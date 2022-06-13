@@ -1,0 +1,26 @@
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sort-btn__top-btn {
+  transform: rotate(180deg);
+  width: 10px;
+  height: 5px;
+}
+
+.sort-btn__bottom-btn {
+  width: 10px;
+  height: 5px;
+}
+
+.sort-btn__top-btn__active {
+  opacity: 0.5;
+}

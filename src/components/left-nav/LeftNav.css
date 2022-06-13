@@ -1,0 +1,125 @@
+.left-nav {
+  background-color: #292a34;
+  padding: 56px 36px;
+  position: relative;
+  max-width: 286px;
+}
+
+.left-nav__logo-hidden {
+  display: none;
+}
+
+.left-nav__logo {
+  font-family: "Montserrat", sans-serif;
+  color: #01b0e9;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 48.76px;
+}
+
+.left-nav__logo > span {
+  color: white;
+  font-weight: 300;
+}
+
+.left-nav__navbar {
+  margin-top: 74px;
+}
+
+.left-nav__nav-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  color: #c4c4c4;
+  margin-bottom: 24px;
+  margin-left: 4px;
+}
+
+.left-nav__nav-item > span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  background-color: #3e3f48;
+  margin-right: 16px;
+}
+
+.left-nav__nav-item > span > img path {
+  stroke: red;
+}
+
+.left-nav__nav-item:hover {
+  color: #fff;
+}
+
+.left-nav__nav-item:hover > span {
+  background-color: #01b0e9;
+}
+
+.left-nav__nav-item:hover > span > svg path {
+  stroke: white;
+}
+
+.left-nav__nav-item__active {
+  color: #fff;
+}
+
+.left-nav__nav-item__active > span {
+  background-color: #01b0e9;
+}
+
+.left-nav__nav-item__active > span > svg path {
+  stroke: white;
+}
+
+.left-nav::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: #01b0e9;
+  position: absolute;
+  top: 21px;
+  right: -10px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.left-nav-hidden::after {
+  background-color: #292a34;
+}
+
+.left-nav-hidden .left-nav__logo {
+  display: none;
+}
+
+.left-nav-hidden .left-nav__logo-hidden {
+  display: block;
+  text-align: center;
+}
+
+.left-nav-hidden .left-nav__nav-item {
+  margin-left: 0;
+}
+
+.left-nav-hidden .left-nav__nav-item span {
+  margin-right: 0;
+}
+
+.left-nav-hidden .left-nav__nav-item p {
+  display: none;
+}
+/*# sourceMappingURL=LeftNav.css.map */

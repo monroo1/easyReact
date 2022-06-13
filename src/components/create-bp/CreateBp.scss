@@ -1,0 +1,172 @@
+.business__drop-content {
+  width: 747px;
+  background-color: #fff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  max-height: 100%;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: scroll;
+  }
+
+  & > div > div:last-child {
+    border: 1px solid #e1e1e1;
+    box-shadow: 0px -1px 3px rgba(0, 0, 0, 0.15);
+    padding: 35px 68px 39px 68px;
+    display: flex;
+    gap: 35px;
+    flex-shrink: 0;
+  }
+
+  & > div > div:first-child {
+    padding: 42px 40px 0 38px;
+    flex-shrink: 0;
+
+    & > form {
+      margin-top: 37px;
+      & > div {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 35px;
+
+        & > label {
+          display: flex;
+          align-items: center;
+          margin-left: 8px;
+          margin-bottom: 9px;
+          gap: 8px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.p__drop-content {
+  font-size: 14px;
+  color: #292a34;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.input-form {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: #292a34;
+  font-weight: 400;
+  line-height: 16px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.54);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px 4px 0px 0px;
+  height: 56px;
+  margin-left: 42px;
+  padding: 0 9px;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+.input__date {
+  & > div {
+    display: flex;
+    gap: 20px;
+    & > input[type="date"] {
+      width: 224px;
+      cursor: pointer;
+    }
+    & > input[type="time"] {
+      margin-left: 0;
+      width: 96px;
+      cursor: text;
+    }
+  }
+}
+
+input[type="time"]::-webkit-datetime-edit-text {
+  padding: 0 2px;
+}
+
+#input-download {
+  & > label {
+    gap: 15px;
+  }
+  & > input {
+    display: none;
+  }
+}
+
+#input-download__input-label {
+  background: #ffffff;
+  border: 1px solid #c4c4c4;
+  border-radius: 4px;
+  width: 163px;
+  justify-content: center;
+  align-items: center;
+  padding: 9px 0;
+  margin-left: 42px;
+  cursor: pointer;
+}
+
+.business__drop-content > div::-webkit-scrollbar {
+  width: 7px;
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 3px;
+}
+
+.business__drop-content > div::-webkit-scrollbar-thumb {
+  width: 7px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+.businessClass {
+  position: relative;
+  height: 100%;
+
+  & > div:last-child {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+  }
+}
+
+#businessTask__description {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 21px;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 14px;
+    color: #292a34;
+  }
+
+  & > div:not(:last-child) > input:focus-visible {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.54);
+  }
+
+  & input {
+    margin-left: 8px;
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    height: 40px;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 400;
+    font-weight: 400;
+
+    &:focus-visible {
+      outline: none;
+      padding: 0 9px;
+    }
+  }
+}

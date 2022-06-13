@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
+import { StatusContext } from "./context/status";
+import Header from "./components/header/Header";
+import BusinessMain from "./components/business-main/BusinessMain";
+import LeftNav from "./components/left-nav/LeftNav.jsx";
+import "./components/left-nav/LeftNav.jsx";
 
 function App() {
+  const [createBpStatus, setCreateBpStatus] = useState(false);
+  const [createBpForm, setCreateBpForm] = useState({
+    name: null,
+    initiator_id: null,
+    project_id: null,
+    deadlineDate: null,
+    deadlineTime: null,
+    tasks: null,
+  });
+  const [filter, setFilter] = useState("id");
+  const [filterMethod, setFilterMethod] = useState("asc");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StatusContext.Provider
+      value={{
+        createBpStatus,
+        setCreateBpStatus,
+        createBpForm,
+        setCreateBpForm,
+        filter,
+        setFilter,
+        filterMethod,
+        setFilterMethod,
+      }}
+    >
+      <div className="bussines-page">
+        <LeftNav />
+        <div className="right-content">
+          <Header />
+          <BusinessMain />
+        </div>
+      </div>
+    </StatusContext.Provider>
   );
 }
 
