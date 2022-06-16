@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 
-const base64url = require("base64url");
+// const base64url = require("base64url");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -36,9 +36,9 @@ fetch("https://test.easy-task.ru/api/v1/login", {
       ),
     };
 
-    const unsignedToken = base64url(header) + "." + base64url(payload);
+    // const unsignedToken = base64url(header) + "." + base64url(payload);
 
-    console.log(unsignedToken);
+    // console.log(unsignedToken);
 
     fetch("https://test.easy-task.ru/api/v1/projects/95", {
       headers: {

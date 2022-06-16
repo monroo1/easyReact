@@ -68,7 +68,7 @@ const BpItemStatus = (status) => {
         setStatusObj({
           text: "Автору",
           styleText: {
-            color: "##FF9900",
+            color: "#FF9900",
           },
           styleIcons: {
             borderColor: "#FF9900",

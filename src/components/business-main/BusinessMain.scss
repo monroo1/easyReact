@@ -187,6 +187,8 @@ button {
   margin-top: 12px;
   padding-bottom: 22px;
   padding-left: 50px;
+  max-width: 1400px;
+  margin-left: auto;
 
   &__content {
     flex-grow: 1;
@@ -219,9 +221,13 @@ button {
     &__right {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      gap: 2.5em;
+      min-width: 383px;
+      gap: 2.66em;
       flex-shrink: 0;
+    }
+
+    &__right-active {
+      gap: 1em;
     }
 
     &-completed {
@@ -315,7 +321,7 @@ button {
   content: "";
   border-bottom: 1px dashed #8b8c91;
   position: absolute;
-  top: 47%;
+  top: 54%;
   width: 40px;
   left: -60px;
   padding: 1px;
@@ -332,6 +338,16 @@ button {
 }
 
 .dependencies__content-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: #f4f4f4;
+  box-shadow: 0px 4px 5px rgb(0 0 0 / 20%);
+  border-radius: 4px;
+  padding: 18px 16px;
+  margin-bottom: 12px;
+  margin-left: auto;
   grid-column-start: 1;
   grid-column-end: 4;
 }
@@ -393,7 +409,7 @@ button {
     }
 
     & > div:last-child {
-      gap: 2em;
+      gap: 3em;
     }
   }
 
@@ -412,26 +428,13 @@ button {
     }
 
     & > .business__main-content__list-block__item-right {
-      padding-right: 88px;
-      flex-basis: 465px;
+      flex-basis: 655px;
+      justify-content: space-between;
+      padding-right: 193px;
     }
 
     &__number {
       margin-right: 34px;
-    }
-
-    &__logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 45px;
-      flex-shrink: 0;
-
-      & img {
-        width: 34px;
-        height: 34px;
-      }
     }
 
     &__message {
@@ -445,28 +448,6 @@ button {
       margin-bottom: 5px;
     }
 
-    &__status {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #436ea0;
-      font-size: 18px;
-      flex-shrink: 0;
-      flex-basis: 163px;
-
-      & button {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid #436ea0;
-        background: rgba(67, 110, 160, 0.1);
-        border-radius: 4px;
-        cursor: pointer;
-      }
-    }
-
     &-right {
       gap: 14px;
     }
@@ -475,7 +456,6 @@ button {
 
 .business__main-content__list-block__item__message {
   position: relative;
-  margin-right: 44px;
   cursor: pointer;
 }
 
@@ -512,4 +492,65 @@ button {
   background-color: rgba(1, 176, 233, 1);
   height: 4px;
   border-radius: 0px 0px 4px 4px;
+}
+
+.business__main-content__list-block__item > div:first-child {
+  & > .business__main-content__list-block__item-left {
+    gap: 40px;
+    padding-left: 23px;
+  }
+}
+
+.business__main-content__list-block__item__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #436ea0;
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 163px;
+
+  & button {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #436ea0;
+    background: rgba(67, 110, 160, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}
+
+.business__main-content__list-block__item__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  & img {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+.dependencies__content-list__item__btn {
+  display: flex;
+  gap: 14px;
+}
+
+.business__main-content__list-block__title-active {
+  margin-right: 46px;
+  & > div:last-child {
+    gap: 1.4em !important;
+  }
+}
+.business__main-content__list-block__item-active
+  > div:first-child
+  > .business__main-content__list-block__item-right {
+  padding-right: 140px;
+  flex-basis: unset;
+  gap: 56px;
 }

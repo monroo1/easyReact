@@ -4,10 +4,18 @@ import BpItem from "../bp-item/BpItem.jsx";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus.jsx";
 import SortBtn from "../ui/sort-btn/SortBtn.jsx";
 import { StatusContext } from "../../context/status.js";
+import TasksList from "../dep-tasks-list/TasksList.jsx";
 
 const BusinessMainList = () => {
   const [bpList, setBpList] = useState([]);
-  const { filter, setFilter, filterMethod } = useContext(StatusContext);
+  const {
+    filter,
+    setFilter,
+    filterMethod,
+    createBpStatus,
+    openTasks,
+    setOpenTasks,
+  } = useContext(StatusContext);
 
   useEffect(() => {
     axios
@@ -23,9 +31,23 @@ const BusinessMainList = () => {
     setFilter(e.dataset.sort);
   };
 
+  const openTasksMenu = (e) => {
+    if (e.id == openTasks) {
+      setOpenTasks("");
+    } else {
+      setOpenTasks(e.id);
+    }
+  };
+
   return (
     <div className="business__main-content__list-block">
-      <div className="business__main-content__list-block__title">
+      <div
+        className={
+          createBpStatus
+            ? "business__main-content__list-block__title business__main-content__list-block__title-active"
+            : "business__main-content__list-block__title"
+        }
+      >
         <div>
           <div
             style={{ display: "flex", gap: 23 + "px", alignItems: "center" }}
@@ -111,14 +133,24 @@ const BusinessMainList = () => {
             <BpItem el={bpItem} key={bpItem.id} />
           ))} */}
           <div
-            className="business__main-content__list-block__item"
-            id={"business-item-" + 1}
+            className={
+              createBpStatus
+                ? "business__main-content__list-block__item business__main-content__list-block__item-active"
+                : "business__main-content__list-block__item"
+            }
           >
-            <div>
+            <div
+              id={"business-item-" + 1}
+              onClick={(e) => openTasksMenu(e.target)}
+            >
               <div className="business__main-content__list-block__item-left">
-                <p className="business__main-content__list-block__item__number p-black">
-                  {1}
-                </p>
+                <div className="business__main-content__list-block__item__arrow">
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/ShapeBlack.svg`}
+                    alt="drop"
+                    style={{ opacity: 0.5 }}
+                  />
+                </div>
                 <div className="business__main-content__list-block__item__logo">
                   <img
                     src={`${process.env.PUBLIC_URL}/assets/header-profile-logo.png`}
@@ -141,7 +173,7 @@ const BusinessMainList = () => {
                 </div>
               </div>
               <div className="business__main-content__list-block__item-right">
-                <BpItemStatus status={1} />
+                <BpItemStatus status={5} />
                 <p className="business__main-content__list-block__item__deadline p-black">
                   {/* {new Date(el.deadline).toLocaleString("ru", {
                   month: "long",
@@ -160,285 +192,27 @@ const BusinessMainList = () => {
                 />
               </div>
             </div>
-            <div class="dependencies">
-              <div class="dependencies__content">
-                <div class="dependencies__content-list">
-                  <div class="dependencies__content-list__task-block">
-                    <div class="dependencies__content-list__item">
-                      <div class="dependencies__content-list__item__btn">
-                        <img src="./img/arrow.svg" />
-                      </div>
-
-                      <div class="dependencies__content-list__item__title">
-                        <p class="p-black">111</p>
-                        <span class="p-grey">222</span>
-                      </div>
-                      <div class="dependencies__content-list__item__right">
-                        <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                          <img src="./img/completed.svg" />
-                        </div>
-                        <div class="dependencies__content-list__deadline p-black">
-                          333
-                        </div>
-                        <div class="dependencies__content-list__item__right__logo">
-                          <img src="./img/header-profile-logo.png" />
-                        </div>
-                        <div class="dependencies__content-list__item__right__priority">
-                          <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                          <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                          <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="dependencies__content-list__task-block__vertical-line">
-                      <div></div>
-                    </div>
-                    <div class="dependencies__content-list__task-block__gorizont-wrapper">
-                      <div
-                        class="dependencies__content-list__task-block__gorizont"
-                        id="dependencies-block-drow-${el.id}"
-                      >
-                        <div class="dependencies__content-list__task-block">
-                          <div class="dependencies__content-list__item dependencies__content-list__item-dropdown">
-                            <div class="dependencies__content-list__item">
-                              <div class="dependencies__content-list__item__btn">
-                                <img src="./img/arrow.svg" />
-                              </div>
-
-                              <div class="dependencies__content-list__item__title">
-                                <p class="p-black">444</p>
-                                <span class="p-grey">555</span>
-                              </div>
-                              <div class="dependencies__content-list__item__right">
-                                <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                                  <img src="./img/completed.svg" />
-                                </div>
-                                <div class="dependencies__content-list__deadline p-black">
-                                  666
-                                </div>
-                                <div class="dependencies__content-list__item__right__logo">
-                                  <img src="./img/header-profile-logo.png" />
-                                </div>
-                                <div class="dependencies__content-list__item__right__priority">
-                                  <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                  <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                  <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="dependencies__content-list__task-block__vertical-line">
-                            <div></div>
-                          </div>
-                          <div class="dependencies__content-list__task-block__gorizont-wrapper">
-                            <div
-                              class="dependencies__content-list__task-block__gorizont"
-                              id="dependencies-block-drow-${el.id}"
-                            >
-                              <div class="dependencies__content-list__task-block">
-                                <div class="dependencies__content-list__item dependencies__content-list__item-dropdown">
-                                  <div class="dependencies__content-list__item">
-                                    <div class="dependencies__content-list__item__btn">
-                                      <img src="./img/arrow.svg" />
-                                    </div>
-
-                                    <div class="dependencies__content-list__item__title">
-                                      <p class="p-black">444</p>
-                                      <span class="p-grey">555</span>
-                                    </div>
-                                    <div class="dependencies__content-list__item__right">
-                                      <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                                        <img src="./img/completed.svg" />
-                                      </div>
-                                      <div class="dependencies__content-list__deadline p-black">
-                                        666
-                                      </div>
-                                      <div class="dependencies__content-list__item__right__logo">
-                                        <img src="./img/header-profile-logo.png" />
-                                      </div>
-                                      <div class="dependencies__content-list__item__right__priority">
-                                        <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                        <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                        <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="dependencies__content-list__task-block__vertical-line">
-                                  <div></div>
-                                </div>
-                                <div class="dependencies__content-list__task-block__gorizont-wrapper"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="dependencies__content-list__task-block">
-                    <div class="dependencies__content-list__item">
-                      <div class="dependencies__content-list__item__btn">
-                        <img src="./img/arrow.svg" />
-                      </div>
-
-                      <div class="dependencies__content-list__item__title">
-                        <p class="p-black">111</p>
-                        <span class="p-grey">222</span>
-                      </div>
-                      <div class="dependencies__content-list__item__right">
-                        <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                          <img src="./img/completed.svg" />
-                        </div>
-                        <div class="dependencies__content-list__deadline p-black">
-                          333
-                        </div>
-                        <div class="dependencies__content-list__item__right__logo">
-                          <img src="./img/header-profile-logo.png" />
-                        </div>
-                        <div class="dependencies__content-list__item__right__priority">
-                          <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                          <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                          <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="dependencies__content-list__task-block__vertical-line">
-                      <div></div>
-                    </div>
-                    <div class="dependencies__content-list__task-block__gorizont-wrapper">
-                      <div
-                        class="dependencies__content-list__task-block__gorizont"
-                        id="dependencies-block-drow-${el.id}"
-                      >
-                        <div class="dependencies__content-list__task-block">
-                          <div class="dependencies__content-list__item dependencies__content-list__item-dropdown">
-                            <div class="dependencies__content-list__item">
-                              <div class="dependencies__content-list__item__btn">
-                                <img src="./img/arrow.svg" />
-                              </div>
-
-                              <div class="dependencies__content-list__item__title">
-                                <p class="p-black">444</p>
-                                <span class="p-grey">555</span>
-                              </div>
-                              <div class="dependencies__content-list__item__right">
-                                <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                                  <img src="./img/completed.svg" />
-                                </div>
-                                <div class="dependencies__content-list__deadline p-black">
-                                  666
-                                </div>
-                                <div class="dependencies__content-list__item__right__logo">
-                                  <img src="./img/header-profile-logo.png" />
-                                </div>
-                                <div class="dependencies__content-list__item__right__priority">
-                                  <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                  <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                  <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="dependencies__content-list__task-block__vertical-line">
-                            <div></div>
-                          </div>
-                          <div class="dependencies__content-list__task-block__gorizont-wrapper">
-                            <div
-                              class="dependencies__content-list__task-block__gorizont"
-                              id="dependencies-block-drow-${el.id}"
-                            >
-                              <div class="dependencies__content-list__task-block">
-                                <div class="dependencies__content-list__item dependencies__content-list__item-dropdown">
-                                  <div class="dependencies__content-list__item">
-                                    <div class="dependencies__content-list__item__btn">
-                                      <img src="./img/arrow.svg" />
-                                    </div>
-
-                                    <div class="dependencies__content-list__item__title">
-                                      <p class="p-black">444</p>
-                                      <span class="p-grey">555</span>
-                                    </div>
-                                    <div class="dependencies__content-list__item__right">
-                                      <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                                        <img src="./img/completed.svg" />
-                                      </div>
-                                      <div class="dependencies__content-list__deadline p-black">
-                                        666
-                                      </div>
-                                      <div class="dependencies__content-list__item__right__logo">
-                                        <img src="./img/header-profile-logo.png" />
-                                      </div>
-                                      <div class="dependencies__content-list__item__right__priority">
-                                        <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                        <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                        <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="dependencies__content-list__task-block__vertical-line">
-                                  <div></div>
-                                </div>
-                                <div class="dependencies__content-list__task-block__gorizont-wrapper"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="dependencies__content-list__task-block__gorizont"
-                        id="dependencies-block-drow-${el.id}"
-                      >
-                        <div class="dependencies__content-list__task-block">
-                          <div class="dependencies__content-list__item dependencies__content-list__item-dropdown">
-                            <div class="dependencies__content-list__item">
-                              <div class="dependencies__content-list__item__btn">
-                                <img src="./img/arrow.svg" />
-                              </div>
-
-                              <div class="dependencies__content-list__item__title">
-                                <p class="p-black">444</p>
-                                <span class="p-grey">555</span>
-                              </div>
-                              <div class="dependencies__content-list__item__right">
-                                <div class="dependencies__content-list__item__right__status dependencies__content-list__item__right__status-completed">
-                                  <img src="./img/completed.svg" />
-                                </div>
-                                <div class="dependencies__content-list__deadline p-black">
-                                  666
-                                </div>
-                                <div class="dependencies__content-list__item__right__logo">
-                                  <img src="./img/header-profile-logo.png" />
-                                </div>
-                                <div class="dependencies__content-list__item__right__priority">
-                                  <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                  <div class="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-                                  <div class="dependencies__content-list__item__right__priority-indicator"></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="dependencies__content-list__task-block__vertical-line">
-                            <div></div>
-                          </div>
-                          <div class="dependencies__content-list__task-block__gorizont-wrapper"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {openTasks === "business-item-" + 1 ? <TasksList /> : <></>}
           </div>
           <div
-            className="business__main-content__list-block__item"
-            id={"business-item-" + 1}
+            className={
+              createBpStatus
+                ? "business__main-content__list-block__item business__main-content__list-block__item-active"
+                : "business__main-content__list-block__item"
+            }
           >
-            <div>
+            <div
+              id={"business-item-" + 2}
+              onClick={(e) => openTasksMenu(e.target)}
+            >
               <div className="business__main-content__list-block__item-left">
-                <p className="business__main-content__list-block__item__number p-black">
-                  {1}
-                </p>
+                <div className="business__main-content__list-block__item__arrow">
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/ShapeBlack.svg`}
+                    alt="drop"
+                    style={{ opacity: 0.5 }}
+                  />
+                </div>
                 <div className="business__main-content__list-block__item__logo">
                   <img
                     src={`${process.env.PUBLIC_URL}/assets/header-profile-logo.png`}
@@ -480,6 +254,7 @@ const BusinessMainList = () => {
                 />
               </div>
             </div>
+            {openTasks === "business-item-" + 2 ? <TasksList /> : <></>}
           </div>
         </div>
       </div>
