@@ -5,6 +5,7 @@ import BpItemStatus from "../ui/bp-item-status/BpItemStatus.jsx";
 import SortBtn from "../ui/sort-btn/SortBtn.jsx";
 import { StatusContext } from "../../context/status.js";
 import TasksList from "../dep-tasks-list/TasksList.jsx";
+import BpItemMenu from "../ui/bp-item-menu/BpItemMenu.jsx";
 
 const BusinessMainList = () => {
   const [bpList, setBpList] = useState([]);
@@ -17,15 +18,15 @@ const BusinessMainList = () => {
     setOpenTasks,
   } = useContext(StatusContext);
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://b6fed652a996ab.lhrtunnel.link/api/v1/businessProcess?orderFilter[${filter}]=${filterMethod}`
-      )
-      .then((response) => {
-        setBpList(response.data.data);
-      });
-  }, [setBpList, filter, filterMethod]);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `https://b6fed652a996ab.lhrtunnel.link/api/v1/businessProcess?orderFilter[${filter}]=${filterMethod}`
+  //     )
+  //     .then((response) => {
+  //       setBpList(response.data.data);
+  //     });
+  // }, [setBpList, filter, filterMethod]);
 
   const sortFunc = (e) => {
     setFilter(e.dataset.sort);
@@ -193,6 +194,7 @@ const BusinessMainList = () => {
                   alt="menu"
                 />
               </div>
+              <BpItemMenu />
             </div>
             {openTasks === "business-item-" + 1 ? <TasksList /> : <></>}
           </div>

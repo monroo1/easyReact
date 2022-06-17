@@ -371,7 +371,7 @@ button {
 
   &__container {
     overflow: auto;
-    height: calc(100% - 77.5px);
+    height: calc(100vh - 77.5px);
 
     &::-webkit-scrollbar {
       width: 7px;
@@ -416,7 +416,6 @@ button {
   &__item > div:first-child {
     display: flex;
     justify-content: space-between;
-
     cursor: pointer;
     position: relative;
 
@@ -483,7 +482,7 @@ button {
   position: relative;
 }
 
-.business__main-content__list-block__item::after {
+.business__main-content__list-block__item::before {
   position: absolute;
   content: "";
   left: 0;
