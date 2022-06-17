@@ -32,7 +32,7 @@ const BusinessMainList = () => {
   };
 
   const openTasksMenu = (e) => {
-    if (e.id == openTasks) {
+    if (e.id === openTasks) {
       setOpenTasks("");
     } else {
       setOpenTasks(e.id);
@@ -141,7 +141,9 @@ const BusinessMainList = () => {
           >
             <div
               id={"business-item-" + 1}
-              onClick={(e) => openTasksMenu(e.target)}
+              onClick={(e) => {
+                openTasksMenu(e.target);
+              }}
             >
               <div className="business__main-content__list-block__item-left">
                 <div className="business__main-content__list-block__item__arrow">

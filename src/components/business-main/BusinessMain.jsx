@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import BusinessMainList from "../business-main-list/BusinessMainList";
 import { StatusContext } from "../../context/status";
 import CreateBp from "../create-bp/CreateBp";
+import TaskResultForm from "../task-result-form/TaskResultForm";
 
 const BusinessMain = () => {
   const { createBpStatus, setCreateBpStatus } = useContext(StatusContext);
@@ -119,7 +120,8 @@ const BusinessMain = () => {
           </div>
           <BusinessMainList />
         </div>
-        <CreateBp />
+        <TaskResultForm />
+        {/* <CreateBp /> */}
       </section>
     </>
   );

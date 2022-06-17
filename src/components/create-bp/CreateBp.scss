@@ -64,6 +64,11 @@
   height: 56px;
   margin-left: 42px;
   padding: 0 9px;
+  padding-left: 21px;
+
+  &::placeholder {
+    color: #292a34;
+  }
 
   &:focus-visible {
     outline: none;

@@ -3,8 +3,8 @@ import { StatusContext } from "../../context/status";
 import "./CreateBp.scss";
 
 const CreateBp = () => {
-  const { createBpStatus, setCreateBpStatus } = useContext(StatusContext);
-  const { createBpForm, setCreateBpForm } = useContext(StatusContext);
+  const { createBpStatus, setCreateBpStatus, createBpForm, setCreateBpForm } =
+    useContext(StatusContext);
 
   if (createBpStatus) {
     return (
