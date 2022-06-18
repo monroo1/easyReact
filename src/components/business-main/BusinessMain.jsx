@@ -3,10 +3,13 @@ import React, { useContext } from "react";
 import BusinessMainList from "../business-main-list/BusinessMainList";
 import { StatusContext } from "../../context/status";
 import CreateBp from "../create-bp/CreateBp";
-import TaskResultForm from "../task-result-form/TaskResultForm";
+import BpResultFormTreaty from "../bp-result-form-treaty/BpResultFormTreaty";
+import BpResultFormWork from "../bp-result-form-work/BpResultFormWork";
+import BpResultFormDismissal from "../bp-result-form-dismissal/BpResultFormDismissal";
 
 const BusinessMain = () => {
-  const { createBpStatus, setCreateBpStatus } = useContext(StatusContext);
+  const { createBpStatus, setCreateBpStatus, setOpenForm } =
+    useContext(StatusContext);
 
   const createBp = (e) => {
     if (createBpStatus === true) {
@@ -82,19 +85,28 @@ const BusinessMain = () => {
               </div>
             </div>
             <div className="business__main-content__header-right">
-              <button className="business__main-content__header-right__btn">
+              <button
+                className="business__main-content__header-right__btn"
+                onClick={() => setOpenForm("form1")}
+              >
                 <img
                   src={`${process.env.PUBLIC_URL}/assets/business-headder/branch.svg`}
                   alt="download"
                 />
               </button>
-              <button className="business__main-content__header-right__btn">
+              <button
+                className="business__main-content__header-right__btn"
+                onClick={() => setOpenForm("form2")}
+              >
                 <img
                   src={`${process.env.PUBLIC_URL}/assets/business-headder/Folders.svg`}
                   alt="stats"
                 />
               </button>
-              <button className="business__main-content__header-right__btn">
+              <button
+                className="business__main-content__header-right__btn"
+                onClick={() => setOpenForm("form3")}
+              >
                 <img
                   src={`${process.env.PUBLIC_URL}/assets/business-headder/NotePencil.svg`}
                   alt="hidden"
@@ -120,8 +132,10 @@ const BusinessMain = () => {
           </div>
           <BusinessMainList />
         </div>
-        <TaskResultForm />
-        {/* <CreateBp /> */}
+        <BpResultFormTreaty />
+        <BpResultFormWork />
+        <BpResultFormDismissal />
+        <CreateBp />
       </section>
     </>
   );

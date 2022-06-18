@@ -19,6 +19,7 @@ function App() {
   const [filter, setFilter] = useState("id");
   const [filterMethod, setFilterMethod] = useState("asc");
   const [openTasks, setOpenTasks] = useState("");
+  const [openForm, setOpenForm] = useState("");
 
   return (
     <StatusContext.Provider
@@ -33,6 +34,8 @@ function App() {
         setFilterMethod,
         openTasks,
         setOpenTasks,
+        openForm,
+        setOpenForm,
       }}
     >
       <div className="bussines-page">

@@ -15,7 +15,7 @@ const LeftNav = () => {
   }, [createBpStatus, setNavStyle]);
 
   return (
-    <section className={"left-nav " + navStyle}>
+    <section className={"left-nav left-nav-hidden" + navStyle}>
       <div className="left-nav__logo">
         EASY<span>TASK</span>
       </div>

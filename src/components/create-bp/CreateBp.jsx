@@ -167,8 +167,6 @@ const CreateBp = () => {
         </div>
       </div>
     );
-  } else {
-    return null;
   }
 };
 
