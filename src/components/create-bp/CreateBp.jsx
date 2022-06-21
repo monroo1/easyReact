@@ -5,15 +5,18 @@ import BpResultFormDismissal from "../bp-result-form-dismissal/BpResultFormDismi
 import BpResultFormWork from "../bp-result-form-work/BpResultFormWork";
 import BpResultFormTreaty from "../bp-result-form-treaty/BpResultFormTreaty";
 import "./CreateBp.scss";
-const API = "https://8ebd466487fd85.lhrtunnel.link/api/v1";
+const API = "https://69abc97a149040.lhrtunnel.link/api/v1";
 
 const CreateBp = () => {
   const {
     setCreateBpStatus,
     createBpForm,
     setCreateBpForm,
-    bearer,
     setCreateTaskStatus,
+    bearer,
+    createTaskForm,
+    setCreateTaskForm,
+    setNowBp,
   } = useContext(StatusContext);
   const [projects, setProjects] = useState([]);
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");
@@ -38,7 +41,6 @@ const CreateBp = () => {
 
       .then((res) => {
         setCreateBpForm({ ...createBpForm, file_id: res.data.id });
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -63,8 +65,6 @@ const CreateBp = () => {
           }
         }
 
-        console.log(createBpForm);
-
         if (
           createBpForm.file_id === null ||
           createBpForm.deadlineDate === null
@@ -74,7 +74,7 @@ const CreateBp = () => {
             createBpForm.deadlineDate === null
           ) {
             fetch(
-              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1|2|3`,
+              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1`,
               {
                 method: "POST",
                 headers: {
@@ -84,7 +84,21 @@ const CreateBp = () => {
                   ),
                 },
               }
-            ).then((res) => console.log(res));
+            )
+              .then((res) => res.json())
+              .then((r) => {
+                console.log(r.businessProcess.tasks);
+                let taskss = "";
+                for (let i of r.tasks) {
+                  if (i.id !== "1") {
+                    taskss = taskss.concat(i.id + "|");
+                  }
+                }
+                setNowBp({
+                  id: r.businessProcess.id,
+                  tasks: taskss,
+                });
+              });
           }
           if (
             createBpForm.file_id === null &&
@@ -95,7 +109,7 @@ const CreateBp = () => {
                 createBpForm.initiator_id
               }&project_id=${createBpForm.project_id}&deadline=${
                 createBpForm.deadlineDate + " " + createBpForm.deadlineTime
-              }&tasks=1|2|3`,
+              }&tasks=1`,
               {
                 method: "POST",
                 headers: {
@@ -105,14 +119,28 @@ const CreateBp = () => {
                   ),
                 },
               }
-            ).then((res) => console.log(res));
+            )
+              .then((res) => res.json())
+              .then((r) => {
+                console.log(r.businessProcess.tasks);
+                let taskss = "";
+                for (let i of r.tasks) {
+                  if (i.id !== "1") {
+                    taskss = taskss.concat(i.id + "|");
+                  }
+                }
+                setNowBp({
+                  id: r.businessProcess.id,
+                  tasks: taskss,
+                });
+              });
           }
           if (
             createBpForm.deadlineDate === null &&
             createBpForm.file_id !== null
           ) {
             fetch(
-              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1|2|3&file_id=${createBpForm.file_id}`,
+              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1&file_id=${createBpForm.file_id}`,
               {
                 method: "POST",
                 headers: {
@@ -122,7 +150,21 @@ const CreateBp = () => {
                   ),
                 },
               }
-            ).then((res) => console.log(res));
+            )
+              .then((res) => res.json())
+              .then((r) => {
+                console.log(r.businessProcess.tasks);
+                let taskss = "";
+                for (let i of r.tasks) {
+                  if (i.id !== "1") {
+                    taskss = taskss.concat(i.id + "|");
+                  }
+                }
+                setNowBp({
+                  id: r.businessProcess.id,
+                  tasks: taskss,
+                });
+              });
           }
         }
         if (
@@ -134,7 +176,7 @@ const CreateBp = () => {
               createBpForm.initiator_id
             }&project_id=${createBpForm.project_id}&deadline=${
               createBpForm.deadlineDate + " " + createBpForm.deadlineTime
-            }&tasks=1|2|3&file_id=${createBpForm.file_id}`,
+            }&tasks=1&file_id=${createBpForm.file_id}`,
             {
               method: "POST",
               headers: {
@@ -144,7 +186,21 @@ const CreateBp = () => {
                 ),
               },
             }
-          ).then((res) => console.log(res));
+          )
+            .then((res) => res.json())
+            .then((r) => {
+              console.log(r.businessProcess.tasks);
+              let taskss = "";
+              for (let i of r.tasks) {
+                if (i.id !== "1") {
+                  taskss = taskss.concat(i.id + "|");
+                }
+              }
+              setNowBp({
+                id: r.businessProcess.id,
+                tasks: taskss,
+              });
+            });
         }
       }
       setCreateBpForm({
@@ -186,8 +242,6 @@ const CreateBp = () => {
         });
     }
   }, [nextLinkProjects]);
-
-  console.log(projects);
 
   return (
     <div className="business__drop-content">
@@ -266,10 +320,18 @@ const CreateBp = () => {
                       ...createBpForm,
                       project_id: null,
                     });
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      project_id: parseInt(e.target.value),
+                    });
                   } else {
                     setCreateBpForm({
                       ...createBpForm,
                       project_id: e.target.value,
+                    });
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      project_id: parseInt(e.target.value),
                     });
                   }
                 }}

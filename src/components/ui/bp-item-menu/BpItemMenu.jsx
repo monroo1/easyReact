@@ -6,7 +6,7 @@ import "./BpItemMenu.scss";
 const BpItemMenu = ({ id }) => {
   const { idBp, setIdBp } = useContext(StatusContext);
 
-  if (idBp == id) {
+  if (idBp === id) {
     return (
       <ClickAwayListener onClickAway={() => setIdBp("")}>
         <div className="bp-item-menu">

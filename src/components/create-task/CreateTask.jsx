@@ -1,17 +1,62 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StatusContext } from "../../context/status";
-// import axios from "axios";
+import axios from "axios";
 import CreateTaskForm from "../create-task-form/CreateTaskForm";
 
 const CreateTask = () => {
   const {
+    nowBp,
+    setNowBp,
     createTaskForm,
     setCreateTaskForm,
     createBpForm,
     setCreateTaskStatus,
   } = useContext(StatusContext);
-
   const [addTask, setAddTask] = useState();
+
+  const saveTask = () => {
+    fetch("https://test.easy-task.ru/api/v1/tasks", {
+      method: "POST",
+      headers: {
+        Authorization:
+          "Bearer " +
+          document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        "company-id": 1,
+      },
+      body: JSON.stringify(createTaskForm),
+    })
+      .then((resesult) => resesult.json())
+      .then((res) => {
+        fetch(
+          `https://69abc97a149040.lhrtunnel.link/api/v1/businessProcess/${nowBp.id}?tasks=${nowBp.tasks}${res.data.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              secret_token: document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((r) => {
+            console.log(r);
+            let taskss = "";
+            for (let i of r.tasks) {
+              taskss = taskss.concat(i.id + "|");
+            }
+            console.log(taskss);
+            setNowBp({
+              id: r.businessProcess.id,
+              tasks: taskss,
+            });
+          });
+      });
+  };
 
   useEffect(() => {
     if (createTaskForm.name !== null) {
@@ -36,6 +81,7 @@ const CreateTask = () => {
               addTask === true ? "blue-btn" : "blue-btn blue-btn__disabled"
             }
             id="add-task"
+            onClick={() => saveTask()}
           >
             Добавить еще
           </button>

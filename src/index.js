@@ -36,7 +36,7 @@ fetch("https://test.easy-task.ru/api/v1/login", {
 
     axios
       .post(
-        `https://8ebd466487fd85.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}`
+        `https://69abc97a149040.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}`
       )
       .then((response) => {
         return (document.cookie = `access_token_jwt=${response.data}`);
@@ -71,6 +71,13 @@ fetch("https://test.easy-task.ru/api/v1/login", {
     // })
     //   .then((res) => res.json())
     //   .then((r) => console.log(r));
+
+    // fetch("https://test.easy-task.ru/api/v1/tasks?project_id=35", {
+    //   method: "GET",
+    //   headers: {
+    //     Authorization: "Bearer " + res.access_token,
+    //   },
+    // }).then((res) => console.log(res.json()));
 
     // "https://test.easy-task.ru/api/v1/users/512/companies"
 
