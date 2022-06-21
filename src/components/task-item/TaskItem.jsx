@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import { StatusContext } from "../../context/status";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 
-const TaskItem = ({ style }) => {
+const TaskItem = ({ style, el }) => {
   const { createBpStatus } = useContext(StatusContext);
+  console.log(el.end);
   return (
     <div
       className={
@@ -34,8 +35,8 @@ const TaskItem = ({ style }) => {
       </div>
 
       <div className="dependencies__content-list__item__title">
-        <p className="p-black">444</p>
-        <span className="p-grey">555</span>
+        <p className="p-black">{el.name.slice(0, 20)}</p>
+        <span className="p-grey">{el.description.slice(0, 20)}</span>
       </div>
       <div
         className={
@@ -45,16 +46,23 @@ const TaskItem = ({ style }) => {
         }
       >
         <BpItemStatus status={8} />
-        <div className="dependencies__content-list__deadline p-black">666</div>
-        <div className="business__main-content__list-block__item__logo">
+        <div className="dependencies__content-list__deadline p-black">
+          {new Date(new Date(el.end).toJSON())
+            .toLocaleString("ru", {
+              month: "long",
+              day: "numeric",
+            })
+            .slice(0, 7)}
+        </div>
+        <div className="business__main-content__list-block__item__logo business__main-content__list-block__item__logo__task">
           <img
             src={`${process.env.PUBLIC_URL}/assets/header-profile-logo.png`}
             alt="logo"
           />
         </div>
-        <div className="business__main-content__list-block__item__project dependencies__content-list__projcet">
-          <p className="p-black">project</p>
-          <span className="p-grey">projectTheme</span>
+        <div className="dependencies__content-list__project">
+          <p className="p-black">{"projectTheme".slice(0, 10)}</p>
+          <span className="p-grey">{"projectTheme".slice(0, 12)}</span>
         </div>
         <div className="dependencies__content-list__item__right__priority">
           <div className="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>

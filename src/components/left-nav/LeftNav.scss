@@ -51,6 +51,14 @@
   &__nav-item:hover {
     color: #fff;
     & > span {
+      & > svg path {
+        stroke: white;
+      }
+    }
+  }
+
+  &__nav-item:active {
+    & > span {
       background-color: #01b0e9;
       & > svg path {
         stroke: white;

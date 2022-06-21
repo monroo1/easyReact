@@ -21,7 +21,7 @@
   }
 
   & > div > div:first-child {
-    padding: 42px 40px 0 38px;
+    padding: 54px 40px 0 38px;
     flex-shrink: 0;
 
     & > form {
@@ -84,7 +84,7 @@
     }
     & > input[type="time"] {
       margin-left: 0;
-      width: 96px;
+      width: 116px;
       cursor: text;
     }
   }
@@ -138,6 +138,10 @@ input[type="time"]::-webkit-datetime-edit-text {
     right: 0;
     background-color: #fff;
   }
+
+  & > div:first-child > p {
+    text-align: right;
+  }
 }
 
 #businessTask__description {
@@ -174,4 +178,8 @@ input[type="time"]::-webkit-datetime-edit-text {
       padding: 0 9px;
     }
   }
+}
+
+#bussines-next {
+  width: 218px;
 }

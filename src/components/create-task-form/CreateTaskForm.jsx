@@ -1,6 +1,14 @@
-import "./CreateTaskForm.scss";
+import React, { useContext } from "react";
+import { StatusContext } from "../../context/status";
 
 const CreateTaskForm = () => {
+  const {
+    createTaskForm,
+    setCreateTaskForm,
+    createTaskStatus,
+    setCreateTaskStatus,
+  } = useContext(StatusContext);
+
   return (
     <form id="new-bp__form">
       <div>
@@ -12,6 +20,13 @@ const CreateTaskForm = () => {
           className="input-form input-name-task__list"
           type="text"
           id="input-name-task"
+          onChange={(e) => {
+            if (e.target.value.trim() === "") {
+              setCreateTaskForm({ ...createTaskForm, name: null });
+            } else {
+              setCreateTaskForm({ ...createTaskForm, name: e.target.value });
+            }
+          }}
         />
       </div>
       <div>

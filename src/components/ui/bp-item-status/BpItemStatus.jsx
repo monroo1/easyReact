@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { StatusContext } from "../../../context/status.js";
 
 const BpItemStatus = (status) => {
+  const { createBpStatus, createTaskStatus } = useContext(StatusContext);
   const [statusObj, setStatusObj] = useState({});
 
   useEffect(() => {
@@ -124,7 +126,11 @@ const BpItemStatus = (status) => {
           alt="status"
         />
       </button>
-      <p style={statusObj.styleText}>{statusObj.text}</p>
+      {createBpStatus === true || createTaskStatus === true ? (
+        <></>
+      ) : (
+        <p style={statusObj.styleText}>{statusObj.text}</p>
+      )}
     </div>
   );
 };

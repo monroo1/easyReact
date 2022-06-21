@@ -10,35 +10,63 @@ function App() {
   const [createBpStatus, setCreateBpStatus] = useState(false);
   const [createBpForm, setCreateBpForm] = useState({
     name: null,
-    initiator_id: null,
+    initiator_id: document.cookie.replace(
+      /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    ),
     project_id: null,
     deadlineDate: null,
-    deadlineTime: null,
+    deadlineTime: "00:00:00",
     tasks: null,
+    sample: null,
+    file_id: null,
+    deadline: null,
+  });
+  const [createTaskForm, setCreateTaskForm] = useState({
+    name: null,
+    begin: null,
+    end: null,
+    project_id: createBpForm.project_id || null,
+    next_id: null,
+    parent_id: null,
+    prev_id: null,
+    description: null,
   });
   const [filter, setFilter] = useState("id");
   const [filterMethod, setFilterMethod] = useState("asc");
   const [openTasks, setOpenTasks] = useState("");
-  const [openForm, setOpenForm] = useState("");
   const [idBp, setIdBp] = useState("");
+  const [bearer, setBearer] = useState(
+    document.cookie.replace(
+      /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    )
+  );
+  const [createTaskStatus, setCreateTaskStatus] = useState(false);
+  const [tasksList, setTasksList] = useState([]);
 
   return (
     <StatusContext.Provider
       value={{
         createBpStatus,
         setCreateBpStatus,
+        createTaskStatus,
+        setCreateTaskStatus,
         createBpForm,
         setCreateBpForm,
+        createTaskForm,
+        setCreateTaskForm,
         filter,
         setFilter,
         filterMethod,
         setFilterMethod,
         openTasks,
         setOpenTasks,
-        openForm,
-        setOpenForm,
         idBp,
         setIdBp,
+        bearer,
+        tasksList,
+        setTasksList,
       }}
     >
       <div className="bussines-page">

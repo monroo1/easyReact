@@ -8,8 +8,8 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 fetch("https://test.easy-task.ru/api/v1/login", {
   method: "POST",
   body: JSON.stringify({
-    email: "dfedin@mastercr.ru",
-    password: "VaryaginaStyle2022",
+    email: "varo@mastercr.ru",
+    password: "N3z51bMN",
   }),
 })
   .then((response) => {
@@ -36,7 +36,7 @@ fetch("https://test.easy-task.ru/api/v1/login", {
 
     axios
       .post(
-        `https://87a63cc6b4327d.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}`
+        `https://8ebd466487fd85.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}`
       )
       .then((response) => {
         return (document.cookie = `access_token_jwt=${response.data}`);
@@ -46,27 +46,35 @@ fetch("https://test.easy-task.ru/api/v1/login", {
     //   method: "POST",
     //   headers: {
     //     Authorization: "Bearer " + res.access_token,
+    //     "company-id": 1,
     //   },
     //   body: JSON.stringify({
-    //     begin: "13-01-2021 12:54:05",
-    //     cyclic_task_id: 62,
-    //     description: "цикл 2",
-    //     end: "15-01-2022 13:54:05",
-    //     executor_id: 74,
-    //     name: "цикл 1",
+    //     begin: "13-01-2021 12:54:01",
+    //     description: "бп 1",
+    //     end: "15-01-2021 13:54:05",
+    //     executor_id: 513,
+    //     name: "цикл 1001",
     //     next_id: null,
     //     parent_id: null,
     //     prev_id: null,
     //     priority_id: 2,
-    //     project_id: 102,
-    //     project_section_id: 255,
+    //     project_id: 2,
+    //     project_section_id: 4,
     //     provide_to: 0,
     //     status_id: 2,
     //     task_load: 5,
-    //     work_load: 35,
+    //     work_load: 50,
     //     workflow_id: 1,
+    //     company_id: 1,
+    //     business_process_id: 1,
     //   }),
-    // }).then((res) => console.log(res.json()));
+    // })
+    //   .then((res) => res.json())
+    //   .then((r) => console.log(r));
+
+    // "https://test.easy-task.ru/api/v1/users/512/companies"
+
+    // https://d0c0a335401cc2.lhrtunnel.link/api/v1getSampleWithOptions/1
   })
   .catch(function (error) {
     console.log(error);

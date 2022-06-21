@@ -186,7 +186,7 @@ button {
   justify-content: space-between;
   margin-top: 12px;
   padding-bottom: 22px;
-  padding-left: 50px;
+  padding-left: 20px;
   max-width: 1450px;
   margin-left: auto;
 
@@ -222,7 +222,6 @@ button {
       display: flex;
       align-items: center;
       min-width: 383px;
-      gap: 2.66em;
       flex-shrink: 0;
     }
 
@@ -277,6 +276,8 @@ button {
       display: flex;
       justify-content: space-between;
       gap: 6px;
+      margin-right: 14px;
+      margin-left: 8px;
 
       &-indicator {
         border: 1px solid #01b0e9;
@@ -409,7 +410,7 @@ button {
     }
 
     & > div:last-child {
-      gap: 3em;
+      width: 563px;
     }
   }
 
@@ -427,9 +428,9 @@ button {
     }
 
     & > .business__main-content__list-block__item-right {
-      flex-basis: 655px;
-      justify-content: space-between;
-      padding-right: 193px;
+      flex-basis: 43.6%;
+      // justify-content: space-between;
+      // padding-right: 193px;
     }
 
     &__number {
@@ -522,6 +523,11 @@ button {
   }
 }
 
+.business__main-content__list-block__item__logo__task {
+  margin-right: 84px;
+  margin-left: 94px;
+}
+
 .business__main-content__list-block__item__logo {
   width: 34px;
   height: 34px;
@@ -543,13 +549,49 @@ button {
 .business__main-content__list-block__title-active {
   margin-right: 46px;
   & > div:last-child {
-    gap: 1.96em;
+    gap: 1.5em;
+    width: auto;
   }
 }
 .business__main-content__list-block__item-active
   > div:first-child
   > .business__main-content__list-block__item-right {
-  padding-right: 140px;
-  flex-basis: unset;
-  gap: 56px;
+  padding-right: 54px;
+  & .business__main-content__list-block__item__project {
+    margin-left: 138px;
+  }
+
+  & .business__main-content__list-block__item__status {
+    width: 84px;
+  }
+}
+
+.business__main-content__header-left__position:hover {
+  & > p {
+    color: #01b0e9;
+  }
+  & > svg path {
+    stroke: #01b0e9;
+  }
+}
+
+#business-select-menu__label:hover {
+  border-color: #292a34;
+}
+
+.business__main-content__header-right__btn:hover > svg path,
+.business__main-content__header-right__btn:active > svg path {
+  stroke: #01b0e9;
+}
+
+.business__main-content__list-block__item__project {
+  width: 120px;
+  margin-left: 198px;
+}
+.business__main-content__list-block__item__deadline {
+  width: 70px;
+}
+
+.dependencies__content-list__project {
+  margin-right: 24px;
 }

@@ -46,7 +46,7 @@ ul {
 
 .blue-btn {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: #01b0e9;
   padding: 12px 35px;
@@ -83,4 +83,17 @@ ul {
 .white-btn__disabled {
   color: grey;
   cursor: default;
+}
+
+.blue-btn:hover {
+  background-color: #6db7d0;
+  border-color: #6db7d0;
+}
+
+.defualt__btn:hover {
+  color: #01b0e9;
+}
+
+.defualt__btn:active {
+  color: #01b0e9;
 }

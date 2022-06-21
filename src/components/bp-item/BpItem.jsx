@@ -2,9 +2,40 @@ import React, { useContext } from "react";
 import { StatusContext } from "../../context/status.js";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 import BpItemMenu from "../ui/bp-item-menu/BpItemMenu.jsx";
+import TasksList from "../dep-tasks-list/TasksList.jsx";
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const BpItem = ({ el }) => {
-  const { createBpStatus, idBp, setIdBp } = useContext(StatusContext);
+  const { createBpStatus, idBp, setIdBp, openTasks, setOpenTasks } =
+    useContext(StatusContext);
+  const [project, setProject] = useState();
+
+  const openTasksMenu = (e) => {
+    if (e.id === openTasks) {
+      setOpenTasks("");
+    } else {
+      setOpenTasks(e.id);
+    }
+  };
+
+  useEffect(() => {
+    axios
+      .get(`https://test.easy-task.ru/api/v1/projects/${el.project_id}`, {
+        headers: {
+          Authorization:
+            "Bearer " +
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+        },
+      })
+      .then((res) => {
+        setProject(res.data.data);
+      });
+  }, []);
 
   return (
     <div
@@ -14,7 +45,10 @@ const BpItem = ({ el }) => {
           : "business__main-content__list-block__item"
       }
     >
-      <div id={"business-item-" + el.id}>
+      <div
+        id={"business-item-" + el.id}
+        onClick={(e) => openTasksMenu(e.target)}
+      >
         <div className="business__main-content__list-block__item-left">
           <div className="business__main-content__list-block__item__arrow">
             <img
@@ -41,20 +75,22 @@ const BpItem = ({ el }) => {
             </div>
           </div>
           <div className="business__main-content__list-block__item__name">
-            <p className="p-black">{el.name}</p>
+            <p className="p-black">{el.name.slice(0, 20)}</p>
           </div>
         </div>
         <div className="business__main-content__list-block__item-right">
           <BpItemStatus status={el.status} />
           <p className="business__main-content__list-block__item__deadline p-black">
-            {new Date(el.deadline).toLocaleString("ru", {
-              month: "long",
-              day: "numeric",
-            })}
+            {new Date(el.deadline)
+              .toLocaleString("ru", {
+                month: "long",
+                day: "numeric",
+              })
+              .slice(0, 7)}
           </p>
           <div className="business__main-content__list-block__item__project">
-            <p className="p-black">{el.project_id}</p>
-            <span className="p-grey">{el.project_id}</span>
+            <p className="p-black">{project?.name.slice(0, 10)}</p>
+            <span className="p-grey">{project?.description.slice(0, 12)}</span>
           </div>
         </div>
         <div
@@ -84,6 +120,11 @@ const BpItem = ({ el }) => {
         </div>
         <BpItemMenu id={el.id} />
       </div>
+      {openTasks === "business-item-" + el.id ? (
+        <TasksList tasks={el.tasks} projectId={el.project_id} />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

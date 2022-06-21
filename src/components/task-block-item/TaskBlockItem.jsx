@@ -1,10 +1,10 @@
 import React from "react";
 import TaskItem from "../task-item/TaskItem";
 
-const TaskBlockItem = () => {
+const TaskBlockItem = ({ item }) => {
   return (
     <div className="dependencies__content-list__task-block">
-      <TaskItem />
+      <TaskItem el={item} />
       <div className="dependencies__content-list__task-block__vertical-line">
         <div></div>
       </div>
@@ -13,7 +13,7 @@ const TaskBlockItem = () => {
           className="dependencies__content-list__task-block__gorizont"
           id="dependencies-block-drow-el.id"
         >
-          <div className="dependencies__content-list__task-block">
+          {/* <div className="dependencies__content-list__task-block">
             <TaskItem style={"dropdown"} />
             <div className="dependencies__content-list__task-block__vertical-line">
               <div></div>
@@ -50,7 +50,7 @@ const TaskBlockItem = () => {
                 id="dependencies-block-drow-el.id"
               ></div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
