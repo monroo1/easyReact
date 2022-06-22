@@ -17,7 +17,7 @@ const BusinessMainList = () => {
   useEffect(() => {
     axios
       .get(
-        `https://69abc97a149040.lhrtunnel.link/api/v1/businessProcess?orderFilter[${filter}]=${filterMethod}`,
+        `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/businessProcess?orderFilter[${filter}]=${filterMethod}`,
         {
           headers: {
             secret_token: token,
@@ -25,7 +25,7 @@ const BusinessMainList = () => {
         }
       )
       .then((response) => {
-        console.log(response.data.data);
+        console.log("get bp");
         setBpList(response.data.data);
       })
       .catch((e) => console.log(e));

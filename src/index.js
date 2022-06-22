@@ -18,6 +18,28 @@ fetch("https://test.easy-task.ru/api/v1/login", {
   .then((res) => {
     document.cookie = `access_token=${res.access_token}`;
     document.cookie = `user_id=${res.user_id}`;
+    document.cookie = `company_id=${res.company_id}`;
+
+    axios
+      .get("https://test.easy-task.ru/api/v1/roles", {
+        headers: {
+          Authorization:
+            "Bearer " +
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+        },
+      })
+      .then((res) => res.data.data.filter((el) => el.id === 1))
+      .then((r) => {
+        console.log();
+        if (r[0].id) {
+          document.cookie = `isAdmin=${true}`;
+        } else {
+          document.cookie = `isAdmin=${true}`;
+        }
+      });
 
     const payload = {
       secret_key:
@@ -32,13 +54,20 @@ fetch("https://test.easy-task.ru/api/v1/login", {
         /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
         "$1"
       ),
+      isAdmin: document.cookie.replace(
+        /(?:(?:^|.*;\s*)isAdmin\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      ),
     };
+
+    console.log(payload.isAdmin);
 
     axios
       .post(
-        `https://69abc97a149040.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}`
+        `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}&isAdmin=${payload.isAdmin}`
       )
       .then((response) => {
+        console.log("jwt");
         return (document.cookie = `access_token_jwt=${response.data}`);
       });
 

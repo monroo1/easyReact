@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useEffect } from "react";
 import { StatusContext } from "../../context/status";
+import "./CreateTaskForm.scss";
 
 const CreateTaskForm = () => {
   const {
@@ -11,6 +12,9 @@ const CreateTaskForm = () => {
     setCreateTaskStatus,
     createTaskFormDate,
     setCreateTaskFormDate,
+    depsTask,
+    setDepsTask,
+    nowBp,
   } = useContext(StatusContext);
 
   useEffect(() => {
@@ -171,7 +175,9 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   begin:
-                    createTaskFormDate.beginDate +
+                    new Date(
+                      createTaskFormDate.beginDate
+                    ).toLocaleDateString() +
                     " " +
                     createTaskFormDate.beginTime,
                 });
@@ -183,7 +189,9 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   begin:
-                    createTaskFormDate.beginDate +
+                    new Date(createTaskFormDate.beginDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.beginTime,
                 });
@@ -202,7 +210,9 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   begin:
-                    createTaskFormDate.beginDate +
+                    new Date(createTaskFormDate.beginDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.beginTime,
                 });
@@ -214,7 +224,9 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   begin:
-                    createTaskFormDate.beginDate +
+                    new Date(createTaskFormDate.beginDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.beginTime,
                 });
@@ -249,19 +261,23 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   end:
-                    createTaskFormDate.endDate +
+                    new Date(createTaskFormDate.endDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.endTime,
                 });
               } else {
                 setCreateTaskFormDate({
                   ...createTaskFormDate,
-                  endDate: e.target.value,
+                  endDate: new Date(e.target.value),
                 });
                 setCreateTaskForm({
                   ...createTaskForm,
                   end:
-                    createTaskFormDate.endDate +
+                    new Date(createTaskFormDate.endDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.endTime,
                 });
@@ -280,7 +296,9 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   end:
-                    createTaskFormDate.endDate +
+                    new Date(createTaskFormDate.endDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.endTime,
                 });
@@ -292,7 +310,9 @@ const CreateTaskForm = () => {
                 setCreateTaskForm({
                   ...createTaskForm,
                   end:
-                    createTaskFormDate.endDate +
+                    new Date(createTaskFormDate.endDate)
+                      .toLocaleDateString()
+                      .replace(/\./g, "-") +
                     " " +
                     createTaskFormDate.endTime,
                 });
@@ -301,18 +321,92 @@ const CreateTaskForm = () => {
           />
         </div>
       </div>
-      <div>
-        <label className="p__drop-content" htmlFor="businessTask__dependencies">
+      <div className="form-task__dependencies">
+        <div className="p__drop-content">
           <img
             src={`${process.env.PUBLIC_URL}/assets/input/ArrowUDownRight.svg`}
           />
           Зависимости
-        </label>
-        <input
-          className="input-form"
-          type="text"
-          id="businessTask__dependencies"
-        />
+        </div>
+        <div className="form-task__dependencies__btns">
+          {/* form-task__dependencies__btn-active */}
+          <button
+            className={
+              depsTask === "Родительская"
+                ? "form-task__dependencies__btn-active"
+                : ""
+            }
+            onClick={() => {
+              setDepsTask("Родительская");
+              setCreateTaskForm({
+                ...createTaskForm,
+                prev_id: null,
+                parent_id: null,
+                next_id: null,
+              });
+            }}
+          >
+            Родительская
+          </button>
+          <button
+            className={
+              depsTask === "Дочерняя"
+                ? "form-task__dependencies__btn-active"
+                : ""
+            }
+            onClick={() => {
+              setDepsTask("Дочерняя");
+              let bp = nowBp.tasks;
+              setCreateTaskForm({
+                ...createTaskForm,
+                next_id: null,
+                prev_id: null,
+              });
+              if (!!bp.split("|")[bp.split("|").length - 2]) {
+                setCreateTaskForm({
+                  ...createTaskForm,
+                  parent_id: parseInt(bp.split("|")[bp.split("|").length - 2]),
+                });
+              }
+            }}
+          >
+            Дочерняя
+          </button>
+          <button
+            className={
+              depsTask === "Предыдущая"
+                ? "form-task__dependencies__btn-active"
+                : ""
+            }
+            onClick={() => {
+              setDepsTask("Предыдущая");
+              setCreateTaskForm({
+                ...createTaskForm,
+                next_id: null,
+                parent_id: null,
+              });
+            }}
+          >
+            Предыдущая
+          </button>
+          <button
+            className={
+              depsTask === "Следующая"
+                ? "form-task__dependencies__btn-active"
+                : ""
+            }
+            onClick={() => {
+              setDepsTask("Следующая");
+              setCreateTaskForm({
+                ...createTaskForm,
+                prev_id: null,
+                parent_id: null,
+              });
+            }}
+          >
+            Следующая
+          </button>
+        </div>
       </div>
     </form>
   );

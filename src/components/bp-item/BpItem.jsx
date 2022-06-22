@@ -100,7 +100,7 @@ const BpItem = ({ el }) => {
             if (e.target.dataset.id == idBp) {
               setIdBp("");
             } else {
-              setIdBp(e.target.dataset.id);
+              setIdBp(parseInt(e.target.dataset.id));
             }
           }}
         >
@@ -113,7 +113,7 @@ const BpItem = ({ el }) => {
               if (e.target.dataset.id == idBp) {
                 setIdBp("");
               } else {
-                setIdBp(e.target.dataset.id);
+                setIdBp(parseInt(e.target.dataset.id));
               }
             }}
           />

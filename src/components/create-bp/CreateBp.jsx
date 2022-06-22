@@ -5,7 +5,7 @@ import BpResultFormDismissal from "../bp-result-form-dismissal/BpResultFormDismi
 import BpResultFormWork from "../bp-result-form-work/BpResultFormWork";
 import BpResultFormTreaty from "../bp-result-form-treaty/BpResultFormTreaty";
 import "./CreateBp.scss";
-const API = "https://69abc97a149040.lhrtunnel.link/api/v1";
+const API = "https://c7906cf31bcd4e.lhrtunnel.link/api/v1";
 
 const CreateBp = () => {
   const {

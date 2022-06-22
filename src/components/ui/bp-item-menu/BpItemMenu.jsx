@@ -6,6 +6,22 @@ import "./BpItemMenu.scss";
 const BpItemMenu = ({ id }) => {
   const { idBp, setIdBp } = useContext(StatusContext);
 
+  const createSample = () => {
+    console.log(idBp);
+    fetch(
+      `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/businessProcess/${idBp}/makeSample`,
+      {
+        method: "PATCH",
+        headers: {
+          secret_token: document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+      }
+    ).then((res) => console.log(res));
+  };
+
   if (idBp === id) {
     return (
       <ClickAwayListener onClickAway={() => setIdBp("")}>
@@ -15,7 +31,7 @@ const BpItemMenu = ({ id }) => {
             <li>Запустить с...</li>
             <li>Показать результаты</li>
             <li>Распечатать</li>
-            <li>Сохранить как шаблон</li>
+            <li onClick={() => createSample()}>Сохранить как шаблон</li>
           </ul>
         </div>
       </ClickAwayListener>

@@ -62,6 +62,7 @@ function App() {
   const [createTaskStatus, setCreateTaskStatus] = useState(false);
   const [tasksList, setTasksList] = useState([]);
   const [nowBp, setNowBp] = useState();
+  const [depsTask, setDepsTask] = useState();
 
   return (
     <StatusContext.Provider
@@ -89,6 +90,8 @@ function App() {
         setCreateTaskFormDate,
         nowBp,
         setNowBp,
+        depsTask,
+        setDepsTask,
       }}
     >
       <div className="bussines-page">
