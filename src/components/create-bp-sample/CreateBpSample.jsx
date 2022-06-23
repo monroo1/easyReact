@@ -50,34 +50,23 @@ const CreateBp = () => {
   };
 
   const saveBpSample = () => {
-    fetch(`${apiBp}/addBusinessProcessWithOptions`, {
-      method: "POST",
-      headers: {
-        "secret-token": document.cookie.replace(
-          /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        ),
-      },
-      body: JSON.stringify(createBpSampleForm),
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err.json()));
-    // axios
-    //   .post(
-    //     `${apiBp}/addBusinessProcessWithOptions`,
-    //     {
-    //       body: JSON.stringify(createBpSampleForm),
-    //     },
-    //     {
-    //       headers: {
-    //         "secret-token": document.cookie.replace(
-    //           /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-    //           "$1"
-    //         ),
-    //       },
-    //     }
-    //   )
-    //   .then((res) => console.log(res));
+    axios
+      .post(
+        `${apiBp}/addBusinessProcessWithOptions`,
+        {
+          ...createBpSampleForm,
+        },
+        {
+          headers: {
+            "secret-token": document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+          },
+        }
+      )
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {

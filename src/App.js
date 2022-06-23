@@ -7,9 +7,7 @@ import LeftNav from "./components/left-nav/LeftNav.jsx";
 import "./components/left-nav/LeftNav.jsx";
 
 function App() {
-  const [apiBp, setApiBb] = useState(
-    "https://b03ffeea06f885.lhrtunnel.link/api/v1"
-  );
+  const [apiBp, setApiBb] = useState("http://185.182.111.115/api/v1");
 
   const [createBpStatus, setCreateBpStatus] = useState(false);
   const [createBpSampleStatus, setCreateBpSampleStatus] = useState(false);
