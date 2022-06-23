@@ -121,7 +121,7 @@ const BpItem = ({ el }) => {
         <BpItemMenu id={el.id} />
       </div>
       {openTasks === "business-item-" + el.id ? (
-        <TasksList tasks={el.tasks} projectId={el.project_id} />
+        <TasksList tasks={el.tasks} />
       ) : (
         <></>
       )}

@@ -8,14 +8,32 @@ const CreateTaskForm = () => {
   const {
     createTaskForm,
     setCreateTaskForm,
-    createTaskStatus,
-    setCreateTaskStatus,
     createTaskFormDate,
     setCreateTaskFormDate,
     depsTask,
     setDepsTask,
     nowBp,
   } = useContext(StatusContext);
+
+  useEffect(() => {
+    if (
+      !!createTaskFormDate.endDate &&
+      !!createTaskFormDate.endTime &&
+      !!createTaskFormDate.beginDate &&
+      !!createTaskFormDate.beginTime
+    ) {
+      setCreateTaskForm({
+        ...createTaskForm,
+        end:
+          createTaskFormDate.endDate + " " + createTaskFormDate.endTime + ":00",
+        begin:
+          createTaskFormDate.beginDate +
+          " " +
+          createTaskFormDate.beginTime +
+          ":00",
+      });
+    }
+  }, [createTaskFormDate]);
 
   useEffect(() => {
     axios
@@ -142,7 +160,7 @@ const CreateTaskForm = () => {
             } else {
               setCreateTaskForm({
                 ...createTaskForm,
-                executor_id: e.target.value,
+                executor_id: parseInt(e.target.value),
               });
             }
           }}
@@ -162,38 +180,12 @@ const CreateTaskForm = () => {
             id="businessTask__date-start"
             htmlFor="businessTask__date-start"
             onChange={(e) => {
-              if (e.target.value.trim() === "") {
+              if (!!e.target.value) {
                 setCreateTaskFormDate({
                   ...createTaskFormDate,
-                  beginDate:
-                    new Date().getDate() +
-                    "-" +
-                    new Date().getMonth() +
-                    "-" +
-                    new Date().getFullYear(),
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  begin:
-                    new Date(
-                      createTaskFormDate.beginDate
-                    ).toLocaleDateString() +
-                    " " +
-                    createTaskFormDate.beginTime,
-                });
-              } else {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  beginDate: e.target.value,
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  begin:
-                    new Date(createTaskFormDate.beginDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.beginTime,
+                  beginDate: new Date(e.target.value)
+                    .toLocaleDateString()
+                    .replace(/\./g, "-"),
                 });
               }
             }}
@@ -202,33 +194,10 @@ const CreateTaskForm = () => {
             className="input-form"
             type="time"
             onChange={(e) => {
-              if (e.target.value.trim() === "") {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  beginTime: "00:00:00",
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  begin:
-                    new Date(createTaskFormDate.beginDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.beginTime,
-                });
-              } else {
+              if (!!e.target.value) {
                 setCreateTaskFormDate({
                   ...createTaskFormDate,
                   beginTime: e.target.value,
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  begin:
-                    new Date(createTaskFormDate.beginDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.beginTime,
                 });
               }
             }}
@@ -248,38 +217,12 @@ const CreateTaskForm = () => {
             type="date"
             id="businessTask__date-end"
             onChange={(e) => {
-              if (e.target.value.trim() === "") {
+              if (!!e.target.value) {
                 setCreateTaskFormDate({
                   ...createTaskFormDate,
-                  endDate:
-                    new Date().getDate() +
-                    "-" +
-                    new Date().getMonth() +
-                    "-" +
-                    new Date().getFullYear(),
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  end:
-                    new Date(createTaskFormDate.endDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.endTime,
-                });
-              } else {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  endDate: new Date(e.target.value),
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  end:
-                    new Date(createTaskFormDate.endDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.endTime,
+                  endDate: new Date(e.target.value)
+                    .toLocaleDateString()
+                    .replace(/\./g, "-"),
                 });
               }
             }}
@@ -288,126 +231,112 @@ const CreateTaskForm = () => {
             className="input-form"
             type="time"
             onChange={(e) => {
-              if (e.target.value.trim() === "") {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  endTime: "00:00:00",
-                });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  end:
-                    new Date(createTaskFormDate.endDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.endTime,
-                });
-              } else {
+              if (!!e.target.value) {
                 setCreateTaskFormDate({
                   ...createTaskFormDate,
                   endTime: e.target.value,
                 });
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  end:
-                    new Date(createTaskFormDate.endDate)
-                      .toLocaleDateString()
-                      .replace(/\./g, "-") +
-                    " " +
-                    createTaskFormDate.endTime,
-                });
               }
             }}
           />
         </div>
       </div>
-      <div className="form-task__dependencies">
-        <div className="p__drop-content">
-          <img
-            src={`${process.env.PUBLIC_URL}/assets/input/ArrowUDownRight.svg`}
-          />
-          Зависимости
-        </div>
-        <div className="form-task__dependencies__btns">
-          {/* form-task__dependencies__btn-active */}
-          <button
-            className={
-              depsTask === "Родительская"
-                ? "form-task__dependencies__btn-active"
-                : ""
-            }
-            onClick={() => {
-              setDepsTask("Родительская");
-              setCreateTaskForm({
-                ...createTaskForm,
-                prev_id: null,
-                parent_id: null,
-                next_id: null,
-              });
-            }}
-          >
-            Родительская
-          </button>
-          <button
-            className={
-              depsTask === "Дочерняя"
-                ? "form-task__dependencies__btn-active"
-                : ""
-            }
-            onClick={() => {
-              setDepsTask("Дочерняя");
-              let bp = nowBp.tasks;
-              setCreateTaskForm({
-                ...createTaskForm,
-                next_id: null,
-                prev_id: null,
-              });
-              if (!!bp.split("|")[bp.split("|").length - 2]) {
+      {!!nowBp?.tasks ? (
+        <div className="form-task__dependencies">
+          <div className="p__drop-content">
+            <img
+              src={`${process.env.PUBLIC_URL}/assets/input/ArrowUDownRight.svg`}
+            />
+            Зависимости
+          </div>
+          <div className="form-task__dependencies__btns">
+            <button
+              className={
+                depsTask === "Родительская"
+                  ? "form-task__dependencies__btn-active"
+                  : ""
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setDepsTask("Родительская");
                 setCreateTaskForm({
                   ...createTaskForm,
-                  parent_id: parseInt(bp.split("|")[bp.split("|").length - 2]),
+                  prev_id: null,
+                  parent_id: null,
+                  next_id: null,
                 });
+              }}
+            >
+              Родительская
+            </button>
+            <button
+              className={
+                depsTask === "Дочерняя"
+                  ? "form-task__dependencies__btn-active"
+                  : ""
               }
-            }}
-          >
-            Дочерняя
-          </button>
-          <button
-            className={
-              depsTask === "Предыдущая"
-                ? "form-task__dependencies__btn-active"
-                : ""
-            }
-            onClick={() => {
-              setDepsTask("Предыдущая");
-              setCreateTaskForm({
-                ...createTaskForm,
-                next_id: null,
-                parent_id: null,
-              });
-            }}
-          >
-            Предыдущая
-          </button>
-          <button
-            className={
-              depsTask === "Следующая"
-                ? "form-task__dependencies__btn-active"
-                : ""
-            }
-            onClick={() => {
-              setDepsTask("Следующая");
-              setCreateTaskForm({
-                ...createTaskForm,
-                prev_id: null,
-                parent_id: null,
-              });
-            }}
-          >
-            Следующая
-          </button>
+              onClick={(e) => {
+                e.preventDefault();
+                setDepsTask("Дочерняя");
+                let bp = nowBp.tasks;
+                setCreateTaskForm({
+                  ...createTaskForm,
+                  next_id: null,
+                  prev_id: null,
+                });
+                if (!!bp.split("|")[bp.split("|").length - 2]) {
+                  setCreateTaskForm({
+                    ...createTaskForm,
+                    parent_id: parseInt(
+                      bp.split("|")[bp.split("|").length - 2]
+                    ),
+                  });
+                }
+              }}
+            >
+              Дочерняя
+            </button>
+            <button
+              className={
+                depsTask === "Предыдущая"
+                  ? "form-task__dependencies__btn-active"
+                  : ""
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setDepsTask("Предыдущая");
+                setCreateTaskForm({
+                  ...createTaskForm,
+                  next_id: null,
+                  parent_id: null,
+                });
+              }}
+            >
+              Предыдущая
+            </button>
+            <button
+              className={
+                depsTask === "Следующая"
+                  ? "form-task__dependencies__btn-active"
+                  : ""
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                setDepsTask("Следующая");
+                setCreateTaskForm({
+                  ...createTaskForm,
+                  prev_id: null,
+                  parent_id: null,
+                });
+              }}
+            >
+              Следующая
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
     </form>
   );
 };

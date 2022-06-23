@@ -5,10 +5,11 @@ import BpResultFormDismissal from "../bp-result-form-dismissal/BpResultFormDismi
 import BpResultFormWork from "../bp-result-form-work/BpResultFormWork";
 import BpResultFormTreaty from "../bp-result-form-treaty/BpResultFormTreaty";
 import "./CreateBp.scss";
-const API = "https://c7906cf31bcd4e.lhrtunnel.link/api/v1";
+const API = "https://da3d71f25f4cdc.lhrtunnel.link/api/v1";
 
 const CreateBp = () => {
   const {
+    apiBp,
     setCreateBpStatus,
     createBpForm,
     setCreateBpForm,
@@ -30,7 +31,7 @@ const CreateBp = () => {
     formData.append("file", e.target.files[0]);
 
     axios
-      .post(`${API}/loadFile`, formData, {
+      .post(`${apiBp}/loadFile`, formData, {
         headers: {
           secret_token: document.cookie.replace(
             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
@@ -74,7 +75,7 @@ const CreateBp = () => {
             createBpForm.deadlineDate === null
           ) {
             fetch(
-              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1`,
+              `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1`,
               {
                 method: "POST",
                 headers: {
@@ -105,9 +106,11 @@ const CreateBp = () => {
             createBpForm.deadlineDate !== null
           ) {
             fetch(
-              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${
-                createBpForm.initiator_id
-              }&project_id=${createBpForm.project_id}&deadline=${
+              `${apiBp}/businessProcess?name=${
+                createBpForm.name
+              }&initiator_id=${createBpForm.initiator_id}&project_id=${
+                createBpForm.project_id
+              }&deadline=${
                 createBpForm.deadlineDate + " " + createBpForm.deadlineTime
               }&tasks=1`,
               {
@@ -140,7 +143,7 @@ const CreateBp = () => {
             createBpForm.file_id !== null
           ) {
             fetch(
-              `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1&file_id=${createBpForm.file_id}`,
+              `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=1&file_id=${createBpForm.file_id}`,
               {
                 method: "POST",
                 headers: {
@@ -172,7 +175,7 @@ const CreateBp = () => {
           createBpForm.deadlineDate !== null
         ) {
           fetch(
-            `${API}/businessProcess?name=${createBpForm.name}&initiator_id=${
+            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${
               createBpForm.initiator_id
             }&project_id=${createBpForm.project_id}&deadline=${
               createBpForm.deadlineDate + " " + createBpForm.deadlineTime

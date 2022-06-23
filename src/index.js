@@ -60,57 +60,15 @@ fetch("https://test.easy-task.ru/api/v1/login", {
       ),
     };
 
-    console.log(payload.isAdmin);
-
     axios
       .post(
-        `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}&isAdmin=${payload.isAdmin}`
+        `http://185.182.111.115/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}&isAdmin=${payload.isAdmin}`
       )
       .then((response) => {
-        console.log("jwt");
+        console.log(response.data);
         return (document.cookie = `access_token_jwt=${response.data}`);
       });
-
-    // fetch("https://test.easy-task.ru/api/v1/tasks", {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: "Bearer " + res.access_token,
-    //     "company-id": 1,
-    //   },
-    //   body: JSON.stringify({
-    //     begin: "13-01-2021 12:54:01",
-    //     description: "бп 1",
-    //     end: "15-01-2021 13:54:05",
-    //     executor_id: 513,
-    //     name: "цикл 1001",
-    //     next_id: null,
-    //     parent_id: null,
-    //     prev_id: null,
-    //     priority_id: 2,
-    //     project_id: 2,
-    //     project_section_id: 4,
-    //     provide_to: 0,
-    //     status_id: 2,
-    //     task_load: 5,
-    //     work_load: 50,
-    //     workflow_id: 1,
-    //     company_id: 1,
-    //     business_process_id: 1,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((r) => console.log(r));
-
-    // fetch("https://test.easy-task.ru/api/v1/tasks?project_id=35", {
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: "Bearer " + res.access_token,
-    //   },
-    // }).then((res) => console.log(res.json()));
-
-    // "https://test.easy-task.ru/api/v1/users/512/companies"
-
-    // https://d0c0a335401cc2.lhrtunnel.link/api/v1getSampleWithOptions/1
+    // getSampleWithOptions/1
   })
   .catch(function (error) {
     console.log(error);

@@ -13,111 +13,135 @@ const CreateTask = () => {
     setCreateTaskStatus,
     setDepsTask,
     depsTask,
+    apiBp,
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
   const saveTask = () => {
-    fetch("https://test.easy-task.ru/api/v1/tasks", {
-      method: "POST",
-      headers: {
-        Authorization:
-          "Bearer " +
-          document.cookie.replace(
-            /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+    if (!!addTask) {
+      fetch("https://test.easy-task.ru/api/v1/tasks", {
+        method: "POST",
+        headers: {
+          Authorization:
+            "Bearer " +
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+          "company-id": document.cookie.replace(
+            /(?:(?:^|.*;\s*)company_id\s*\=\s*([^;]*).*$)|^.*$/,
             "$1"
           ),
-        "company-id": document.cookie.replace(
-          /(?:(?:^|.*;\s*)company_id\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        ),
-      },
-      body: JSON.stringify(createTaskForm),
-    })
-      .then((resesult) => resesult.json())
-      .then((res) => {
-        setDepsTask("");
-        setCreateTaskForm({
-          ...createTaskForm,
-          next_id: null,
-          parent_id: null,
-          prev_id: null,
-        });
-        if (depsTask === "Предыдущая") {
-          let bp = nowBp.tasks;
-          axios
-            .patch(
-              `https://test.easy-task.ru/api/v1/tasks/${
-                bp.split("|")[bp.split("|").length - 2]
-              }`,
-              { prev_id: res.data.id },
-              {
-                headers: {
-                  Authorization:
-                    "Bearer " +
-                    document.cookie.replace(
-                      /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                      "$1"
-                    ),
-                },
-              }
-            )
-            .then((res) => console.log(res));
-        }
-        if (depsTask === "Следующая") {
-          let bp = nowBp.tasks;
-          console.log(bp.split("|")[bp.split("|").length - 2]);
-          axios
-            .patch(
-              `https://test.easy-task.ru/api/v1/tasks/${
-                bp.split("|")[bp.split("|").length - 2]
-              }`,
-              { next_id: res.data.id },
-              {
-                headers: {
-                  Authorization:
-                    "Bearer " +
-                    document.cookie.replace(
-                      /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                      "$1"
-                    ),
-                },
-              }
-            )
-            .then((res) => console.log(res));
-        }
-        if (depsTask === "Родительская") {
-          console.log(res.data.id);
-          console.log(depsTask);
-        }
-        console.log(nowBp.id, " |||", res.data.id);
-        fetch(
-          `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/businessProcess/${nowBp.id}?tasks=${nowBp.tasks}${res.data.id}`,
-          {
-            method: "PATCH",
-            headers: {
-              secret_token: document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-          }
-        )
-          .then((res) => res.json())
-          .then((r) => {
-            let taskss = "";
-            for (let i of r.tasks) {
-              taskss = taskss.concat(i.id + "|");
-            }
-            setNowBp({
-              id: r.businessProcess.id,
-              tasks: taskss,
-            });
+        },
+        body: JSON.stringify(createTaskForm),
+      })
+        .then((resesult) => resesult.json())
+        .then((res) => {
+          console.log(res);
+          setDepsTask("");
+          setCreateTaskForm({
+            ...createTaskForm,
+            next_id: null,
+            parent_id: null,
+            prev_id: null,
           });
-      });
+
+          if (depsTask === "Предыдущая") {
+            let bp = nowBp.tasks;
+            axios
+              .patch(
+                `https://test.easy-task.ru/api/v1/tasks/${
+                  bp.split("|")[bp.split("|").length - 2]
+                }`,
+                { prev_id: res.data.id },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                  },
+                }
+              )
+              .then((res) => console.log(res));
+          }
+          if (depsTask === "Следующая") {
+            let bp = nowBp.tasks;
+            axios
+              .patch(
+                `https://test.easy-task.ru/api/v1/tasks/${
+                  bp.split("|")[bp.split("|").length - 2]
+                }`,
+                { next_id: res.data.id },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                  },
+                }
+              )
+              .then((res) => console.log(res));
+          }
+          if (depsTask === "Родительская") {
+            let bp = nowBp.tasks;
+            console.log(bp.split("|")[bp.split("|").length - 2]);
+            axios
+              .patch(
+                `https://test.easy-task.ru/api/v1/tasks/${
+                  bp.split("|")[bp.split("|").length - 2]
+                }`,
+                { parent_id: res.data.id },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                  },
+                }
+              )
+              .then((res) => console.log(res));
+          }
+
+          fetch(
+            `${apiBp}/businessProcess/${nowBp.id}?tasks=${nowBp.tasks.trim()}${
+              res.data.id
+            }`,
+            {
+              method: "PATCH",
+              headers: {
+                secret_token: document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((r) => {
+              let taskss = "";
+              for (let i of r.tasks) {
+                taskss = taskss.concat(i.id + "|");
+              }
+              setNowBp({
+                id: r.businessProcess.id,
+                tasks: taskss,
+              });
+            });
+        });
+    }
   };
 
   useEffect(() => {
-    if (createTaskForm.name !== null) {
+    if (createTaskForm.name && createTaskForm.begin && createTaskForm.end) {
       setAddTask(true);
     } else {
       setAddTask(false);

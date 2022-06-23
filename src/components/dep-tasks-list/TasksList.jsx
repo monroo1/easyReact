@@ -3,24 +3,26 @@ import { StatusContext } from "../../context/status";
 import axios from "axios";
 import TaskBlockItem from "../task-block-item/TaskBlockItem";
 
-const TasksList = ({ tasks, projectId }) => {
+const TasksList = ({ tasks }) => {
   const { tasksList, setTasksList } = useContext(StatusContext);
 
   useEffect(() => {
-    const getTasks = tasks.map((item) => {
-      const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
-      return axios.get(link, {
-        params: { project_id: projectId },
-        headers: {
-          Authorization:
-            "Bearer " +
-            document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-              "$1"
-            ),
-        },
+    const getTasks = tasks
+      .filter((item) => item.id > 1)
+      .map((item) => {
+        const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
+        console.log(item.id);
+        return axios.get(link, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        });
       });
-    });
     Promise.all(getTasks).then((results) => setTasksList(results));
   }, []);
 

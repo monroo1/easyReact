@@ -7,6 +7,8 @@ import LeftNav from "./components/left-nav/LeftNav.jsx";
 import "./components/left-nav/LeftNav.jsx";
 
 function App() {
+  const [apiBp, setApiBb] = useState("http://185.182.111.115/api/v1");
+
   const [createBpStatus, setCreateBpStatus] = useState(false);
   const [createBpForm, setCreateBpForm] = useState({
     name: null,
@@ -23,25 +25,23 @@ function App() {
     deadline: null,
   });
   const [createTaskFormDate, setCreateTaskFormDate] = useState({
-    beginDate: "13-01-2021 ",
-    beginTime: "12:54:05",
-    endDate: "15-01-2022 ",
-    endTime: "13:54:05",
+    beginDate: null,
+    beginTime: null,
+    endDate: null,
+    endTime: null,
   });
   const [createTaskForm, setCreateTaskForm] = useState({
-    name: "цикл 1",
-    description: "ww",
-    begin: "13-01-2021 12:54:05",
-    end: "15-01-2022 13:54:05",
+    name: null,
+    description: "description",
+    begin: null,
+    end: null,
     project_id: 35,
     cyclic_task_id: 0,
     project_section_id: 124,
     executor_id: 512,
-
     next_id: null,
     parent_id: null,
     prev_id: null,
-
     priority_id: 2,
     provide_to: 0,
     status_id: 2,
@@ -92,6 +92,7 @@ function App() {
         setNowBp,
         depsTask,
         setDepsTask,
+        apiBp,
       }}
     >
       <div className="bussines-page">

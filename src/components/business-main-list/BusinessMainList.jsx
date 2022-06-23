@@ -6,7 +6,7 @@ import { StatusContext } from "../../context/status.js";
 
 const BusinessMainList = () => {
   const [bpList, setBpList] = useState([]);
-  const { filter, setFilter, filterMethod, createBpStatus } =
+  const { filter, setFilter, filterMethod, createBpStatus, apiBp } =
     useContext(StatusContext);
 
   const token = document.cookie.replace(
@@ -16,16 +16,12 @@ const BusinessMainList = () => {
 
   useEffect(() => {
     axios
-      .get(
-        `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/businessProcess?orderFilter[${filter}]=${filterMethod}`,
-        {
-          headers: {
-            secret_token: token,
-          },
-        }
-      )
+      .get(`${apiBp}/businessProcess?orderFilter[${filter}]=${filterMethod}`, {
+        headers: {
+          secret_token: token,
+        },
+      })
       .then((response) => {
-        console.log("get bp");
         setBpList(response.data.data);
       })
       .catch((e) => console.log(e));

@@ -250,6 +250,28 @@ const BusinessMain = () => {
                 </span>
                 Добавить
               </button>
+              {document.cookie.replace(
+                /(?:(?:^|.*;\s*)isAdmin\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ) === "true" ? (
+                <button
+                  className="blue-btn create-bp"
+                  id="create-task"
+                  // onClick={(e) => createBp(e.target)}
+                  style={{
+                    fontSize: 16 + "px",
+                    paddingLeft: 15 + "px",
+                    paddingRight: 15 + "px",
+                  }}
+                >
+                  <span style={{ fontSize: 24 + "px", marginRight: 15 + "px" }}>
+                    +
+                  </span>
+                  Добавить БП (шаблон)
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
           <BusinessMainList />
