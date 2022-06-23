@@ -65,7 +65,6 @@ fetch("https://test.easy-task.ru/api/v1/login", {
         `https://easytaskbp.tk/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}&isAdmin=${payload.isAdmin}`
       )
       .then((response) => {
-        console.log(response.data);
         return (document.cookie = `access_token_jwt=${response.data}`);
       });
   })
