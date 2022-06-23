@@ -4,10 +4,10 @@ import { ClickAwayListener } from "@mui/base";
 import "./BpItemMenu.scss";
 
 const BpItemMenu = ({ id }) => {
-  const { idBp, setIdBp } = useContext(StatusContext);
+  const { idBp, setIdBp, apiBp } = useContext(StatusContext);
 
   const createSample = () => {
-    fetch(`http://185.182.111.115/api/v1/businessProcess/${idBp}/makeSample`, {
+    fetch(`${apiBp}/businessProcess/${idBp}/makeSample`, {
       method: "PATCH",
       headers: {
         "secret-token": document.cookie.replace(
