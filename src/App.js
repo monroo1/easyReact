@@ -7,7 +7,7 @@ import LeftNav from "./components/left-nav/LeftNav.jsx";
 import "./components/left-nav/LeftNav.jsx";
 
 function App() {
-  const [apiBp, setApiBb] = useState("https://easytaskbp.tk/");
+  const [apiBp, setApiBb] = useState("https://easytaskbp.tk/api/v1");
 
   const [createBpStatus, setCreateBpStatus] = useState(false);
   const [createBpSampleStatus, setCreateBpSampleStatus] = useState(false);
