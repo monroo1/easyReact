@@ -62,13 +62,12 @@ fetch("https://test.easy-task.ru/api/v1/login", {
 
     axios
       .post(
-        `http://185.182.111.115/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}&isAdmin=${payload.isAdmin}`
+        `https://easytaskbp.tk/api/v1/login_and_get_key?isAuth=${payload.isAuth}&secret_key=${payload.secret_key}&userId=${payload.userId}&isAdmin=${payload.isAdmin}`
       )
       .then((response) => {
         console.log(response.data);
         return (document.cookie = `access_token_jwt=${response.data}`);
       });
-    // getSampleWithOptions/1
   })
   .catch(function (error) {
     console.log(error);
