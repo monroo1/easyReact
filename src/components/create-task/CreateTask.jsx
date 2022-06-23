@@ -118,7 +118,7 @@ const CreateTask = () => {
             {
               method: "PATCH",
               headers: {
-                secret_token: document.cookie.replace(
+                "secret-token": document.cookie.replace(
                   /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
                   "$1"
                 ),

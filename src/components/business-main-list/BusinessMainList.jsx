@@ -18,7 +18,7 @@ const BusinessMainList = () => {
     axios
       .get(`${apiBp}/businessProcess?orderFilter[${filter}]=${filterMethod}`, {
         headers: {
-          secret_token: token,
+          "secret-token": token,
         },
       })
       .then((response) => {

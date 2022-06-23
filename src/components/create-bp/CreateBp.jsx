@@ -33,7 +33,7 @@ const CreateBp = () => {
     axios
       .post(`${apiBp}/loadFile`, formData, {
         headers: {
-          secret_token: document.cookie.replace(
+          "secret-token": document.cookie.replace(
             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
             "$1"
           ),
@@ -79,7 +79,7 @@ const CreateBp = () => {
               {
                 method: "POST",
                 headers: {
-                  secret_token: document.cookie.replace(
+                  "secret-token": document.cookie.replace(
                     /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
                     "$1"
                   ),
@@ -116,7 +116,7 @@ const CreateBp = () => {
               {
                 method: "POST",
                 headers: {
-                  secret_token: document.cookie.replace(
+                  "secret-token": document.cookie.replace(
                     /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
                     "$1"
                   ),
@@ -147,7 +147,7 @@ const CreateBp = () => {
               {
                 method: "POST",
                 headers: {
-                  secret_token: document.cookie.replace(
+                  "secret-token": document.cookie.replace(
                     /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
                     "$1"
                   ),
@@ -183,7 +183,7 @@ const CreateBp = () => {
             {
               method: "POST",
               headers: {
-                secret_token: document.cookie.replace(
+                "secret-token": document.cookie.replace(
                   /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
                   "$1"
                 ),
