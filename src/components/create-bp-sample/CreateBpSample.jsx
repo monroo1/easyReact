@@ -59,7 +59,25 @@ const CreateBp = () => {
         ),
       },
       body: JSON.stringify(createBpSampleForm),
-    }).then((res) => console.log(res));
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err.json()));
+    // axios
+    //   .post(
+    //     `${apiBp}/addBusinessProcessWithOptions`,
+    //     {
+    //       body: JSON.stringify(createBpSampleForm),
+    //     },
+    //     {
+    //       headers: {
+    //         "secret-token": document.cookie.replace(
+    //           /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+    //           "$1"
+    //         ),
+    //       },
+    //     }
+    //   )
+    //   .then((res) => console.log(res));
   };
 
   useEffect(() => {
@@ -76,8 +94,8 @@ const CreateBp = () => {
     if (!!createBpSampleFormDate) {
       setCreateBpSampleForm({
         ...createBpSampleForm,
-        business_process: {
-          ...createBpSampleForm.business_process,
+        businessProcess: {
+          ...createBpSampleForm.businessProcess,
           deadline:
             createBpSampleFormDate.deadlineDate +
             " " +
@@ -90,8 +108,8 @@ const CreateBp = () => {
 
   useEffect(() => {
     if (
-      createBpSampleForm.business_process.name !== null &&
-      createBpSampleForm.business_process.project_id !== null
+      createBpSampleForm.businessProcess.name !== null &&
+      createBpSampleForm.businessProcess.project_id !== null
     ) {
       setAccessNext("blue-btn");
     } else {
@@ -163,16 +181,16 @@ const CreateBp = () => {
                   if (e.target.value.trim() === "") {
                     setCreateBpSampleForm({
                       ...createBpSampleForm,
-                      business_process: {
-                        ...createBpSampleForm.business_process,
+                      businessProcess: {
+                        ...createBpSampleForm.businessProcess,
                         name: null,
                       },
                     });
                   } else {
                     setCreateBpSampleForm({
                       ...createBpSampleForm,
-                      business_process: {
-                        ...createBpSampleForm.business_process,
+                      businessProcess: {
+                        ...createBpSampleForm.businessProcess,
                         name: e.target.value,
                       },
                     });
@@ -193,8 +211,8 @@ const CreateBp = () => {
                 onChange={(e) => {
                   setCreateBpSampleForm({
                     ...createBpSampleForm,
-                    business_process: {
-                      ...createBpSampleForm.business_process,
+                    businessProcess: {
+                      ...createBpSampleForm.businessProcess,
                       project_id: parseInt(e.target.value),
                     },
                   });
@@ -229,8 +247,8 @@ const CreateBp = () => {
                   onChange={(e) => {
                     setCreateBpSampleForm({
                       ...createBpSampleForm,
-                      business_process: {
-                        ...createBpSampleForm.business_process,
+                      businessProcess: {
+                        ...createBpSampleForm.businessProcess,
                         initiator_id: e.target.value,
                       },
                     });
