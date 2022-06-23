@@ -10,6 +10,9 @@ function App() {
   const [apiBp, setApiBb] = useState("http://185.182.111.115/api/v1");
 
   const [createBpStatus, setCreateBpStatus] = useState(false);
+  const [createBpSampleStatus, setCreateBpSampleStatus] = useState(false);
+  const [createTaskStatus, setCreateTaskStatus] = useState(false);
+
   const [createBpForm, setCreateBpForm] = useState({
     name: null,
     initiator_id: document.cookie.replace(
@@ -20,10 +23,34 @@ function App() {
     deadlineDate: null,
     deadlineTime: "00:00:00",
     tasks: null,
-    sample: null,
     file_id: null,
     deadline: null,
   });
+
+  const [createBpSampleFormDate, setCreateBpSampleFormDate] = useState({
+    deadlineDate: null,
+    deadlineTime: "00:00:00",
+  });
+
+  const [createBpSampleForm, setCreateBpSampleForm] = useState({
+    type: 1,
+    business_process: {
+      name: null,
+      deadline: null,
+      project_id: null,
+      tasks: 1,
+      initiator_id: document.cookie.replace(
+        /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      ),
+    },
+    options: [],
+  });
+
+  const [createBpSampleFormOptions, setCreateBpSampleFormOptions] = useState(
+    {}
+  );
+
   const [createTaskFormDate, setCreateTaskFormDate] = useState({
     beginDate: null,
     beginTime: null,
@@ -53,16 +80,16 @@ function App() {
   const [filterMethod, setFilterMethod] = useState("asc");
   const [openTasks, setOpenTasks] = useState("");
   const [idBp, setIdBp] = useState("");
+  const [tasksList, setTasksList] = useState([]);
+  const [nowBp, setNowBp] = useState();
+  const [depsTask, setDepsTask] = useState();
+
   const [bearer, setBearer] = useState(
     document.cookie.replace(
       /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
       "$1"
     )
   );
-  const [createTaskStatus, setCreateTaskStatus] = useState(false);
-  const [tasksList, setTasksList] = useState([]);
-  const [nowBp, setNowBp] = useState();
-  const [depsTask, setDepsTask] = useState();
 
   return (
     <StatusContext.Provider
@@ -71,10 +98,18 @@ function App() {
         setCreateBpStatus,
         createTaskStatus,
         setCreateTaskStatus,
+        createBpSampleStatus,
+        setCreateBpSampleStatus,
         createBpForm,
         setCreateBpForm,
+        createBpSampleForm,
+        setCreateBpSampleForm,
+        createBpSampleFormDate,
+        setCreateBpSampleFormDate,
         createTaskForm,
         setCreateTaskForm,
+        createBpSampleFormOptions,
+        setCreateBpSampleFormOptions,
         filter,
         setFilter,
         filterMethod,

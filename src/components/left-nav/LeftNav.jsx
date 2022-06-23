@@ -3,16 +3,21 @@ import React, { useContext, useEffect, useState } from "react";
 import { StatusContext } from "../../context/status";
 
 const LeftNav = () => {
-  const { createBpStatus, createTaskStatus } = useContext(StatusContext);
+  const {
+    createBpStatus,
+    createTaskStatus,
+    setCreateBpSampleStatus,
+    createBpSampleStatus,
+  } = useContext(StatusContext);
   const [navStyle, setNavStyle] = useState("");
 
   useEffect(() => {
-    if (createBpStatus || createTaskStatus) {
+    if (createBpStatus || createTaskStatus || createBpSampleStatus) {
       setNavStyle("left-nav-hidden");
     } else {
       setNavStyle("");
     }
-  }, [createBpStatus, setNavStyle, createTaskStatus]);
+  }, [createBpStatus, setNavStyle, createTaskStatus, createBpSampleStatus]);
 
   return (
     <section className={"left-nav " + navStyle}>

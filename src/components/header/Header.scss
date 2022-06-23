@@ -1,9 +1,7 @@
 .header {
+  display: grid;
   background-color: #01b0e9;
-  height: 64px;
-  min-width: 838px;
   padding: 12px 44px;
-  display: flex;
   justify-content: flex-end;
 
   &-content {

@@ -4,23 +4,42 @@ import BusinessMainList from "../business-main-list/BusinessMainList";
 import { StatusContext } from "../../context/status";
 import CreateBp from "../create-bp/CreateBp";
 import CreateTask from "../create-task/CreateTask";
+import CreateBpSample from "../create-bp-sample/CreateBpSample";
 
 const BusinessMain = () => {
   const {
     createBpStatus,
     setCreateBpStatus,
     createTaskStatus,
-    setCreateTaskStatus,
+    createBpSampleStatus,
+    setCreateBpSampleStatus,
   } = useContext(StatusContext);
 
-  const createBp = (e) => {
+  const createBp = () => {
     if (createBpStatus === true) {
       return false;
     }
     if (createTaskStatus === true) {
       return false;
     }
+    if (createBpSampleStatus === true) {
+      return false;
+    }
+
     setCreateBpStatus(true);
+  };
+
+  const createBpSample = () => {
+    if (createBpStatus === true) {
+      return false;
+    }
+    if (createTaskStatus === true) {
+      return false;
+    }
+    if (createBpSampleStatus === true) {
+      return false;
+    }
+    setCreateBpSampleStatus(true);
   };
 
   return (
@@ -243,7 +262,7 @@ const BusinessMain = () => {
               <button
                 className="blue-btn create-bp"
                 id="create-task"
-                onClick={(e) => createBp(e.target)}
+                onClick={(e) => createBp()}
               >
                 <span style={{ fontSize: 24 + "px", marginRight: 15 + "px" }}>
                   +
@@ -257,12 +276,12 @@ const BusinessMain = () => {
                 <button
                   className="blue-btn create-bp"
                   id="create-task"
-                  // onClick={(e) => createBp(e.target)}
                   style={{
                     fontSize: 16 + "px",
                     paddingLeft: 15 + "px",
                     paddingRight: 15 + "px",
                   }}
+                  onClick={(e) => createBpSample()}
                 >
                   <span style={{ fontSize: 24 + "px", marginRight: 15 + "px" }}>
                     +
@@ -276,6 +295,7 @@ const BusinessMain = () => {
           </div>
           <BusinessMainList />
         </div>
+        {createBpSampleStatus === true ? <CreateBpSample /> : <></>}
         {createBpStatus === true ? <CreateBp /> : <></>}
         {createTaskStatus === true ? <CreateTask /> : <></>}
       </section>

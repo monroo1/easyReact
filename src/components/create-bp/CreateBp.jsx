@@ -1,11 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { StatusContext } from "../../context/status";
-import BpResultFormDismissal from "../bp-result-form-dismissal/BpResultFormDismissal";
-import BpResultFormWork from "../bp-result-form-work/BpResultFormWork";
-import BpResultFormTreaty from "../bp-result-form-treaty/BpResultFormTreaty";
 import "./CreateBp.scss";
-const API = "https://da3d71f25f4cdc.lhrtunnel.link/api/v1";
 
 const CreateBp = () => {
   const {
@@ -260,38 +256,6 @@ const CreateBp = () => {
                   src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
                   alt="Article"
                 />
-                Шаблон
-              </label>
-
-              <select
-                className="input-form"
-                onChange={(e) => {
-                  if (e.target.value.trim() === "") {
-                    setCreateBpForm({ ...createBpForm, sample: null });
-                  } else {
-                    setCreateBpForm({
-                      ...createBpForm,
-                      sample: e.target.value,
-                    });
-                  }
-                }}
-              >
-                <option>Без шаблона</option>
-                <option value={"договор"}>Шаблон по параметрам Договора</option>
-                <option value={"work"}>
-                  Шаблон по параметрам Приема на работу
-                </option>
-                <option value={"dismissal"}>
-                  Шаблон по параметрам Увольнения
-                </option>
-              </select>
-            </div>
-            <div>
-              <label className="p__drop-content" htmlFor="input-name">
-                <img
-                  src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
-                  alt="Article"
-                />
                 Название*
               </label>
               <input
@@ -446,13 +410,6 @@ const CreateBp = () => {
               </label>
             </div>
           </form>
-          {createBpForm.sample === "work" ? <BpResultFormWork /> : <></>}
-          {createBpForm.sample === "dismissal" ? (
-            <BpResultFormDismissal />
-          ) : (
-            <></>
-          )}
-          {createBpForm.sample === "договор" ? <BpResultFormTreaty /> : <></>}
         </div>
         <div>
           <button

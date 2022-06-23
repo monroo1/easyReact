@@ -7,19 +7,15 @@ const BpItemMenu = ({ id }) => {
   const { idBp, setIdBp } = useContext(StatusContext);
 
   const createSample = () => {
-    console.log(idBp);
-    fetch(
-      `https://c7906cf31bcd4e.lhrtunnel.link/api/v1/businessProcess/${idBp}/makeSample`,
-      {
-        method: "PATCH",
-        headers: {
-          secret_token: document.cookie.replace(
-            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-            "$1"
-          ),
-        },
-      }
-    ).then((res) => console.log(res));
+    fetch(`http://185.182.111.115/api/v1/businessProcess/${idBp}/makeSample`, {
+      method: "PATCH",
+      headers: {
+        "secret-token": document.cookie.replace(
+          /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        ),
+      },
+    }).then((res) => console.log(res));
   };
 
   if (idBp === id) {
