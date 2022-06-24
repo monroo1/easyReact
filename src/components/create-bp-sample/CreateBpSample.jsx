@@ -136,11 +136,6 @@ const CreateBp = () => {
         },
       })
       .then((res) => {
-        // setSampleArr(
-        //   res.data.data.filter(
-        //     (el) => el.id !== 1 && el.id !== 2 && el.id !== 3
-        //   )
-        // );
         setSampleArr(res.data.data);
       });
   }, []);
