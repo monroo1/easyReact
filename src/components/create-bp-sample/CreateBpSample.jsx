@@ -65,7 +65,10 @@ const CreateBp = () => {
           },
         }
       )
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        setCreateBpSampleStatus(false);
+        console.log(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
