@@ -25,6 +25,7 @@ const CreateBp = () => {
   const [nextLinkProjects, setNextLinkProjects] = useState(
     "https://test.easy-task.ru/api/v1/projects"
   );
+  const [sampleArr, setSampleArr] = useState([]);
 
   const submitFile = (e) => {
     e.preventDefault();
@@ -124,6 +125,26 @@ const CreateBp = () => {
     }
   }, [nextLinkProjects]);
 
+  useEffect(() => {
+    axios
+      .get(`${apiBp}/getSamples`, {
+        headers: {
+          "secret-token": document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+      })
+      .then((res) => {
+        // setSampleArr(
+        //   res.data.data.filter(
+        //     (el) => el.id !== 1 && el.id !== 2 && el.id !== 3
+        //   )
+        // );
+        setSampleArr(res.data.data);
+      });
+  }, []);
+
   return (
     <div className="business__drop-content">
       <div id="business" className="businessClass">
@@ -144,17 +165,23 @@ const CreateBp = () => {
               <select
                 className="input-form"
                 onChange={(e) => {
-                  console.log(e.target.value);
-                  setCreateBpSampleForm({
-                    ...createBpSampleForm,
-                    type: parseInt(e.target.value),
-                  });
+                  if (
+                    e.target.value === "1" ||
+                    e.target.value === "2" ||
+                    e.target.value === "3"
+                  ) {
+                    setCreateBpSampleForm({
+                      ...createBpSampleForm,
+                      type: parseInt(e.target.value),
+                    });
+                  }
                 }}
-                defaultValue={1}
               >
-                <option value={1}>Шаблон по параметрам Договора</option>
-                <option value={2}>Шаблон по параметрам Приема на работу</option>
-                <option value={3}>Шаблон по параметрам Увольнения</option>
+                {sampleArr.map((el) => (
+                  <option value={el.id} key={el.id}>
+                    {el.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div>

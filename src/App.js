@@ -33,8 +33,6 @@ function App() {
   });
 
   const [createBpSampleForm, setCreateBpSampleForm] = useState({
-    type: 1,
-    options: [],
     businessProcess: {
       name: null,
       deadline: null,
