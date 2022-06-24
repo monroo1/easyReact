@@ -8,8 +8,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const BpItem = ({ el }) => {
-  const { createBpStatus, idBp, setIdBp, openTasks, setOpenTasks } =
-    useContext(StatusContext);
+  const {
+    createBpStatus,
+    createBpSampleStatus,
+    idBp,
+    setIdBp,
+    openTasks,
+    setOpenTasks,
+  } = useContext(StatusContext);
   const [project, setProject] = useState();
 
   const openTasksMenu = (e) => {
@@ -40,7 +46,7 @@ const BpItem = ({ el }) => {
   return (
     <div
       className={
-        createBpStatus
+        createBpStatus || createBpSampleStatus
           ? "business__main-content__list-block__item business__main-content__list-block__item-active"
           : "business__main-content__list-block__item"
       }

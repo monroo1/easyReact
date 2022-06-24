@@ -6,8 +6,14 @@ import { StatusContext } from "../../context/status.js";
 
 const BusinessMainList = () => {
   const [bpList, setBpList] = useState([]);
-  const { filter, setFilter, filterMethod, createBpStatus, apiBp } =
-    useContext(StatusContext);
+  const {
+    filter,
+    setFilter,
+    filterMethod,
+    createBpStatus,
+    createBpSampleStatus,
+    apiBp,
+  } = useContext(StatusContext);
 
   const token = document.cookie.replace(
     /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
@@ -35,7 +41,7 @@ const BusinessMainList = () => {
     <div className="business__main-content__list-block">
       <div
         className={
-          createBpStatus
+          createBpStatus || createBpSampleStatus
             ? "business__main-content__list-block__title business__main-content__list-block__title-active"
             : "business__main-content__list-block__title"
         }

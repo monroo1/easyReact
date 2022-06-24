@@ -44,7 +44,13 @@ const BusinessMain = () => {
 
   return (
     <>
-      <section className="business">
+      <section
+        className={
+          createBpStatus || createBpSampleStatus
+            ? "business business-open"
+            : "business"
+        }
+      >
         <div className="business__main-content">
           <div className="business__main-content__header">
             <div className="business__main-content__header-left">
