@@ -42,21 +42,15 @@ const CreateTask = () => {
         body: JSON.stringify(createTaskForm),
       })
         .then((resesult) => resesult.json())
-        .then((res) => {
-          setTasks([...tasks, res.data.id]);
-          setDepsTask("");
-          setCreateTaskForm({
-            ...createTaskForm,
-            next_id: null,
-            parent_id: null,
-            prev_id: null,
-          });
-
+        .then(async (res) => {
+          await setTasks([...tasks, res.data.id]);
+          console.log(depsTask);
+          console.log(tasks);
           if (depsTask === "Предыдущая") {
             axios
               .patch(
                 `https://test.easy-task.ru/api/v1/tasks/${
-                  tasks[tasks.length - 2]
+                  tasks[tasks.length - 1]
                 }`,
                 { prev_id: res.data.id },
                 {
@@ -76,7 +70,7 @@ const CreateTask = () => {
             axios
               .patch(
                 `https://test.easy-task.ru/api/v1/tasks/${
-                  tasks[tasks.length - 2]
+                  tasks[tasks.length - 1]
                 }`,
                 { next_id: res.data.id },
                 {
@@ -96,7 +90,7 @@ const CreateTask = () => {
             axios
               .patch(
                 `https://test.easy-task.ru/api/v1/tasks/${
-                  tasks[tasks.length - 2]
+                  tasks[tasks.length - 1]
                 }`,
                 { parent_id: res.data.id },
                 {
@@ -112,6 +106,13 @@ const CreateTask = () => {
               )
               .then((res) => setTasks([...tasks, res.data.id]));
           }
+          setDepsTask("");
+          setCreateTaskForm({
+            ...createTaskForm,
+            next_id: null,
+            parent_id: null,
+            prev_id: null,
+          });
         });
     }
   };
@@ -269,7 +270,7 @@ const CreateTask = () => {
                   : "blue-btn white-btn white-btn__disabled"
               }
               id="save-task"
-              onClick={(e) => saveBp()}
+              onClick={() => saveBp()}
             >
               Сохранить
             </button>
