@@ -5,8 +5,6 @@ import CreateTaskForm from "../create-task-form/CreateTaskForm";
 
 const CreateTask = () => {
   const {
-    nowBp,
-
     createTaskForm,
     setCreateTaskForm,
     createBpForm,
@@ -25,95 +23,125 @@ const CreateTask = () => {
 
   const saveTask = () => {
     if (!!addTask) {
-      fetch("https://test.easy-task.ru/api/v1/tasks", {
-        method: "POST",
-        headers: {
-          Authorization:
-            "Bearer " +
-            document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+      if (depsTask === "Дочерняя") {
+        fetch("https://test.easy-task.ru/api/v1/tasks", {
+          method: "POST",
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            "company-id": document.cookie.replace(
+              /(?:(?:^|.*;\s*)company_id\s*\=\s*([^;]*).*$)|^.*$/,
               "$1"
             ),
-          "company-id": document.cookie.replace(
-            /(?:(?:^|.*;\s*)company_id\s*\=\s*([^;]*).*$)|^.*$/,
-            "$1"
-          ),
-        },
-        body: JSON.stringify(createTaskForm),
-      })
-        .then((resesult) => resesult.json())
-        .then(async (res) => {
-          await setTasks([...tasks, res.data.id]);
-          console.log(depsTask);
-          console.log(tasks);
-          if (depsTask === "Предыдущая") {
-            axios
-              .patch(
-                `https://test.easy-task.ru/api/v1/tasks/${
-                  tasks[tasks.length - 1]
-                }`,
-                { prev_id: res.data.id },
-                {
-                  headers: {
-                    Authorization:
-                      "Bearer " +
-                      document.cookie.replace(
-                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                      ),
-                  },
-                }
-              )
-              .then((res) => console.log(res.data.id));
-          }
-          if (depsTask === "Следующая") {
-            axios
-              .patch(
-                `https://test.easy-task.ru/api/v1/tasks/${
-                  tasks[tasks.length - 1]
-                }`,
-                { next_id: res.data.id },
-                {
-                  headers: {
-                    Authorization:
-                      "Bearer " +
-                      document.cookie.replace(
-                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                      ),
-                  },
-                }
-              )
-              .then((res) => setTasks([...tasks, res.data.id]));
-          }
-          if (depsTask === "Родительская") {
-            axios
-              .patch(
-                `https://test.easy-task.ru/api/v1/tasks/${
-                  tasks[tasks.length - 1]
-                }`,
-                { parent_id: res.data.id },
-                {
-                  headers: {
-                    Authorization:
-                      "Bearer " +
-                      document.cookie.replace(
-                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                      ),
-                  },
-                }
-              )
-              .then((res) => setTasks([...tasks, res.data.id]));
-          }
-          setDepsTask("");
-          setCreateTaskForm({
-            ...createTaskForm,
-            next_id: null,
-            parent_id: null,
-            prev_id: null,
+          },
+          body: JSON.stringify(createTaskForm),
+        })
+          .then((resesult) => resesult.json())
+          .then((res) => setTasks([...tasks, res.data.id]));
+      } else {
+        fetch("https://test.easy-task.ru/api/v1/tasks", {
+          method: "POST",
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            "company-id": document.cookie.replace(
+              /(?:(?:^|.*;\s*)company_id\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+          },
+          body: JSON.stringify(createTaskForm),
+        })
+          .then((resesult) => resesult.json())
+          .then(async (res) => {
+            console.log(res.data.id);
+            await setTasks([...tasks, res.data.id]);
+
+            if (depsTask === "Предыдущая") {
+              console.log(tasks);
+              axios
+                .patch(
+                  `https://test.easy-task.ru/api/v1/tasks/${
+                    tasks[tasks.length - 1]
+                  }`,
+                  { prev_id: res.data.id },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                    },
+                  }
+                )
+                .then((res) => {
+                  setTasks([...tasks, res.data.data.id]);
+                });
+            }
+            if (depsTask === "Следующая") {
+              console.log(tasks);
+              axios
+                .patch(
+                  `https://test.easy-task.ru/api/v1/tasks/${
+                    tasks[tasks.length - 1]
+                  }`,
+                  { next_id: res.data.id },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                    },
+                  }
+                )
+                .then((res) => {
+                  setTasks([...tasks, res.data.data.id]);
+                });
+            }
+            if (depsTask === "Родительская") {
+              console.log(tasks);
+              axios
+                .patch(
+                  `https://test.easy-task.ru/api/v1/tasks/${
+                    tasks[tasks.length - 1]
+                  }`,
+                  { parent_id: res.data.id },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                    },
+                  }
+                )
+                .then((res) => {
+                  setTasks([...tasks, res.data.data.id]);
+                });
+            }
+            setDepsTask("");
+            setCreateTaskForm({
+              ...createTaskForm,
+              next_id: null,
+              parent_id: null,
+              prev_id: null,
+            });
           });
-        });
+      }
     }
   };
 
@@ -216,18 +244,22 @@ const CreateTask = () => {
     }
     setCreateBpForm({
       name: null,
-      initiator_id: document.cookie.replace(
-        /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-        "$1"
+      initiator_id: parseInt(
+        document.cookie.replace(
+          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        )
       ),
       project_id: null,
       deadlineDate: null,
       deadlineTime: "00:00:00",
       tasks: null,
-      sample: null,
       file_id: null,
       deadline: null,
     });
+
+    setCreateTaskStatus(false);
+    setCreateTaskSampleFormStatus(false);
   };
 
   useEffect(() => {

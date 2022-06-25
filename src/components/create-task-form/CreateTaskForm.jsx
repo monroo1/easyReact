@@ -12,9 +12,7 @@ const CreateTaskForm = () => {
     setCreateTaskFormDate,
     depsTask,
     setDepsTask,
-    nowBp,
     tasks,
-    createBpSampleForm,
     createTaskSampleFormStatus,
     sampleArr,
     idSample,
@@ -320,20 +318,12 @@ const CreateTaskForm = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setDepsTask("Дочерняя");
-                    let bp = nowBp.tasks;
                     setCreateTaskForm({
                       ...createTaskForm,
                       next_id: null,
                       prev_id: null,
+                      parent_id: tasks[tasks.length - 1],
                     });
-                    if (!!bp.split("|")[bp.split("|").length - 2]) {
-                      setCreateTaskForm({
-                        ...createTaskForm,
-                        parent_id: parseInt(
-                          bp.split("|")[bp.split("|").length - 2]
-                        ),
-                      });
-                    }
                   }}
                 >
                   Дочерняя
