@@ -72,17 +72,4 @@ fetch("https://test.easy-task.ru/api/v1/login", {
     console.log(error);
   });
 
-axios
-  .get("https://test.easy-task.ru/api/v1/tasks?task_id=5823", {
-    headers: {
-      Authorization:
-        "Bearer " +
-        document.cookie.replace(
-          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        ),
-    },
-  })
-  .then((res) => console.log(res));
-
 root.render(<App />);
