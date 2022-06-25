@@ -26,8 +26,6 @@ const TasksList = ({ tasks }) => {
     Promise.all(getTasks).then((results) => setTasksList(results));
   }, []);
 
-  console.log(tasksList);
-
   return (
     <div className="dependencies">
       <div className="dependencies__content">

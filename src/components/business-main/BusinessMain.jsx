@@ -46,7 +46,7 @@ const BusinessMain = () => {
     <>
       <section
         className={
-          createBpStatus || createBpSampleStatus
+          createBpStatus || createBpSampleStatus || createTaskStatus
             ? "business business-open"
             : "business"
         }

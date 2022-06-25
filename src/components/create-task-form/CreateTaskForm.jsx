@@ -13,6 +13,11 @@ const CreateTaskForm = () => {
     depsTask,
     setDepsTask,
     nowBp,
+    tasks,
+    createBpSampleForm,
+    createTaskSampleFormStatus,
+    sampleArr,
+    idSample,
   } = useContext(StatusContext);
 
   useEffect(() => {
@@ -58,12 +63,28 @@ const CreateTaskForm = () => {
       );
   }, []);
 
+  useEffect(() => {
+    if (!!createTaskSampleFormStatus) {
+      let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
+      bp = bp[0].businessProcessId;
+
+      console.log(bp);
+
+      let arr = [];
+      for (let i in bp.tasks) {
+        arr.push(bp.tasks[i].id);
+      }
+
+      console.log(arr);
+    }
+  }, [createTaskSampleFormStatus]);
+
   return (
     <form id="new-bp__form">
       <div>
         <label className="p__drop-content" htmlFor="input-name-Task">
           <img src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`} />
-          Нименование задачи*
+          Название задачи*
         </label>
         <input
           className="input-form input-name-task__list"
@@ -78,73 +99,86 @@ const CreateTaskForm = () => {
           }}
         />
       </div>
-      <div>
-        <label className="p__drop-content">
-          <img
-            src={`${process.env.PUBLIC_URL}/assets/input/NewspaperClipping.svg`}
-          />
-          Описание
-        </label>
-        <div className="input-form" id="businessTask__description">
-          <div>
-            <label htmlFor="businessTask__description__what">
-              Что нужно сделать:
-            </label>
-            <input
-              type="text"
-              id="businessTask__description__what"
-              onChange={(e) => {
-                if (e.target.value.trim() === "") {
-                  setCreateTaskForm({ ...createTaskForm, description: "Desc" });
-                } else {
-                  setCreateTaskForm({
-                    ...createTaskForm,
-                    description: e.target.value,
-                  });
-                }
-              }}
+      {createBpSampleForm.type === 0 ? (
+        <div>
+          <label className="p__drop-content">
+            <img
+              src={`${process.env.PUBLIC_URL}/assets/input/NewspaperClipping.svg`}
             />
-          </div>
-          <div>
-            <label htmlFor="businessTask__description__as">
-              Как нужно сделать:
-            </label>
-            <input
-              type="text"
-              id="businessTask__description__as"
-              onChange={(e) => {
-                if (e.target.value.trim() === "") {
-                  setCreateTaskForm({ ...createTaskForm, description: "Desc" });
-                } else {
-                  setCreateTaskForm({
-                    ...createTaskForm,
-                    description: e.target.value,
-                  });
-                }
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="businessTask__description__result">
-              Какой должен быть результат:
-            </label>
-            <input
-              type="text"
-              id="businessTask__description__result"
-              onChange={(e) => {
-                if (e.target.value.trim() === "") {
-                  setCreateTaskForm({ ...createTaskForm, description: "Desc" });
-                } else {
-                  setCreateTaskForm({
-                    ...createTaskForm,
-                    description: e.target.value,
-                  });
-                }
-              }}
-            />
+            Описание
+          </label>
+          <div className="input-form" id="businessTask__description">
+            <div>
+              <label htmlFor="businessTask__description__what">
+                Что нужно сделать:
+              </label>
+              <input
+                type="text"
+                id="businessTask__description__what"
+                onChange={(e) => {
+                  if (e.target.value.trim() === "") {
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      description: "Desc",
+                    });
+                  } else {
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      description: e.target.value,
+                    });
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="businessTask__description__as">
+                Как нужно сделать:
+              </label>
+              <input
+                type="text"
+                id="businessTask__description__as"
+                onChange={(e) => {
+                  if (e.target.value.trim() === "") {
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      description: "Desc",
+                    });
+                  } else {
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      description: e.target.value,
+                    });
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="businessTask__description__result">
+                Какой должен быть результат:
+              </label>
+              <input
+                type="text"
+                id="businessTask__description__result"
+                onChange={(e) => {
+                  if (e.target.value.trim() === "") {
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      description: "Desc",
+                    });
+                  } else {
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      description: e.target.value,
+                    });
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
       <div>
         <label className="p__drop-content" htmlFor="businessTask__executor">
           <img src={`${process.env.PUBLIC_URL}/assets/input/User.svg`} />
@@ -166,176 +200,190 @@ const CreateTaskForm = () => {
           }}
         />
       </div>
-      <div className="input__date">
-        <label className="p__drop-content">
-          <img
-            src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
-          />
-          Дата и время начала
-        </label>
-        <div>
-          <input
-            className="input-form"
-            type="date"
-            id="businessTask__date-start"
-            htmlFor="businessTask__date-start"
-            onChange={(e) => {
-              if (!!e.target.value) {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  beginDate: new Date(e.target.value)
-                    .toLocaleDateString()
-                    .replace(/\./g, "-"),
-                });
-              }
-            }}
-          />
-          <input
-            className="input-form"
-            type="time"
-            onChange={(e) => {
-              if (!!e.target.value) {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  beginTime: e.target.value,
-                });
-              }
-            }}
-          />
-        </div>
-      </div>
-      <div className="input__date">
-        <label className="p__drop-content" htmlFor="businessTask__date-end">
-          <img
-            src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
-          />
-          Дата и время окончания
-        </label>
-        <div>
-          <input
-            className="input-form"
-            type="date"
-            id="businessTask__date-end"
-            onChange={(e) => {
-              if (!!e.target.value) {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  endDate: new Date(e.target.value)
-                    .toLocaleDateString()
-                    .replace(/\./g, "-"),
-                });
-              }
-            }}
-          />
-          <input
-            className="input-form"
-            type="time"
-            onChange={(e) => {
-              if (!!e.target.value) {
-                setCreateTaskFormDate({
-                  ...createTaskFormDate,
-                  endTime: e.target.value,
-                });
-              }
-            }}
-          />
-        </div>
-      </div>
-      {!!nowBp?.tasks ? (
-        <div className="form-task__dependencies">
+      {!createTaskSampleFormStatus ? (
+        <>
+          <div className="input__date">
+            <label className="p__drop-content">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
+              />
+              Дата и время начала
+            </label>
+            <div>
+              <input
+                className="input-form"
+                type="date"
+                id="businessTask__date-start"
+                htmlFor="businessTask__date-start"
+                onChange={(e) => {
+                  if (!!e.target.value) {
+                    setCreateTaskFormDate({
+                      ...createTaskFormDate,
+                      beginDate: new Date(e.target.value)
+                        .toLocaleDateString()
+                        .replace(/\./g, "-"),
+                    });
+                  }
+                }}
+              />
+              <input
+                className="input-form"
+                type="time"
+                onChange={(e) => {
+                  if (!!e.target.value) {
+                    setCreateTaskFormDate({
+                      ...createTaskFormDate,
+                      beginTime: e.target.value,
+                    });
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className="input__date">
+            <label className="p__drop-content" htmlFor="businessTask__date-end">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
+              />
+              Дата и время окончания
+            </label>
+            <div>
+              <input
+                className="input-form"
+                type="date"
+                id="businessTask__date-end"
+                onChange={(e) => {
+                  if (!!e.target.value) {
+                    setCreateTaskFormDate({
+                      ...createTaskFormDate,
+                      endDate: new Date(e.target.value)
+                        .toLocaleDateString()
+                        .replace(/\./g, "-"),
+                    });
+                  }
+                }}
+              />
+              <input
+                className="input-form"
+                type="time"
+                onChange={(e) => {
+                  if (!!e.target.value) {
+                    setCreateTaskFormDate({
+                      ...createTaskFormDate,
+                      endTime: e.target.value,
+                    });
+                  }
+                }}
+              />
+            </div>
+          </div>
+          {tasks.length >= 1 ? (
+            <div className="form-task__dependencies">
+              <div className="p__drop-content">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/input/ArrowUDownRight.svg`}
+                />
+                Зависимости
+              </div>
+              <div className="form-task__dependencies__btns">
+                <button
+                  className={
+                    depsTask === "Родительская"
+                      ? "form-task__dependencies__btn-active"
+                      : ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDepsTask("Родительская");
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      prev_id: null,
+                      parent_id: null,
+                      next_id: null,
+                    });
+                  }}
+                >
+                  Родительская
+                </button>
+                <button
+                  className={
+                    depsTask === "Дочерняя"
+                      ? "form-task__dependencies__btn-active"
+                      : ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDepsTask("Дочерняя");
+                    let bp = nowBp.tasks;
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      next_id: null,
+                      prev_id: null,
+                    });
+                    if (!!bp.split("|")[bp.split("|").length - 2]) {
+                      setCreateTaskForm({
+                        ...createTaskForm,
+                        parent_id: parseInt(
+                          bp.split("|")[bp.split("|").length - 2]
+                        ),
+                      });
+                    }
+                  }}
+                >
+                  Дочерняя
+                </button>
+                <button
+                  className={
+                    depsTask === "Предыдущая"
+                      ? "form-task__dependencies__btn-active"
+                      : ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDepsTask("Предыдущая");
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      next_id: null,
+                      parent_id: null,
+                    });
+                  }}
+                >
+                  Предыдущая
+                </button>
+                <button
+                  className={
+                    depsTask === "Следующая"
+                      ? "form-task__dependencies__btn-active"
+                      : ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDepsTask("Следующая");
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      prev_id: null,
+                      parent_id: null,
+                    });
+                  }}
+                >
+                  Следующая
+                </button>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+        </>
+      ) : (
+        <div className="task-sample__deps">
           <div className="p__drop-content">
             <img
               src={`${process.env.PUBLIC_URL}/assets/input/ArrowUDownRight.svg`}
             />
             Зависимости
           </div>
-          <div className="form-task__dependencies__btns">
-            <button
-              className={
-                depsTask === "Родительская"
-                  ? "form-task__dependencies__btn-active"
-                  : ""
-              }
-              onClick={(e) => {
-                e.preventDefault();
-                setDepsTask("Родительская");
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  prev_id: null,
-                  parent_id: null,
-                  next_id: null,
-                });
-              }}
-            >
-              Родительская
-            </button>
-            <button
-              className={
-                depsTask === "Дочерняя"
-                  ? "form-task__dependencies__btn-active"
-                  : ""
-              }
-              onClick={(e) => {
-                e.preventDefault();
-                setDepsTask("Дочерняя");
-                let bp = nowBp.tasks;
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  next_id: null,
-                  prev_id: null,
-                });
-                if (!!bp.split("|")[bp.split("|").length - 2]) {
-                  setCreateTaskForm({
-                    ...createTaskForm,
-                    parent_id: parseInt(
-                      bp.split("|")[bp.split("|").length - 2]
-                    ),
-                  });
-                }
-              }}
-            >
-              Дочерняя
-            </button>
-            <button
-              className={
-                depsTask === "Предыдущая"
-                  ? "form-task__dependencies__btn-active"
-                  : ""
-              }
-              onClick={(e) => {
-                e.preventDefault();
-                setDepsTask("Предыдущая");
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  next_id: null,
-                  parent_id: null,
-                });
-              }}
-            >
-              Предыдущая
-            </button>
-            <button
-              className={
-                depsTask === "Следующая"
-                  ? "form-task__dependencies__btn-active"
-                  : ""
-              }
-              onClick={(e) => {
-                e.preventDefault();
-                setDepsTask("Следующая");
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  prev_id: null,
-                  parent_id: null,
-                });
-              }}
-            >
-              Следующая
-            </button>
-          </div>
+          <div className="input-form">123</div>
         </div>
-      ) : (
-        <></>
       )}
     </form>
   );

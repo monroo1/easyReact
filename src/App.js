@@ -7,6 +7,12 @@ import LeftNav from "./components/left-nav/LeftNav.jsx";
 import "./components/left-nav/LeftNav.jsx";
 
 function App() {
+  const [bearer, setBearer] = useState(
+    document.cookie.replace(
+      /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    )
+  );
   const [apiBp, setApiBb] = useState("https://easytaskbp.tk/api/v1");
 
   const [createBpStatus, setCreateBpStatus] = useState(false);
@@ -15,9 +21,11 @@ function App() {
 
   const [createBpForm, setCreateBpForm] = useState({
     name: null,
-    initiator_id: document.cookie.replace(
-      /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-      "$1"
+    initiator_id: parseInt(
+      document.cookie.replace(
+        /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      )
     ),
     project_id: null,
     deadlineDate: null,
@@ -33,6 +41,7 @@ function App() {
   });
 
   const [createBpSampleForm, setCreateBpSampleForm] = useState({
+    type: 1,
     businessProcess: {
       name: null,
       deadline: null,
@@ -81,13 +90,14 @@ function App() {
   const [tasksList, setTasksList] = useState([]);
   const [nowBp, setNowBp] = useState();
   const [depsTask, setDepsTask] = useState();
+  const [tasks, setTasks] = useState([]);
 
-  const [bearer, setBearer] = useState(
-    document.cookie.replace(
-      /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    )
-  );
+  const [createTaskSampleForm, setCreateTaskSampleForm] = useState({});
+  const [createTaskSampleFormStatus, setCreateTaskSampleFormStatus] =
+    useState(false);
+
+  const [idSample, setIdSample] = useState("1");
+  const [sampleArr, setSampleArr] = useState([]);
 
   return (
     <StatusContext.Provider
@@ -108,6 +118,10 @@ function App() {
         setCreateTaskForm,
         createBpSampleFormOptions,
         setCreateBpSampleFormOptions,
+        createTaskSampleForm,
+        setCreateTaskSampleForm,
+        createTaskSampleFormStatus,
+        setCreateTaskSampleFormStatus,
         filter,
         setFilter,
         filterMethod,
@@ -126,6 +140,12 @@ function App() {
         depsTask,
         setDepsTask,
         apiBp,
+        tasks,
+        setTasks,
+        idSample,
+        setIdSample,
+        sampleArr,
+        setSampleArr,
       }}
     >
       <div className="bussines-page">

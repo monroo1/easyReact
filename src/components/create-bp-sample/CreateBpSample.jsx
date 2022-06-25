@@ -19,13 +19,18 @@ const CreateBp = () => {
     createBpSampleFormDate,
     setCreateBpSampleFormDate,
     createBpSampleFormOptions,
+    setCreateTaskSampleFormStatus,
+    setCreateTaskStatus,
+    idSample,
+    setIdSample,
+    sampleArr,
+    setSampleArr,
   } = useContext(StatusContext);
   const [projects, setProjects] = useState([]);
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");
   const [nextLinkProjects, setNextLinkProjects] = useState(
     "https://test.easy-task.ru/api/v1/projects"
   );
-  const [sampleArr, setSampleArr] = useState([]);
 
   const submitFile = (e) => {
     e.preventDefault();
@@ -43,7 +48,13 @@ const CreateBp = () => {
       })
 
       .then((res) => {
-        setCreateBpSampleForm({ ...createBpSampleForm, file_id: res.data.id });
+        setCreateBpSampleForm({
+          ...createBpSampleForm,
+          businessProcess: {
+            ...createBpSampleForm.businessProcess,
+            file_id: res.data.id,
+          },
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -51,26 +62,68 @@ const CreateBp = () => {
   };
 
   const saveBpSample = () => {
-    axios
-      .post(
-        `${apiBp}/addBusinessProcessWithOptions`,
-        {
-          ...createBpSampleForm,
-        },
-        {
-          headers: {
-            "secret-token": document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-              "$1"
-            ),
-          },
-        }
-      )
-      .then((res) => {
-        setCreateBpSampleStatus(false);
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err));
+    setCreateBpSampleStatus(false);
+    setCreateTaskSampleFormStatus(true);
+    setCreateTaskStatus(true);
+
+    // if (createBpSampleForm.type === 0) {
+    //   if (createBpSampleForm.businessProcess.file_id) {
+    //     fetch(
+    //       `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${createBpSampleForm.businessProcess.tasks}&file_id=${createBpSampleForm.businessProcess.file_id}`,
+    //       {
+    //         method: "POST",
+    //         headers: {
+    //           "secret-token": document.cookie.replace(
+    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+    //             "$1"
+    //           ),
+    //         },
+    //       }
+    //     )
+    //       .then((res) => res.json())
+    //       .then((r) => {
+    //         console.log(r.businessProcess.tasks);
+    //       });
+    //   } else {
+    //     fetch(
+    //       `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${createBpSampleForm.businessProcess.tasks}`,
+    //       {
+    //         method: "POST",
+    //         headers: {
+    //           "secret-token": document.cookie.replace(
+    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+    //             "$1"
+    //           ),
+    //         },
+    //       }
+    //     )
+    //       .then((res) => res.json())
+    //       .then((r) => {
+    //         console.log(r.businessProcess.tasks);
+    //       });
+    //   }
+    // } else {
+    //   axios
+    //     .post(
+    //       `${apiBp}/addBusinessProcessWithOptions`,
+    //       {
+    //         ...createBpSampleForm,
+    //       },
+    //       {
+    //         headers: {
+    //           "secret-token": document.cookie.replace(
+    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+    //             "$1"
+    //           ),
+    //         },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       setCreateBpSampleStatus(false);
+    //       console.log(res.data);
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
   };
 
   useEffect(() => {
@@ -140,6 +193,37 @@ const CreateBp = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (createBpSampleForm.type === 0) {
+      let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
+      bp = bp[0].businessProcessId;
+
+      let tasksStr = "";
+      for (let i in bp.tasks) {
+        tasksStr = tasksStr.concat(bp.tasks[i].id);
+        if (i < bp.tasks.length - 1) {
+          tasksStr = tasksStr.concat("|");
+        }
+      }
+
+      setCreateBpSampleForm({
+        ...createBpSampleForm,
+        businessProcess: {
+          name: bp.name,
+          initiator_id: parseInt(
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            )
+          ),
+          project_id: parseInt(bp.project_id),
+          tasks: tasksStr,
+          deadline: bp.deadline,
+        },
+      });
+    }
+  }, [idSample]);
+
   return (
     <div className="business__drop-content">
       <div id="business" className="businessClass">
@@ -165,9 +249,16 @@ const CreateBp = () => {
                     e.target.value === "2" ||
                     e.target.value === "3"
                   ) {
+                    setIdSample(e.target.value);
                     setCreateBpSampleForm({
                       ...createBpSampleForm,
                       type: parseInt(e.target.value),
+                    });
+                  } else {
+                    setIdSample(e.target.value);
+                    setCreateBpSampleForm({
+                      ...createBpSampleForm,
+                      type: 0,
                     });
                   }
                 }}
@@ -191,6 +282,11 @@ const CreateBp = () => {
                 className="input-form"
                 type="text"
                 id="input-name"
+                value={
+                  createBpSampleForm.businessProcess.name
+                    ? createBpSampleForm.businessProcess.name
+                    : ""
+                }
                 onChange={(e) => {
                   if (e.target.value.trim() === "") {
                     setCreateBpSampleForm({
@@ -222,6 +318,11 @@ const CreateBp = () => {
               </label>
               <select
                 className="input-form"
+                value={
+                  createBpSampleForm.businessProcess.project_id
+                    ? createBpSampleForm.businessProcess.project_id
+                    : ""
+                }
                 onChange={(e) => {
                   setCreateBpSampleForm({
                     ...createBpSampleForm,
@@ -246,7 +347,7 @@ const CreateBp = () => {
                 })}
               </select>
             </div>
-            {createBpSampleForm.type ? (
+            {createBpSampleForm.type === 0 ? (
               <div>
                 <label className="p__drop-content" htmlFor="input-initiator">
                   <img
@@ -258,6 +359,14 @@ const CreateBp = () => {
 
                 <select
                   className="input-form"
+                  value={
+                    createBpSampleForm.businessProcess.initiator_id
+                      ? createBpSampleForm.businessProcess.initiator_id
+                      : document.cookie.replace(
+                          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        )
+                  }
                   onChange={(e) => {
                     setCreateBpSampleForm({
                       ...createBpSampleForm,
@@ -322,7 +431,7 @@ const CreateBp = () => {
                 />
               </div>
             </div>
-            {createBpSampleForm.type ? (
+            {createBpSampleForm.type === 0 ? (
               <div id="input-download">
                 <label
                   className="p__drop-content"

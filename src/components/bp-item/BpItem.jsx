@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { StatusContext } from "../../context/status.js";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 import BpItemMenu from "../ui/bp-item-menu/BpItemMenu.jsx";
-import TasksList from "../dep-tasks-list/TasksList.jsx";
+import TasksList from "../tasks-list/TasksList.jsx";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -53,7 +53,7 @@ const BpItem = ({ el }) => {
     >
       <div
         id={"business-item-" + el.id}
-        onClick={(e) => openTasksMenu(e.target)}
+        onClick={(e) => openTasksMenu(e.currentTarget)}
       >
         <div className="business__main-content__list-block__item-left">
           <div className="business__main-content__list-block__item__arrow">
@@ -103,7 +103,8 @@ const BpItem = ({ el }) => {
           className="dropdown-menu__bpItem"
           data-id={el.id}
           onClick={(e) => {
-            if (e.target.dataset.id == idBp) {
+            e.stopPropagation();
+            if (e.target.dataset.id === idBp) {
               setIdBp("");
             } else {
               setIdBp(parseInt(e.target.dataset.id));
@@ -116,7 +117,7 @@ const BpItem = ({ el }) => {
             data-id={el.id}
             onClick={(e) => {
               e.stopPropagation();
-              if (e.target.dataset.id == idBp) {
+              if (e.target.dataset.id === idBp) {
                 setIdBp("");
               } else {
                 setIdBp(parseInt(e.target.dataset.id));
