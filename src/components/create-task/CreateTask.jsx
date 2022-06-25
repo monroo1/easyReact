@@ -73,7 +73,6 @@ const CreateTask = () => {
               .then((res) => console.log(res.data.id));
           }
           if (depsTask === "Следующая") {
-            let bp = nowBp.tasks;
             axios
               .patch(
                 `https://test.easy-task.ru/api/v1/tasks/${
@@ -118,6 +117,7 @@ const CreateTask = () => {
   };
 
   const saveBp = () => {
+    console.log(createBpForm);
     let tasksStr = "";
     for (let i in tasks) {
       tasksStr = tasksStr.concat(tasks[i]);
@@ -125,6 +125,7 @@ const CreateTask = () => {
         tasksStr = tasksStr.concat("|");
       }
     }
+
     if (createBpForm.deadlineDate !== null) {
       if (!createBpForm.deadlineTime) {
         setCreateBpForm({ ...createBpForm, deadlineTime: "00:00:00" });

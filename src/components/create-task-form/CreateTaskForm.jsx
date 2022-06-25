@@ -65,17 +65,23 @@ const CreateTaskForm = () => {
 
   useEffect(() => {
     if (!!createTaskSampleFormStatus) {
+      console.log(idSample);
+      console.log(sampleArr);
       let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
-      bp = bp[0].businessProcessId;
 
       console.log(bp);
 
-      let arr = [];
-      for (let i in bp.tasks) {
-        arr.push(bp.tasks[i].id);
+      if (bp[0].businessProcessId) {
+        bp = bp[0].businessProcessId;
+        console.log(bp);
+        if (bp.tasks) {
+          let arr = [];
+          for (let i in bp.tasks) {
+            arr.push(bp.tasks[i].id);
+          }
+          console.log(arr);
+        }
       }
-
-      console.log(arr);
     }
   }, [createTaskSampleFormStatus]);
 
@@ -99,7 +105,7 @@ const CreateTaskForm = () => {
           }}
         />
       </div>
-      {createBpSampleForm.type === 0 ? (
+      {!createTaskSampleFormStatus ? (
         <div>
           <label className="p__drop-content">
             <img
