@@ -17,7 +17,6 @@ const CreateTaskForm = () => {
     idSample,
     arrTasksSample,
     setArrTasksSample,
-    setDepsTaskSample,
     valueTaskSample,
     setValueTaskSample,
     nowTask,
@@ -28,9 +27,8 @@ const CreateTaskForm = () => {
     setStatusCreateTask,
     setCreateTaskStatus,
     setCreateBpSampleStatus,
-    appearanceTaskSample,
-    setAppearanceTaskSample,
     setLengthArrTasks,
+    setNowTask,
   } = useContext(StatusContext);
 
   useEffect(() => {
@@ -100,33 +98,34 @@ const CreateTaskForm = () => {
 
   useEffect(() => {
     if (arrTasksSample.length >= 1) {
-      let arrValue = [];
-      let objDeps = {};
-      for (let i in arrTasksSample) {
-        axios
-          .get(`https://test.easy-task.ru/api/v1/tasks/${arrTasksSample[i]}`, {
-            headers: {
-              Authorization:
-                "Bearer " +
-                document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-            },
-          })
-          .then((res) => {
-            objDeps[i] = parseInt(arrTasksSample[i]);
-            arrValue.push(res.data.data);
-          });
-      }
-      setValueTaskSample(arrValue);
-      setDepsTaskSample(objDeps);
+      Promise.all(
+        arrTasksSample.map(async (el) => {
+          return axios
+            .get(`https://test.easy-task.ru/api/v1/tasks/${el}`, {
+              headers: {
+                Authorization:
+                  "Bearer " +
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  ),
+              },
+            })
+            .then((result) => {
+              return result.data.data;
+            });
+        })
+      )
+        .then((r) => setValueTaskSample(r))
+        .catch((err) => console.log("err " + err));
     }
   }, [arrTasksSample]);
 
   useEffect(() => {
-    console.log(appearanceTaskSample);
-  }, [appearanceTaskSample]);
+    if (valueTaskSample.length > 0) {
+      console.log(valueTaskSample);
+    }
+  }, [valueTaskSample]);
 
   useEffect(() => {
     if (tasksArr.length > 0) {
@@ -134,14 +133,15 @@ const CreateTaskForm = () => {
         setStatusCreateTask(false);
         setCreateTaskStatus(false);
         setCreateBpSampleStatus(true);
-        console.log(tasksArr.length);
+        console.log(tasksArr);
       }
     }
   }, [tasksArr]);
 
   useEffect(() => {
+    setTaskSample(createTaskForm);
     if (!!nowTask) {
-      console.log(nowTask.id);
+      // console.log(nowTask.id);
       axios
         .post(
           `https://test.easy-task.ru/api/v1/tasks`,
@@ -184,18 +184,27 @@ const CreateTaskForm = () => {
           }
         )
         .then((res) => {
-          console.log("da");
           setTaskSample({
             ...taskSample,
             name: "",
           });
           setTasksArr([...tasksArr, res.data.data.id]);
+          setCreateTaskForm({ ...createTaskForm, name: "" });
         })
         .catch((err) => {
           setLengthArrTasks(tasksArr.length);
+          setTaskSample({
+            ...taskSample,
+          });
           console.log("errrrr " + err);
         });
     }
+  }, [nowTask]);
+
+  useEffect(() => {
+    // console.log(taskSample);
+    // console.log(createTaskSampleFormStatus);
+    console.log(nowTask);
   }, [nowTask]);
 
   return (
@@ -212,8 +221,8 @@ const CreateTaskForm = () => {
           value={taskSample.name}
           onChange={(e) => {
             if (e.target.value.trim() === "") {
-              setCreateTaskForm({ ...createTaskForm, name: null });
-              setTaskSample({ ...taskSample, name: null });
+              setCreateTaskForm({ ...createTaskForm, name: "" });
+              setTaskSample({ ...taskSample, name: "" });
             } else {
               setCreateTaskForm({ ...createTaskForm, name: e.target.value });
               setTaskSample({ ...taskSample, name: e.target.value });
@@ -310,19 +319,31 @@ const CreateTaskForm = () => {
           className="input-form"
           type="text"
           id="businessTask__executor"
+          value={taskSample.executor_id}
           onChange={(e) => {
             if (e.target.value.trim() === "") {
-              setCreateTaskForm({ ...createTaskForm, executor_id: 512 });
-              setTaskSample({ ...taskSample, executor_id: 512 });
+              setCreateTaskForm({ ...createTaskForm, executor_id: "" });
+              setTaskSample({ ...taskSample, executor_id: "" });
             } else {
-              setCreateTaskForm({
-                ...createTaskForm,
-                executor_id: parseInt(e.target.value),
-              });
-              setTaskSample({
-                ...taskSample,
-                executor_id: parseInt(e.target.value),
-              });
+              if (!!parseInt(e.target.value)) {
+                setCreateTaskForm({
+                  ...createTaskForm,
+                  executor_id: parseInt(e.target.value),
+                });
+                setTaskSample({
+                  ...taskSample,
+                  executor_id: parseInt(e.target.value),
+                });
+              } else {
+                setCreateTaskForm({
+                  ...createTaskForm,
+                  executor_id: "",
+                });
+                setTaskSample({
+                  ...taskSample,
+                  executor_id: "",
+                });
+              }
             }
           }}
         />

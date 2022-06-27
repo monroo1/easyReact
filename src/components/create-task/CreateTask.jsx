@@ -23,7 +23,9 @@ const CreateTask = () => {
     nowTask,
     setNowTask,
     statusCreateTask,
-    lengthArrTasks,
+    addTaskSample,
+    taskSample,
+    setAddTaskSample,
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
@@ -66,9 +68,9 @@ const CreateTask = () => {
           body: JSON.stringify(createTaskForm),
         })
           .then((resesult) => resesult.json())
-          .then(async (res) => {
+          .then((res) => {
             console.log(res.data.id);
-            await setTasks([...tasks, res.data.id]);
+            setTasks([...tasks, res.data.id]);
 
             if (depsTask === "Предыдущая") {
               console.log(tasks);
@@ -150,20 +152,18 @@ const CreateTask = () => {
       }
     }
     if (statusCreateTask) {
-      if (!!nowTask) {
-        for (let i in valueTaskSample) {
-          if (valueTaskSample[i].id === nowTask.id) {
-            console.log(valueTaskSample);
-            console.log(nowTask);
-            console.log(i);
-            console.log(lengthArrTasks);
-            i++;
-            setNowTask(valueTaskSample[i]);
+      if (addTaskSample) {
+        if (!nowTask) {
+          setNowTask(valueTaskSample[0]);
+        }
+        if (!!nowTask) {
+          for (let i in valueTaskSample) {
+            if (valueTaskSample[i].id === nowTask.id) {
+              i++;
+              setNowTask(valueTaskSample[i]);
+            }
           }
         }
-      }
-      if (!nowTask) {
-        setNowTask(valueTaskSample[0]);
       }
     }
   };
@@ -290,6 +290,15 @@ const CreateTask = () => {
     } else {
       setAddTask(false);
     }
+    if (
+      createTaskSampleFormStatus &&
+      !!taskSample.name &&
+      !!taskSample.executor_id
+    ) {
+      setAddTaskSample(true);
+    } else {
+      setAddTaskSample(false);
+    }
   }, [createTaskForm]);
 
   return (
@@ -304,7 +313,9 @@ const CreateTask = () => {
         <div>
           <button
             className={
-              addTask === true ? "blue-btn" : "blue-btn blue-btn__disabled"
+              addTask || addTaskSample
+                ? "blue-btn"
+                : "blue-btn blue-btn__disabled"
             }
             id="add-task"
             style={

@@ -66,7 +66,7 @@ function App() {
     endTime: null,
   });
   const [createTaskForm, setCreateTaskForm] = useState({
-    name: null,
+    name: "",
     description: "description",
     begin: null,
     end: null,
@@ -108,10 +108,10 @@ function App() {
   const [tasksArr, setTasksArr] = useState([]);
   const [taskSample, setTaskSample] = useState({
     name: "",
-    executor_id: null,
+    executor_id: "",
   });
   const [lengthArrTasks, setLengthArrTasks] = useState("");
-  const [appearanceTaskSample, setAppearanceTaskSample] = useState([]);
+  const [addTaskSample, setAddTaskSample] = useState(false);
 
   return (
     <StatusContext.Provider
@@ -178,8 +178,8 @@ function App() {
         setTaskSample,
         lengthArrTasks,
         setLengthArrTasks,
-        appearanceTaskSample,
-        setAppearanceTaskSample,
+        addTaskSample,
+        setAddTaskSample,
       }}
     >
       <div className="bussines-page">
