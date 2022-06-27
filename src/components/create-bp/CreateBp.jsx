@@ -13,7 +13,6 @@ const CreateBp = () => {
     bearer,
     createTaskForm,
     setCreateTaskForm,
-    setNowBp,
   } = useContext(StatusContext);
   const [projects, setProjects] = useState([]);
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");

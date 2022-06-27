@@ -18,6 +18,12 @@ const CreateTask = () => {
     setCreateTaskSampleFormStatus,
     createTaskSampleFormStatus,
     setCreateBpSampleForm,
+    createBpSampleForm,
+    valueTaskSample,
+    nowTask,
+    setNowTask,
+    statusCreateTask,
+    lengthArrTasks,
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
@@ -143,10 +149,26 @@ const CreateTask = () => {
           });
       }
     }
+    if (statusCreateTask) {
+      if (!!nowTask) {
+        for (let i in valueTaskSample) {
+          if (valueTaskSample[i].id === nowTask.id) {
+            console.log(valueTaskSample);
+            console.log(nowTask);
+            console.log(i);
+            console.log(lengthArrTasks);
+            i++;
+            setNowTask(valueTaskSample[i]);
+          }
+        }
+      }
+      if (!nowTask) {
+        setNowTask(valueTaskSample[0]);
+      }
+    }
   };
 
   const saveBp = () => {
-    console.log(createBpForm);
     let tasksStr = "";
     for (let i in tasks) {
       tasksStr = tasksStr.concat(tasks[i]);
@@ -250,7 +272,7 @@ const CreateTask = () => {
           "$1"
         )
       ),
-      project_id: null,
+      project_id: createBpForm.project_id,
       deadlineDate: null,
       deadlineTime: "00:00:00",
       tasks: null,
@@ -316,22 +338,18 @@ const CreateTask = () => {
             onClick={() => {
               setCreateTaskStatus(false);
               setCreateTaskSampleFormStatus(false);
+
               setCreateTaskForm({
-                name: null,
-                begin: null,
-                end: null,
-                project_id: createBpForm.project_id || null,
-                next_id: null,
-                parent_id: null,
-                prev_id: null,
-                description: null,
+                ...createTaskForm,
+                createTaskForm: createTaskForm.project_section_id,
               });
+
               setCreateBpSampleForm({
-                type: 1,
+                type: createBpSampleForm.type,
                 businessProcess: {
-                  name: null,
-                  deadline: null,
-                  project_id: null,
+                  ...createBpSampleForm.businessProcess,
+                  name: createBpSampleForm.businessProcess.name,
+                  deadline: createBpSampleForm.businessProcess.deadline,
                   tasks: 1,
                   initiator_id: document.cookie.replace(
                     /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,

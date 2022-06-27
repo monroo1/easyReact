@@ -9,7 +9,6 @@ import "../create-bp/CreateBp.scss";
 const CreateBp = () => {
   const {
     apiBp,
-    setCreateBpForm,
     bearer,
     createTaskForm,
     setCreateTaskForm,
@@ -25,6 +24,9 @@ const CreateBp = () => {
     setIdSample,
     sampleArr,
     setSampleArr,
+    setStatusCreateTask,
+    tasksArr,
+    setTasksArr,
   } = useContext(StatusContext);
   const [projects, setProjects] = useState([]);
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");
@@ -61,69 +63,90 @@ const CreateBp = () => {
       });
   };
 
-  const saveBpSample = () => {
+  const nextBpSample = () => {
     setCreateBpSampleStatus(false);
     setCreateTaskSampleFormStatus(true);
     setCreateTaskStatus(true);
+    setStatusCreateTask(true);
+  };
 
-    // if (createBpSampleForm.type === 0) {
-    //   if (createBpSampleForm.businessProcess.file_id) {
-    //     fetch(
-    //       `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${createBpSampleForm.businessProcess.tasks}&file_id=${createBpSampleForm.businessProcess.file_id}`,
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           "secret-token": document.cookie.replace(
-    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-    //             "$1"
-    //           ),
-    //         },
-    //       }
-    //     )
-    //       .then((res) => res.json())
-    //       .then((r) => {
-    //         console.log(r.businessProcess.tasks);
-    //       });
-    //   } else {
-    //     fetch(
-    //       `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${createBpSampleForm.businessProcess.tasks}`,
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           "secret-token": document.cookie.replace(
-    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-    //             "$1"
-    //           ),
-    //         },
-    //       }
-    //     )
-    //       .then((res) => res.json())
-    //       .then((r) => {
-    //         console.log(r.businessProcess.tasks);
-    //       });
-    //   }
-    // } else {
-    //   axios
-    //     .post(
-    //       `${apiBp}/addBusinessProcessWithOptions`,
-    //       {
-    //         ...createBpSampleForm,
-    //       },
-    //       {
-    //         headers: {
-    //           "secret-token": document.cookie.replace(
-    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-    //             "$1"
-    //           ),
-    //         },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       setCreateBpSampleStatus(false);
-    //       console.log(res.data);
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
+  const saveBpSample = () => {
+    setCreateBpSampleStatus(false);
+
+    let tasksStr = "";
+    for (let i in tasksArr) {
+      tasksStr = tasksStr.concat(tasksArr[i]);
+      if (i < tasksArr.length - 1) {
+        tasksStr = tasksStr.concat("|");
+      }
+    }
+
+    if (createBpSampleForm.type === 0) {
+      if (createBpSampleForm.businessProcess.file_id) {
+        fetch(
+          `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${tasksStr}&file_id=${createBpSampleForm.businessProcess.file_id}`,
+          {
+            method: "POST",
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((r) => {
+            setTasksArr([]);
+            console.log(r.businessProcess.tasks);
+          });
+      } else {
+        fetch(
+          `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${tasksStr}`,
+          {
+            method: "POST",
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((r) => {
+            setTasksArr([]);
+            console.log(r.businessProcess.tasks);
+          });
+      }
+    } else {
+      axios
+        .post(
+          `${apiBp}/addBusinessProcessWithOptions`,
+          {
+            ...createBpSampleForm,
+            businessProcess: {
+              ...createBpSampleForm.businessProcess,
+              tasks: tasksStr,
+            },
+          },
+          {
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        )
+        .then((res) => {
+          setCreateBpSampleStatus(false);
+          setTasksArr([]);
+
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   useEffect(() => {
@@ -465,19 +488,29 @@ const CreateBp = () => {
           {createBpSampleForm.type === 3 ? <BpResultFormDismissal /> : <></>}
         </div>
         <div>
-          <button
-            className={accessNext}
-            id="bussines-next"
-            onClick={() => saveBpSample()}
-          >
-            Далее
-          </button>
+          {tasksArr.length > 0 ? (
+            <button
+              className={accessNext}
+              id="bussines-next"
+              onClick={() => saveBpSample()}
+            >
+              Сохранить
+            </button>
+          ) : (
+            <button
+              className={accessNext}
+              id="bussines-next"
+              onClick={() => nextBpSample()}
+            >
+              Далее
+            </button>
+          )}
+
           <button
             className="defualt__btn"
             id="close-btn"
             onClick={() => {
               setCreateBpSampleStatus(false);
-              setCreateBpForm({});
             }}
           >
             Отмена

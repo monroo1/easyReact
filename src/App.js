@@ -52,6 +52,7 @@ function App() {
         "$1"
       ),
     },
+    options: [],
   });
 
   const [createBpSampleFormOptions, setCreateBpSampleFormOptions] = useState(
@@ -98,6 +99,19 @@ function App() {
 
   const [idSample, setIdSample] = useState("1");
   const [sampleArr, setSampleArr] = useState([]);
+  const [statusCreateTask, setStatusCreateTask] = useState(false);
+  const [arrTasksSample, setArrTasksSample] = useState([]);
+  const [depsTaskSample, setDepsTaskSample] = useState([]);
+  const [valueTaskSample, setValueTaskSample] = useState([]);
+  const [nowTask, setNowTask] = useState("");
+  const [endTasksSample, setEndTasksSample] = useState([]);
+  const [tasksArr, setTasksArr] = useState([]);
+  const [taskSample, setTaskSample] = useState({
+    name: "",
+    executor_id: null,
+  });
+  const [lengthArrTasks, setLengthArrTasks] = useState("");
+  const [appearanceTaskSample, setAppearanceTaskSample] = useState([]);
 
   return (
     <StatusContext.Provider
@@ -146,6 +160,26 @@ function App() {
         setIdSample,
         sampleArr,
         setSampleArr,
+        arrTasksSample,
+        setArrTasksSample,
+        depsTaskSample,
+        setDepsTaskSample,
+        valueTaskSample,
+        setValueTaskSample,
+        nowTask,
+        setNowTask,
+        endTasksSample,
+        setEndTasksSample,
+        statusCreateTask,
+        setStatusCreateTask,
+        tasksArr,
+        setTasksArr,
+        taskSample,
+        setTaskSample,
+        lengthArrTasks,
+        setLengthArrTasks,
+        appearanceTaskSample,
+        setAppearanceTaskSample,
       }}
     >
       <div className="bussines-page">
