@@ -117,21 +117,6 @@ const CreateTaskForm = () => {
           .then((res) => {
             objDeps[i] = parseInt(arrTasksSample[i]);
             arrValue.push(res.data.data);
-            if (a.length >= 1) {
-              a.push({
-                id: res.data.data.id,
-                next_id: res.data.data.next_id,
-                parent_id: res.data.data.parent_id,
-                prev_id: res.data.data.prev_id,
-              });
-            } else if (a.length === 0) {
-              a.push({
-                id: res.data.data.id,
-                next_id: null,
-                parent_id: null,
-                prev_id: null,
-              });
-            }
           });
       }
       setValueTaskSample(arrValue);
