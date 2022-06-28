@@ -157,7 +157,15 @@ const CreateBp = () => {
                 className="input-form"
                 onChange={(e) => {
                   if (e.target.value.trim() === "") {
-                    setCreateBpForm({ ...createBpForm, initiator_id: null });
+                    setCreateBpForm({
+                      ...createBpForm,
+                      initiator_id: parseInt(
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        )
+                      ),
+                    });
                   } else {
                     setCreateBpForm({
                       ...createBpForm,
@@ -257,7 +265,12 @@ const CreateBp = () => {
               setCreateBpStatus(false);
               setCreateBpForm({
                 name: null,
-                initiator_id: null,
+                initiator_id: parseInt(
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  )
+                ),
                 project_id: null,
                 deadlineDate: null,
                 deadlineTime: null,

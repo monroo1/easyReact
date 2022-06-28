@@ -27,6 +27,7 @@ const CreateBp = () => {
     setStatusCreateTask,
     tasksArr,
     setTasksArr,
+    createBpSampleStatus,
   } = useContext(StatusContext);
   const [projects, setProjects] = useState([]);
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");
@@ -64,13 +65,19 @@ const CreateBp = () => {
   };
 
   const nextBpSample = () => {
+    console.log("nextBpSample");
     setCreateBpSampleStatus(false);
     setCreateTaskSampleFormStatus(true);
     setCreateTaskStatus(true);
     setStatusCreateTask(true);
   };
 
+  useEffect(() => {
+    console.log(createBpSampleStatus);
+  }, [createBpSampleStatus]);
+
   const saveBpSample = () => {
+    console.log(createBpSampleStatus);
     setCreateBpSampleStatus(false);
 
     let tasksStr = "";
@@ -105,9 +112,11 @@ const CreateBp = () => {
                 deadline: null,
                 project_id: null,
                 tasks: 1,
-                initiator_id: document.cookie.replace(
-                  /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
+                initiator_id: parseInt(
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  )
                 ),
               },
               options: [],
@@ -585,6 +594,20 @@ const CreateBp = () => {
             id="close-btn"
             onClick={() => {
               setCreateBpSampleStatus(false);
+              setCreateBpSampleForm({
+                type: 1,
+                businessProcess: {
+                  name: null,
+                  deadline: null,
+                  project_id: null,
+                  tasks: 1,
+                  initiator_id: document.cookie.replace(
+                    /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  ),
+                },
+                options: [],
+              });
             }}
           >
             Отмена

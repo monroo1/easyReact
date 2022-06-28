@@ -202,8 +202,8 @@ const CreateTaskForm = () => {
   }, [nowTask]);
 
   useEffect(() => {
-    // console.log(taskSample);
-    // console.log(createTaskSampleFormStatus);
+    console.log(taskSample);
+    console.log(createTaskSampleFormStatus);
     console.log(nowTask);
   }, [nowTask]);
 

@@ -17,8 +17,7 @@ const CreateTask = () => {
     setTasks,
     setCreateTaskSampleFormStatus,
     createTaskSampleFormStatus,
-    setCreateBpSampleForm,
-    createBpSampleForm,
+    setTasksArr,
     valueTaskSample,
     nowTask,
     setNowTask,
@@ -26,6 +25,8 @@ const CreateTask = () => {
     addTaskSample,
     taskSample,
     setAddTaskSample,
+    setCreateBpSampleForm,
+    setStatusCreateTask,
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
@@ -34,6 +35,9 @@ const CreateTask = () => {
   }, [tasks]);
 
   const saveTask = () => {
+    console.log("saveTask");
+    console.log(!!addTask);
+    console.log(statusCreateTask);
     if (!!addTask) {
       if (depsTask === "Дочерняя") {
         fetch("https://test.easy-task.ru/api/v1/tasks", {
@@ -286,7 +290,7 @@ const CreateTask = () => {
       file_id: null,
       deadline: null,
     });
-
+    setTasks([]);
     setCreateTaskStatus(false);
     setCreateTaskSampleFormStatus(false);
   };
@@ -354,26 +358,49 @@ const CreateTask = () => {
             className="defualt__btn"
             id="close-btn"
             onClick={() => {
+              setCreateBpForm({
+                name: null,
+                initiator_id: parseInt(
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  )
+                ),
+                project_id: createBpForm.project_id,
+                deadlineDate: null,
+                deadlineTime: "00:00:00",
+                tasks: null,
+                file_id: null,
+                deadline: null,
+              });
+
               setCreateTaskStatus(false);
               setCreateTaskSampleFormStatus(false);
+              setStatusCreateTask(false);
 
               setCreateTaskForm({
                 ...createTaskForm,
                 createTaskForm: createTaskForm.project_section_id,
               });
+              setTasks([]);
+              setTasksArr([]);
+              setNowTask("");
 
               setCreateBpSampleForm({
-                type: createBpSampleForm.type,
+                type: 1,
                 businessProcess: {
-                  ...createBpSampleForm.businessProcess,
-                  name: createBpSampleForm.businessProcess.name,
-                  deadline: createBpSampleForm.businessProcess.deadline,
+                  name: null,
+                  deadline: null,
+                  project_id: null,
                   tasks: 1,
-                  initiator_id: document.cookie.replace(
-                    /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-                    "$1"
+                  initiator_id: parseInt(
+                    document.cookie.replace(
+                      /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                      "$1"
+                    )
                   ),
                 },
+                options: [],
               });
             }}
           >

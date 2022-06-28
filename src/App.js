@@ -47,9 +47,11 @@ function App() {
       deadline: null,
       project_id: null,
       tasks: 1,
-      initiator_id: document.cookie.replace(
-        /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-        "$1"
+      initiator_id: parseInt(
+        document.cookie.replace(
+          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        )
       ),
     },
     options: [],
