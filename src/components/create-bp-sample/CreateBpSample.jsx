@@ -27,7 +27,6 @@ const CreateBp = () => {
     setStatusCreateTask,
     tasksArr,
     setTasksArr,
-    createBpSampleStatus,
   } = useContext(StatusContext);
   const [projects, setProjects] = useState([]);
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");
