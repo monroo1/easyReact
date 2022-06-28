@@ -98,6 +98,20 @@ const CreateBp = () => {
           .then((res) => res.json())
           .then((r) => {
             setTasksArr([]);
+            setCreateBpSampleForm({
+              type: 1,
+              businessProcess: {
+                name: null,
+                deadline: null,
+                project_id: null,
+                tasks: 1,
+                initiator_id: document.cookie.replace(
+                  /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+              options: [],
+            });
             console.log(r.businessProcess.tasks);
           });
       } else {
@@ -116,6 +130,20 @@ const CreateBp = () => {
           .then((res) => res.json())
           .then((r) => {
             setTasksArr([]);
+            setCreateBpSampleForm({
+              type: 1,
+              businessProcess: {
+                name: null,
+                deadline: null,
+                project_id: null,
+                tasks: 1,
+                initiator_id: document.cookie.replace(
+                  /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+              options: [],
+            });
             console.log(r.businessProcess.tasks);
           });
       }
@@ -142,7 +170,20 @@ const CreateBp = () => {
         .then((res) => {
           setCreateBpSampleStatus(false);
           setTasksArr([]);
-
+          setCreateBpSampleForm({
+            type: 1,
+            businessProcess: {
+              name: null,
+              deadline: null,
+              project_id: null,
+              tasks: 1,
+              initiator_id: document.cookie.replace(
+                /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+            options: [],
+          });
           console.log(res.data);
         })
         .catch((err) => console.log(err));
@@ -161,19 +202,52 @@ const CreateBp = () => {
 
   useEffect(() => {
     if (!!createBpSampleFormDate) {
-      setCreateBpSampleForm({
-        ...createBpSampleForm,
-        businessProcess: {
-          ...createBpSampleForm.businessProcess,
-          deadline:
-            createBpSampleFormDate.deadlineDate +
-            " " +
-            createBpSampleFormDate.deadlineTime +
-            ":00",
-        },
-      });
+      if (
+        !!createBpSampleFormDate.deadlineDate &&
+        !!createBpSampleFormDate.deadlineTime
+      ) {
+        setCreateBpSampleForm({
+          ...createBpSampleForm,
+          businessProcess: {
+            ...createBpSampleForm.businessProcess,
+            deadline:
+              createBpSampleFormDate.deadlineDate +
+              " " +
+              createBpSampleFormDate.deadlineTime +
+              ":00",
+          },
+        });
+      } else if (
+        !!createBpSampleFormDate.deadlineDate &&
+        !createBpSampleFormDate.deadlineTime
+      ) {
+        setCreateBpSampleForm({
+          ...createBpSampleForm,
+          businessProcess: {
+            ...createBpSampleForm.businessProcess,
+            deadline: createBpSampleFormDate.deadlineDate + " 00:00:00",
+          },
+        });
+      } else if (
+        !createBpSampleFormDate.deadlineDate &&
+        !!createBpSampleFormDate.deadlineTime
+      ) {
+        let date = new Date();
+        date.setDate(date.getDate() + 30);
+        setCreateBpSampleForm({
+          ...createBpSampleForm,
+          businessProcess: {
+            ...createBpSampleForm.businessProcess,
+            deadline: date.toLocaleString(),
+          },
+        });
+      }
     }
   }, [createBpSampleFormDate]);
+
+  useEffect(() => {
+    console.log(createBpSampleForm);
+  }, [createBpSampleForm]);
 
   useEffect(() => {
     if (
