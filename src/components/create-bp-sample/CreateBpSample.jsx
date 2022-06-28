@@ -65,7 +65,6 @@ const CreateBp = () => {
   };
 
   const nextBpSample = () => {
-    console.log("nextBpSample");
     setCreateBpSampleStatus(false);
     setCreateTaskSampleFormStatus(true);
     setCreateTaskStatus(true);
@@ -148,7 +147,7 @@ const CreateBp = () => {
               },
               options: [],
             });
-            console.log(r.businessProcess.tasks);
+            // console.log(r.businessProcess.tasks);
           });
       }
     } else {
@@ -236,7 +235,6 @@ const CreateBp = () => {
         !createBpSampleFormDate.deadlineDate &&
         !!createBpSampleFormDate.deadlineTime
       ) {
-        console.log("date");
         let date = new Date();
         date.setDate(date.getDate() + 30);
         setCreateBpSampleForm({

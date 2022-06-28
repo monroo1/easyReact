@@ -120,11 +120,11 @@ const CreateTaskForm = () => {
     }
   }, [arrTasksSample]);
 
-  useEffect(() => {
-    if (valueTaskSample.length > 0) {
-      console.log(valueTaskSample);
-    }
-  }, [valueTaskSample]);
+  // useEffect(() => {
+  //   if (valueTaskSample.length > 0) {
+  //     console.log(valueTaskSample);
+  //   }
+  // }, [valueTaskSample]);
 
   useEffect(() => {
     if (tasksArr.length > 0) {
@@ -132,7 +132,7 @@ const CreateTaskForm = () => {
         setStatusCreateTask(false);
         setCreateTaskStatus(false);
         setCreateBpSampleStatus(true);
-        console.log(tasksArr);
+        // console.log(tasksArr);
       }
     }
   }, [tasksArr]);
@@ -197,12 +197,6 @@ const CreateTaskForm = () => {
           console.log("errrrr " + err);
         });
     }
-  }, [nowTask]);
-
-  useEffect(() => {
-    console.log(taskSample);
-    console.log(createTaskSampleFormStatus);
-    console.log(nowTask);
   }, [nowTask]);
 
   return (

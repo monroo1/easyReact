@@ -30,10 +30,6 @@ const CreateTask = () => {
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
-  useEffect(() => {
-    console.log(tasks);
-  }, [tasks]);
-
   const saveTask = () => {
     if (!!addTask) {
       if (depsTask === "Дочерняя") {
@@ -55,7 +51,6 @@ const CreateTask = () => {
         })
           .then((resesult) => resesult.json())
           .then((res) => {
-            console.log(res.data);
             setTasks([...tasks, res.data.id]);
           });
       } else {
@@ -77,11 +72,9 @@ const CreateTask = () => {
         })
           .then((resesult) => resesult.json())
           .then((res) => {
-            console.log(res.data);
             setTasks([...tasks, res.data.id]);
 
             if (depsTask === "Предыдущая") {
-              console.log(tasks);
               axios
                 .patch(
                   `https://test.easy-task.ru/api/v1/tasks/${
@@ -99,12 +92,9 @@ const CreateTask = () => {
                     },
                   }
                 )
-                .then((res) => {
-                  console.log(res.data.data.id);
-                });
+                .then((res) => {});
             }
             if (depsTask === "Следующая") {
-              console.log(tasks);
               axios
                 .patch(
                   `https://test.easy-task.ru/api/v1/tasks/${
@@ -122,12 +112,9 @@ const CreateTask = () => {
                     },
                   }
                 )
-                .then((res) => {
-                  console.log(res.data.data.id);
-                });
+                .then((res) => {});
             }
             if (depsTask === "Родительская") {
-              console.log(tasks);
               axios
                 .patch(
                   `https://test.easy-task.ru/api/v1/tasks/${
@@ -145,9 +132,7 @@ const CreateTask = () => {
                     },
                   }
                 )
-                .then((res) => {
-                  console.log(res.data.data.id);
-                });
+                .then((res) => {});
             }
             setDepsTask("");
             setCreateTaskForm({
@@ -169,18 +154,18 @@ const CreateTask = () => {
             if (valueTaskSample[i].id === nowTask.id) {
               i++;
               setNowTask(valueTaskSample[i]);
-              if (valueTaskSample) {
-                console.log("next");
-                console.log(valueTaskSample);
-              }
-              if (valueTaskSample) {
-                console.log("prev");
-                console.log(valueTaskSample);
-              }
-              if (valueTaskSample) {
-                console.log("parent");
-                console.log(valueTaskSample);
-              }
+              // if (valueTaskSample) {
+              //   console.log("next");
+              //   console.log(valueTaskSample);
+              // }
+              // if (valueTaskSample) {
+              //   console.log("prev");
+              //   console.log(valueTaskSample);
+              // }
+              // if (valueTaskSample) {
+              //   console.log("parent");
+              //   console.log(valueTaskSample);
+              // }
             }
           }
         }
@@ -280,9 +265,7 @@ const CreateTask = () => {
         }
       )
         .then((res) => res.json())
-        .then((r) => {
-          console.log(r.businessProcess.tasks);
-        });
+        .then((r) => {});
     }
     setCreateBpForm({
       name: null,
