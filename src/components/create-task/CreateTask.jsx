@@ -29,6 +29,10 @@ const CreateTask = () => {
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
+  useEffect(() => {
+    console.log(tasks);
+  }, [tasks]);
+
   const saveTask = () => {
     if (!!addTask) {
       if (depsTask === "Дочерняя") {
@@ -49,7 +53,10 @@ const CreateTask = () => {
           body: JSON.stringify(createTaskForm),
         })
           .then((resesult) => resesult.json())
-          .then((res) => setTasks([...tasks, res.data.id]));
+          .then((res) => {
+            console.log(res.data);
+            setTasks([...tasks, res.data.id]);
+          });
       } else {
         fetch("https://test.easy-task.ru/api/v1/tasks", {
           method: "POST",
@@ -69,7 +76,7 @@ const CreateTask = () => {
         })
           .then((resesult) => resesult.json())
           .then((res) => {
-            console.log(res.data.id);
+            console.log(res.data);
             setTasks([...tasks, res.data.id]);
 
             if (depsTask === "Предыдущая") {
@@ -92,7 +99,7 @@ const CreateTask = () => {
                   }
                 )
                 .then((res) => {
-                  setTasks([...tasks, res.data.data.id]);
+                  console.log(res.data.data.id);
                 });
             }
             if (depsTask === "Следующая") {
@@ -115,7 +122,7 @@ const CreateTask = () => {
                   }
                 )
                 .then((res) => {
-                  setTasks([...tasks, res.data.data.id]);
+                  console.log(res.data.data.id);
                 });
             }
             if (depsTask === "Родительская") {
@@ -138,7 +145,7 @@ const CreateTask = () => {
                   }
                 )
                 .then((res) => {
-                  setTasks([...tasks, res.data.data.id]);
+                  console.log(res.data.data.id);
                 });
             }
             setDepsTask("");
