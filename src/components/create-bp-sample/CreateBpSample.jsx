@@ -72,12 +72,7 @@ const CreateBp = () => {
     setStatusCreateTask(true);
   };
 
-  useEffect(() => {
-    console.log(createBpSampleStatus);
-  }, [createBpSampleStatus]);
-
   const saveBpSample = () => {
-    console.log(createBpSampleStatus);
     setCreateBpSampleStatus(false);
 
     let tasksStr = "";
@@ -241,22 +236,25 @@ const CreateBp = () => {
         !createBpSampleFormDate.deadlineDate &&
         !!createBpSampleFormDate.deadlineTime
       ) {
+        console.log("date");
         let date = new Date();
         date.setDate(date.getDate() + 30);
         setCreateBpSampleForm({
           ...createBpSampleForm,
           businessProcess: {
             ...createBpSampleForm.businessProcess,
-            deadline: date.toLocaleString(),
+            deadline:
+              date.getFullYear() +
+              "-" +
+              date.getMonth() +
+              "-" +
+              date.getDate() +
+              " 00:00:00",
           },
         });
       }
     }
   }, [createBpSampleFormDate]);
-
-  useEffect(() => {
-    console.log(createBpSampleForm);
-  }, [createBpSampleForm]);
 
   useEffect(() => {
     if (

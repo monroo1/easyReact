@@ -35,9 +35,6 @@ const CreateTask = () => {
   }, [tasks]);
 
   const saveTask = () => {
-    console.log("saveTask");
-    console.log(!!addTask);
-    console.log(statusCreateTask);
     if (!!addTask) {
       if (depsTask === "Дочерняя") {
         fetch("https://test.easy-task.ru/api/v1/tasks", {
@@ -172,6 +169,18 @@ const CreateTask = () => {
             if (valueTaskSample[i].id === nowTask.id) {
               i++;
               setNowTask(valueTaskSample[i]);
+              if (valueTaskSample) {
+                console.log("next");
+                console.log(valueTaskSample);
+              }
+              if (valueTaskSample) {
+                console.log("prev");
+                console.log(valueTaskSample);
+              }
+              if (valueTaskSample) {
+                console.log("parent");
+                console.log(valueTaskSample);
+              }
             }
           }
         }

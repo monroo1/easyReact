@@ -28,7 +28,6 @@ const CreateTaskForm = () => {
     setCreateTaskStatus,
     setCreateBpSampleStatus,
     setLengthArrTasks,
-    setNowTask,
   } = useContext(StatusContext);
 
   useEffect(() => {
@@ -141,7 +140,6 @@ const CreateTaskForm = () => {
   useEffect(() => {
     setTaskSample(createTaskForm);
     if (!!nowTask) {
-      // console.log(nowTask.id);
       axios
         .post(
           `https://test.easy-task.ru/api/v1/tasks`,
