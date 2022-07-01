@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { StatusContext } from "../../context/status";
 import "./CreateTaskForm.scss";
@@ -29,6 +29,8 @@ const CreateTaskForm = () => {
     setCreateBpSampleStatus,
     setLengthArrTasks,
   } = useContext(StatusContext);
+
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     if (
@@ -72,6 +74,21 @@ const CreateTaskForm = () => {
             project_section_id: parseInt(res.data.data[0].project_section_id),
           });
         }
+      });
+
+    axios
+      .get(`https://test.easy-task.ru/api/v1/users`, {
+        headers: {
+          Authorization:
+            "Bearer " +
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+        },
+      })
+      .then((res) => {
+        setUsers(res.data.data);
       });
   }, []);
 
@@ -199,6 +216,11 @@ const CreateTaskForm = () => {
     }
   }, [nowTask]);
 
+  const executors = useMemo(
+    () => users.filter((user) => user.roles.includes(7)),
+    [users]
+  );
+
   return (
     <form id="new-bp__form">
       <div>
@@ -305,40 +327,29 @@ const CreateTaskForm = () => {
       <div>
         <label className="p__drop-content" htmlFor="businessTask__executor">
           <img src={`${process.env.PUBLIC_URL}/assets/input/User.svg`} />
-          Id Исполнителя
+          Исполнитель
         </label>
-        <input
+        <select
           className="input-form"
-          type="text"
           id="businessTask__executor"
           value={taskSample.executor_id}
           onChange={(e) => {
-            if (e.target.value.trim() === "") {
-              setCreateTaskForm({ ...createTaskForm, executor_id: "" });
-              setTaskSample({ ...taskSample, executor_id: "" });
-            } else {
-              if (!!parseInt(e.target.value)) {
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  executor_id: parseInt(e.target.value),
-                });
-                setTaskSample({
-                  ...taskSample,
-                  executor_id: parseInt(e.target.value),
-                });
-              } else {
-                setCreateTaskForm({
-                  ...createTaskForm,
-                  executor_id: "",
-                });
-                setTaskSample({
-                  ...taskSample,
-                  executor_id: "",
-                });
-              }
-            }
+            setCreateTaskForm({
+              ...createTaskForm,
+              executor_id: parseInt(e.target.value),
+            });
+            setTaskSample({
+              ...taskSample,
+              executor_id: parseInt(e.target.value),
+            });
           }}
-        />
+        >
+          {executors.map((executor) => (
+            <option key={executor.id} value={executor.id}>
+              {executor.name} {executor.surname}
+            </option>
+          ))}
+        </select>
       </div>
       {!createTaskSampleFormStatus ? (
         <>
