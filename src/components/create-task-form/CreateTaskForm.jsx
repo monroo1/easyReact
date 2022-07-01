@@ -28,6 +28,7 @@ const CreateTaskForm = () => {
     setCreateTaskStatus,
     setCreateBpSampleStatus,
     setLengthArrTasks,
+    setCreateBpStatus,
   } = useContext(StatusContext);
 
   const [users, setUsers] = useState([]);
@@ -137,24 +138,19 @@ const CreateTaskForm = () => {
     }
   }, [arrTasksSample]);
 
-  // useEffect(() => {
-  //   if (valueTaskSample.length > 0) {
-  //     console.log(valueTaskSample);
-  //   }
-  // }, [valueTaskSample]);
-
   useEffect(() => {
     if (tasksArr.length > 0) {
       if (tasksArr.length === valueTaskSample.length) {
         setStatusCreateTask(false);
         setCreateTaskStatus(false);
+        setCreateBpStatus(true);
         setCreateBpSampleStatus(true);
-        // console.log(tasksArr);
       }
     }
   }, [tasksArr]);
 
   useEffect(() => {
+    console.log(nowTask);
     setTaskSample(createTaskForm);
     if (!!nowTask) {
       axios

@@ -39,6 +39,7 @@ const BpItem = ({ el }) => {
         },
       })
       .then((res) => {
+        // console.log(res.data.data);
         setProject(res.data.data);
       });
   }, []);

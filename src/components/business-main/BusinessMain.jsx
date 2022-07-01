@@ -4,7 +4,6 @@ import BusinessMainList from "../business-main-list/BusinessMainList";
 import { StatusContext } from "../../context/status";
 import CreateBp from "../create-bp/CreateBp";
 import CreateTask from "../create-task/CreateTask";
-import CreateBpSample from "../create-bp-sample/CreateBpSample";
 
 const BusinessMain = () => {
   const {
@@ -275,34 +274,11 @@ const BusinessMain = () => {
                 </span>
                 Добавить
               </button>
-              {document.cookie.replace(
-                /(?:(?:^|.*;\s*)isAdmin\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ) === "true" ? (
-                <button
-                  className="blue-btn create-bp"
-                  id="create-task"
-                  style={{
-                    fontSize: 16 + "px",
-                    paddingLeft: 15 + "px",
-                    paddingRight: 15 + "px",
-                  }}
-                  onClick={(e) => createBpSample()}
-                >
-                  <span style={{ fontSize: 24 + "px", marginRight: 15 + "px" }}>
-                    +
-                  </span>
-                  Добавить БП (шаблон)
-                </button>
-              ) : (
-                <></>
-              )}
             </div>
           </div>
           <BusinessMainList />
         </div>
-        {createBpSampleStatus === true ? <CreateBpSample /> : <></>}
-        {createBpStatus === true ? <CreateBp /> : <></>}
+        <CreateBp />
         {createTaskStatus === true ? <CreateTask /> : <></>}
       </section>
     </>

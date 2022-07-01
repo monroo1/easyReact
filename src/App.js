@@ -41,7 +41,7 @@ function App() {
   });
 
   const [createBpSampleForm, setCreateBpSampleForm] = useState({
-    type: 1,
+    type: null,
     businessProcess: {
       name: null,
       deadline: null,
@@ -91,7 +91,7 @@ function App() {
   const [openTasks, setOpenTasks] = useState("");
   const [idBp, setIdBp] = useState("");
   const [tasksList, setTasksList] = useState([]);
-  const [nowBp, setNowBp] = useState();
+  const [nowBp, setNowBp] = useState({});
   const [depsTask, setDepsTask] = useState();
   const [tasks, setTasks] = useState([]);
 
