@@ -40,6 +40,7 @@ const CreateBp = () => {
   const [nextLinkProjects, setNextLinkProjects] = useState(
     "https://test.easy-task.ru/api/v1/projects"
   );
+  const [file, setFile] = useState({});
 
   const submitFile = (e) => {
     e.preventDefault();
@@ -57,29 +58,8 @@ const CreateBp = () => {
       })
 
       .then((res) => {
+        console.log(res.data);
         setCreateBpForm({ ...createBpForm, file_id: res.data.id });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const submitFileSample = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-
-    axios
-      .post(`${apiBp}/loadFile`, formData, {
-        headers: {
-          "secret-token": document.cookie.replace(
-            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-            "$1"
-          ),
-        },
-      })
-
-      .then((res) => {
         setCreateBpSampleForm({
           ...createBpSampleForm,
           businessProcess: {
@@ -87,6 +67,7 @@ const CreateBp = () => {
             file_id: res.data.id,
           },
         });
+        setFile({ name: res.data.original_name });
       })
       .catch((err) => {
         console.log(err);
@@ -661,18 +642,30 @@ const CreateBp = () => {
                     />
                     Прикрепить файл
                   </label>
-                  <input
-                    type="file"
-                    id="input-download__input"
-                    onChange={(e) => submitFile(e)}
-                  />
-                  <label
-                    className="p__drop-content"
-                    htmlFor="input-download__input"
-                    id="input-download__input-label"
-                  >
-                    Выбрать
-                  </label>
+                  {!!file.name ? (
+                    <div className="file-download">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                        alt=""
+                      />
+                      {file.name}
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="file"
+                        id="input-download__input"
+                        onChange={(e) => submitFile(e)}
+                      />
+                      <label
+                        className="p__drop-content"
+                        htmlFor="input-download__input"
+                        id="input-download__input-label"
+                      >
+                        Выбрать
+                      </label>
+                    </>
+                  )}
                 </div>
               ) : (
                 <></>

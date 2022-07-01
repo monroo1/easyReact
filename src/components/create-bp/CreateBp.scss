@@ -185,3 +185,12 @@ input[type="time"]::-webkit-datetime-edit-text {
 #bussines-next {
   width: 218px;
 }
+
+.file-download {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 42px;
+  margin-top: 13px;
+}

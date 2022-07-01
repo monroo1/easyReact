@@ -13,6 +13,15 @@ const BpResultFormTreaty = () => {
   const [supply, setSupply] = useState();
   const [fileId, setFileId] = useState(0);
   const [paramsId, setParamsId] = useState(0);
+  const [fileName, setFileName] = useState("");
+  const [files, setFiles] = useState({
+    22: {},
+    23: {},
+    24: {},
+    25: {},
+    26: {},
+    27: {},
+  });
 
   const sendFile = (e) => {
     e.preventDefault();
@@ -31,6 +40,7 @@ const BpResultFormTreaty = () => {
       .then((res) => {
         setParamsId(parseInt(e.target.dataset.id));
         setFileId(parseInt(res.data.id));
+        setFileName(res.data.original_name);
       })
       .catch((err) => {
         console.log(err);
@@ -43,36 +53,42 @@ const BpResultFormTreaty = () => {
         ...createBpSampleFormOptions,
         22: { optionId: 22, fileId: fileId },
       });
+      setFiles({ ...files, 22: { name: fileName } });
     }
     if (paramsId === 23) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         23: { optionId: 23, fileId: fileId },
       });
+      setFiles({ ...files, 23: { name: fileName } });
     }
     if (paramsId === 24) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         24: { optionId: 24, fileId: fileId },
       });
+      setFiles({ ...files, 24: { name: fileName } });
     }
     if (paramsId === 25) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         25: { optionId: 25, fileId: fileId },
       });
+      setFiles({ ...files, 25: { name: fileName } });
     }
     if (paramsId === 26) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         26: { optionId: 26, fileId: fileId },
       });
+      setFiles({ ...files, 26: { name: fileName } });
     }
     if (paramsId === 27) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         27: { optionId: 27, fileId: fileId },
       });
+      setFiles({ ...files, 27: { name: fileName } });
     }
   }, [fileId, paramsId]);
 
@@ -743,21 +759,36 @@ const BpResultFormTreaty = () => {
               />
               Анкета
             </label>
-            <input
-              type="file"
-              id="anketa"
-              data-id="22"
-              onChange={(e) => {
-                sendFile(e);
-              }}
-            />
-            <label className="p__drop-content download-file" htmlFor="anketa">
-              <img
-                src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                alt="download"
-              />
-              Прикрепить файл
-            </label>
+            {!files[22].name ? (
+              <>
+                <input
+                  type="file"
+                  id="anketa"
+                  data-id="22"
+                  onChange={(e) => {
+                    sendFile(e);
+                  }}
+                />
+                <label
+                  className="p__drop-content download-file"
+                  htmlFor="anketa"
+                >
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                    alt="download"
+                  />
+                  Прикрепить файл
+                </label>
+              </>
+            ) : (
+              <div className="file-download">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                  alt=""
+                />
+                {files[22].name}
+              </div>
+            )}
           </div>
           <div>
             <label className="p__drop-content">
@@ -768,69 +799,109 @@ const BpResultFormTreaty = () => {
               Учредительные документы
             </label>
             <div className="doc-list">
-              <label className="p__drop-content">Устав:</label>
-              <input
-                type="file"
-                id="reporting-previous-year"
-                data-id="23"
-                onChange={(e) => {
-                  sendFile(e);
-                }}
-              />
-              <label
-                className="p__drop-content download-file"
-                htmlFor="reporting-previous-year"
-              >
-                <img
-                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                  alt="download"
-                />
-                Прикрепить файл
+              <label className="p__drop-content" htmlFor="charter">
+                Устав:
               </label>
+              {!files[23].name ? (
+                <>
+                  <input
+                    type="file"
+                    id="charter"
+                    data-id="23"
+                    onChange={(e) => {
+                      sendFile(e);
+                    }}
+                  />
+                  <label
+                    className="p__drop-content download-file"
+                    htmlFor="charter"
+                  >
+                    <img
+                      src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                      alt="download"
+                    />
+                    Прикрепить файл
+                  </label>
+                </>
+              ) : (
+                <div className="file-download">
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                    alt=""
+                  />
+                  {files[23].name}
+                </div>
+              )}
             </div>
             <div className="doc-list">
-              <label className="p__drop-content">
+              <label className="p__drop-content" htmlFor="solution">
                 Решение/протокол о назначении генерального директора:
               </label>
-              <input
-                type="file"
-                id="reporting-previous-year"
-                data-id="24"
-                onChange={(e) => {
-                  sendFile(e);
-                }}
-              />
-              <label
-                className="p__drop-content download-file"
-                htmlFor="reporting-previous-year"
-              >
-                <img
-                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                  alt="download"
-                />
-                Прикрепить файл
-              </label>
+              {!files[24].name ? (
+                <>
+                  <input
+                    type="file"
+                    id="solution"
+                    data-id="24"
+                    onChange={(e) => {
+                      sendFile(e);
+                    }}
+                  />
+                  <label
+                    className="p__drop-content download-file"
+                    htmlFor="solution"
+                  >
+                    <img
+                      src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                      alt="download"
+                    />
+                    Прикрепить файл
+                  </label>
+                </>
+              ) : (
+                <div className="file-download">
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                    alt=""
+                  />
+                  {files[24].name}
+                </div>
+              )}
             </div>
             <div className="doc-list">
-              <label className="p__drop-content">Доверенность:</label>
-              <input
-                type="file"
-                id="reporting-previous-year"
-                data-id="25"
-                onChange={(e) => {
-                  sendFile(e);
-                }}
-              />
-              <label
-                className="p__drop-content download-file"
-                htmlFor="reporting-previous-year"
-              >
-                <img
-                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                  alt="download"
-                />
-                Прикрепить файл
+              <label className="p__drop-content" htmlFor="attorney">
+                Доверенность:
               </label>
+              {!files[25].name ? (
+                <>
+                  <input
+                    type="file"
+                    id="attorney"
+                    data-id="25"
+                    onChange={(e) => {
+                      sendFile(e);
+                    }}
+                  />
+                  <label
+                    className="p__drop-content download-file"
+                    htmlFor="attorney"
+                  >
+                    <img
+                      src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                      alt="download"
+                    />
+                    Прикрепить файл
+                  </label>
+                </>
+              ) : (
+                <div className="file-download">
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                    alt=""
+                  />
+                  {files[25].name}
+                </div>
+              )}
             </div>
           </div>
           <div>
@@ -841,24 +912,36 @@ const BpResultFormTreaty = () => {
               />
               Проект договора с заполненными реквизитами обеих сторон
             </label>
-            <input
-              type="file"
-              id="project-treaty"
-              data-id="26"
-              onChange={(e) => {
-                sendFile(e);
-              }}
-            />
-            <label
-              className="p__drop-content download-file"
-              htmlFor="project-treaty"
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                alt="download"
-              />
-              Прикрепить файл
-            </label>
+            {!files[26].name ? (
+              <>
+                <input
+                  type="file"
+                  id="project-treaty"
+                  data-id="26"
+                  onChange={(e) => {
+                    sendFile(e);
+                  }}
+                />
+                <label
+                  className="p__drop-content download-file"
+                  htmlFor="project-treaty"
+                >
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                    alt="download"
+                  />
+                  Прикрепить файл
+                </label>
+              </>
+            ) : (
+              <div className="file-download">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                  alt=""
+                />
+                {files[26].name}
+              </div>
+            )}
           </div>
           <div>
             <label
@@ -871,24 +954,36 @@ const BpResultFormTreaty = () => {
               />
               Отчетность контрагента за предыдущий год
             </label>
-            <input
-              type="file"
-              id="reporting-previous-year"
-              data-id="27"
-              onChange={(e) => {
-                sendFile(e);
-              }}
-            />
-            <label
-              className="p__drop-content download-file"
-              htmlFor="reporting-previous-year"
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                alt="download"
-              />
-              Прикрепить файл
-            </label>
+            {!files[27].name ? (
+              <>
+                <input
+                  type="file"
+                  id="reporting-previous-year"
+                  data-id="27"
+                  onChange={(e) => {
+                    sendFile(e);
+                  }}
+                />
+                <label
+                  className="p__drop-content download-file"
+                  htmlFor="reporting-previous-year"
+                >
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                    alt="download"
+                  />
+                  Прикрепить файл
+                </label>
+              </>
+            ) : (
+              <div className="file-download">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                  alt=""
+                />
+                {files[27].name}
+              </div>
+            )}
           </div>
         </>
       ) : (
