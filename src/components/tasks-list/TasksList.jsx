@@ -24,6 +24,7 @@ const TasksList = ({ tasks }) => {
   }, []);
 
   if (tasksList.length > 0) {
+    console.log(tasksList);
     return (
       <div className="dependencies">
         <div className="dependencies__content">
