@@ -31,9 +31,12 @@ fetch("https://test.easy-task.ru/api/v1/login", {
             ),
         },
       })
-      .then((res) => res.data.data.filter((el) => el.id === 1))
+      .then((res) => {
+        console.log(res.data.data);
+        // console.log(res.data.data[6] === {id: 7, name: 'executor', rus_name: 'Исполнитель'});
+        return res.data.data.filter((el) => el.id === 1);
+      })
       .then((r) => {
-        console.log();
         if (r[0].id) {
           document.cookie = `isAdmin=${true}`;
         } else {

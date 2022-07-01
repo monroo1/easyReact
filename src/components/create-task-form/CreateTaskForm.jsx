@@ -28,6 +28,7 @@ const CreateTaskForm = () => {
     setCreateTaskStatus,
     setCreateBpSampleStatus,
     setLengthArrTasks,
+    setCreateBpStatus,
   } = useContext(StatusContext);
 
   useEffect(() => {
@@ -120,24 +121,19 @@ const CreateTaskForm = () => {
     }
   }, [arrTasksSample]);
 
-  // useEffect(() => {
-  //   if (valueTaskSample.length > 0) {
-  //     console.log(valueTaskSample);
-  //   }
-  // }, [valueTaskSample]);
-
   useEffect(() => {
     if (tasksArr.length > 0) {
       if (tasksArr.length === valueTaskSample.length) {
         setStatusCreateTask(false);
         setCreateTaskStatus(false);
+        setCreateBpStatus(true);
         setCreateBpSampleStatus(true);
-        // console.log(tasksArr);
       }
     }
   }, [tasksArr]);
 
   useEffect(() => {
+    console.log(nowTask);
     setTaskSample(createTaskForm);
     if (!!nowTask) {
       axios
@@ -305,8 +301,9 @@ const CreateTaskForm = () => {
       <div>
         <label className="p__drop-content" htmlFor="businessTask__executor">
           <img src={`${process.env.PUBLIC_URL}/assets/input/User.svg`} />
-          Id Исполнителя
+          Исполнитель
         </label>
+
         <input
           className="input-form"
           type="text"

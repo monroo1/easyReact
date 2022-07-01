@@ -379,7 +379,7 @@ const CreateTask = () => {
               setNowTask("");
 
               setCreateBpSampleForm({
-                type: 1,
+                type: 0,
                 businessProcess: {
                   name: null,
                   deadline: null,

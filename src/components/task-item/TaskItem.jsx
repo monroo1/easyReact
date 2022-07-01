@@ -4,7 +4,6 @@ import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 
 const TaskItem = ({ style, el }) => {
   const { createBpStatus } = useContext(StatusContext);
-  // console.log(el.end);
   return (
     <div
       className={
