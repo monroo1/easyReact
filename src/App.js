@@ -86,6 +86,7 @@ function App() {
     work_load: 35,
     workflow_id: 1,
   });
+  const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("id");
   const [filterMethod, setFilterMethod] = useState("asc");
   const [openTasks, setOpenTasks] = useState("");
@@ -118,6 +119,8 @@ function App() {
   return (
     <StatusContext.Provider
       value={{
+        users,
+        setUsers,
         createBpStatus,
         setCreateBpStatus,
         createTaskStatus,

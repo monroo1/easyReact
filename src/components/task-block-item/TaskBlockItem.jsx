@@ -1,15 +1,41 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { useEffect } from "react";
 import { StatusContext } from "../../context/status";
 import TaskItem from "../task-item/TaskItem";
 
 const TaskBlockItem = ({ item }) => {
   const { tasksList } = useContext(StatusContext);
+  const getTopChildBlock = useRef();
+  const getTopParentBlock = useRef();
+  const [styleLine, setStyleLine] = useState(false);
+
+  useEffect(() => {
+    console.log(!!getTopChildBlock.current);
+    if (!!getTopChildBlock.current) {
+      setStyleLine(true);
+    }
+  }, []);
 
   return (
-    <div className="dependencies__content-list__task-block">
+    <div
+      className="dependencies__content-list__task-block"
+      ref={getTopParentBlock}
+    >
       <TaskItem el={item} />
       <div className="dependencies__content-list__task-block__vertical-line">
-        <div></div>
+        <div
+          style={
+            !!styleLine
+              ? {
+                  height:
+                    getTopChildBlock.current.offsetTop -
+                    getTopParentBlock.current.offsetTop -
+                    47 +
+                    "px",
+                }
+              : {}
+          }
+        ></div>
       </div>
       <div className="dependencies__content-list__task-block__gorizont-wrapper">
         <div
@@ -25,6 +51,7 @@ const TaskBlockItem = ({ item }) => {
                 <div
                   className="dependencies__content-list__task-block"
                   key={it}
+                  ref={getTopChildBlock}
                 >
                   <TaskItem el={arr[0].data.data} style={"dropdown"} />
                   <div className="dependencies__content-list__task-block__vertical-line">

@@ -1,9 +1,12 @@
 import "./BusinessMain.scss";
-import React, { useContext } from "react";
-import BusinessMainList from "../business-main-list/BusinessMainList";
+import React, { useContext, useEffect } from "react";
+import axios from "axios";
 import { StatusContext } from "../../context/status";
+import BusinessMainList from "../business-main-list/BusinessMainList";
 import CreateBp from "../create-bp/CreateBp";
 import CreateTask from "../create-task/CreateTask";
+import SelectSearch from "react-select-search";
+import { useState } from "react";
 
 const BusinessMain = () => {
   const {
@@ -12,7 +15,14 @@ const BusinessMain = () => {
     createTaskStatus,
     createBpSampleStatus,
     setCreateBpSampleStatus,
+    setUsers,
+    users,
   } = useContext(StatusContext);
+  const [nextLink, setNextLink] = useState(
+    "https://test.easy-task.ru/api/v1/users?page=1"
+  );
+
+  const [usersInitiator, setUsersInitiator] = useState([]);
 
   const createBp = () => {
     if (createBpStatus === true) {
@@ -41,6 +51,39 @@ const BusinessMain = () => {
     setCreateBpSampleStatus(true);
   };
 
+  useEffect(() => {
+    if (!!nextLink) {
+      axios
+        .get(nextLink, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        })
+        .then((res) => {
+          setNextLink(res.data.links.next);
+          setUsers([...users, ...res.data.data]);
+        });
+    }
+  }, [nextLink]);
+
+  useEffect(() => {
+    users.map((el) => {
+      setUsersInitiator([
+        ...usersInitiator,
+        {
+          name: el.name + " " + el.surname,
+          value: el.id,
+          id: el.id,
+        },
+      ]);
+    });
+  }, [users]);
+
   return (
     <>
       <section
@@ -53,7 +96,7 @@ const BusinessMain = () => {
         <div className="business__main-content">
           <div className="business__main-content__header">
             <div className="business__main-content__header-left">
-              <div className="business__main-content__header-left__select">
+              {/* <div className="business__main-content__header-left__select">
                 <input
                   className="hidden"
                   type="checkbox"
@@ -100,12 +143,22 @@ const BusinessMain = () => {
                             alt="logo"
                           />
                         </div>
-                        <p className="p-black">Шеин Алексей</p>
+                        
                       </div>
                     </button>
                   </li>
                 </ul>
-              </div>
+              </div> */}
+              <select id="business-select-menu__label">
+                <option>ША Шеин Алексей</option>
+                {usersInitiator.map((user) => {
+                  return (
+                    <option key={user.id} value={user.id} id={user.id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
               <div className="business__main-content__header-left__position">
                 <svg
                   width="24"

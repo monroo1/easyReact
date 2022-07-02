@@ -10,6 +10,14 @@ const BpResultFormWork = () => {
   const [fileId, setFileId] = useState(0);
   const [paramsId, setParamsId] = useState(0);
 
+  const [fileName, setFileName] = useState("");
+  const [files, setFiles] = useState({
+    9: {},
+    10: {},
+    11: {},
+    12: {},
+  });
+
   const sendFile = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -27,6 +35,7 @@ const BpResultFormWork = () => {
       .then((res) => {
         setParamsId(parseInt(e.target.dataset.id));
         setFileId(parseInt(res.data.id));
+        setFileName(res.data.original_name);
       })
       .catch((err) => {
         console.log(err);
@@ -39,24 +48,28 @@ const BpResultFormWork = () => {
         ...createBpSampleFormOptions,
         9: { optionId: 9, fileId: fileId },
       });
+      setFiles({ ...files, 9: { name: fileName } });
     }
     if (paramsId === 10) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         10: { optionId: 10, fileId: fileId },
       });
+      setFiles({ ...files, 10: { name: fileName } });
     }
     if (paramsId === 11) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         11: { optionId: 11, fileId: fileId },
       });
+      setFiles({ ...files, 11: { name: fileName } });
     }
     if (paramsId === 12) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         12: { optionId: 12, fileId: fileId },
       });
+      setFiles({ ...files, 12: { name: fileName } });
     }
   }, [fileId, paramsId]);
 
@@ -225,23 +238,30 @@ const BpResultFormWork = () => {
             });
           }}
         ></TextareaAutosize>
-        <div style={{ marginTop: 20 + "px" }}>
-          <input
-            type="file"
-            id="schedule"
-            data-id="9"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label className="p__drop-content download-file" htmlFor="schedule">
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
+        {!files[9].name ? (
+          <div style={{ marginTop: 20 + "px" }}>
+            <input
+              type="file"
+              id="schedule"
+              data-id="9"
+              onChange={(e) => {
+                sendFile(e);
+              }}
             />
-            Прикрепить файл
-          </label>
-        </div>
+            <label className="p__drop-content download-file" htmlFor="schedule">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                alt="download"
+              />
+              Прикрепить файл
+            </label>
+          </div>
+        ) : (
+          <div className="file-download">
+            <img src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`} alt="" />
+            {files[9].name}
+          </div>
+        )}
       </div>
       <div>
         <label className="p__drop-content">
@@ -253,57 +273,94 @@ const BpResultFormWork = () => {
         </label>
         <div className="doc-list">
           <label className="p__drop-content">ГПХ/ТД:</label>
-          <input
-            type="file"
-            id="GPC"
-            data-id="10"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label className="p__drop-content download-file" htmlFor="GPC">
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
-            />
-            Прикрепить файл
-          </label>
+          {!files[10].name ? (
+            <>
+              <input
+                type="file"
+                id="GPC"
+                data-id="10"
+                onChange={(e) => {
+                  sendFile(e);
+                }}
+              />
+              <label className="p__drop-content download-file" htmlFor="GPC">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                  alt="download"
+                />
+                Прикрепить файл
+              </label>
+            </>
+          ) : (
+            <div className="file-download">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                alt=""
+              />
+              {files[10].name}
+            </div>
+          )}
         </div>
         <div className="doc-list">
           <label className="p__drop-content">СМЗ:</label>
-          <input
-            type="file"
-            id="smz"
-            data-id="11"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label className="p__drop-content download-file" htmlFor="smz">
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
-            />
-            Прикрепить файл
-          </label>
+          {!files[11].name ? (
+            <>
+              <input
+                type="file"
+                id="smz"
+                data-id="11"
+                onChange={(e) => {
+                  sendFile(e);
+                }}
+              />
+              <label className="p__drop-content download-file" htmlFor="smz">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                  alt="download"
+                />
+                Прикрепить файл
+              </label>
+            </>
+          ) : (
+            <div className="file-download">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                alt=""
+              />
+              {files[11].name}
+            </div>
+          )}
         </div>
         <div className="doc-list">
           <label className="p__drop-content">ИП:</label>
-          <input
-            type="file"
-            id="ip"
-            data-id="12"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label className="p__drop-content download-file" htmlFor="ip">
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
-            />
-            Прикрепить файл
-          </label>
+          {!files[12].name ? (
+            <>
+              {" "}
+              <input
+                type="file"
+                id="ip"
+                data-id="12"
+                onChange={(e) => {
+                  sendFile(e);
+                }}
+              />
+              <label className="p__drop-content download-file" htmlFor="ip">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                  alt="download"
+                />
+                Прикрепить файл
+              </label>
+            </>
+          ) : (
+            <div className="file-download">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                alt=""
+              />
+              {files[12].name}
+            </div>
+          )}
         </div>
       </div>
     </form>

@@ -29,9 +29,8 @@ const CreateTaskForm = () => {
     setCreateBpSampleStatus,
     setLengthArrTasks,
     setCreateBpStatus,
+    users,
   } = useContext(StatusContext);
-
-  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     if (
@@ -75,21 +74,6 @@ const CreateTaskForm = () => {
             project_section_id: parseInt(res.data.data[0].project_section_id),
           });
         }
-      });
-
-    axios
-      .get(`https://test.easy-task.ru/api/v1/users`, {
-        headers: {
-          Authorization:
-            "Bearer " +
-            document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-              "$1"
-            ),
-        },
-      })
-      .then((res) => {
-        setUsers(res.data.data);
       });
   }, []);
 

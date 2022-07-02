@@ -11,6 +11,15 @@ const BpResultFormDismissal = () => {
   const [fileId, setFileId] = useState(0);
   const [paramsId, setParamsId] = useState(0);
 
+  const [fileName, setFileName] = useState("");
+  const [files, setFiles] = useState({
+    5: {},
+    8: {},
+    9: {},
+    10: {},
+    11: {},
+  });
+
   const sendFile = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -28,6 +37,7 @@ const BpResultFormDismissal = () => {
       .then((res) => {
         setParamsId(parseInt(e.target.dataset.id));
         setFileId(parseInt(res.data.id));
+        setFileName(res.data.original_name);
       })
       .catch((err) => {
         console.log(err);
@@ -40,30 +50,35 @@ const BpResultFormDismissal = () => {
         ...createBpSampleFormOptions,
         5: { optionId: 5, fileId: fileId },
       });
+      setFiles({ ...files, 5: { name: fileName } });
     }
     if (paramsId === 8) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         8: { optionId: 8, fileId: fileId },
       });
+      setFiles({ ...files, 8: { name: fileName } });
     }
     if (paramsId === 9) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         9: { optionId: 9, fileId: fileId },
       });
+      setFiles({ ...files, 9: { name: fileName } });
     }
     if (paramsId === 10) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         10: { optionId: 10, fileId: fileId },
       });
+      setFiles({ ...files, 10: { name: fileName } });
     }
     if (paramsId === 11) {
       setCreateBpSampleFormOptions({
         ...createBpSampleFormOptions,
         11: { optionId: 11, fileId: fileId },
       });
+      setFiles({ ...files, 11: { name: fileName } });
     }
   }, [fileId, paramsId]);
 
@@ -178,24 +193,36 @@ const BpResultFormDismissal = () => {
               />
               Заявление на увольнение
             </label>
-            <input
-              type="file"
-              id="reporting-previous-year"
-              data-id="5"
-              onChange={(e) => {
-                sendFile(e);
-              }}
-            />
-            <label
-              className="p__drop-content download-file"
-              htmlFor="reporting-previous-year"
-            >
-              <img
-                src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-                alt="download"
-              />
-              Прикрепить файл
-            </label>
+            {!files[5].name ? (
+              <>
+                <input
+                  type="file"
+                  id="reporting-previous-year"
+                  data-id="5"
+                  onChange={(e) => {
+                    sendFile(e);
+                  }}
+                />
+                <label
+                  className="p__drop-content download-file"
+                  htmlFor="reporting-previous-year"
+                >
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                    alt="download"
+                  />
+                  Прикрепить файл
+                </label>
+              </>
+            ) : (
+              <div className="file-download">
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                  alt=""
+                />
+                {files[5].name}
+              </div>
+            )}
           </div>
         </>
       ) : (
@@ -291,24 +318,34 @@ const BpResultFormDismissal = () => {
           />
           Статья
         </label>
-        <input
-          type="file"
-          id="reporting-previous-year"
-          data-id="8"
-          onChange={(e) => {
-            sendFile(e);
-          }}
-        />
-        <label
-          className="p__drop-content download-file"
-          htmlFor="reporting-previous-year"
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-            alt="download"
-          />
-          Прикрепить файл
-        </label>
+        {!files[8].name ? (
+          <>
+            {" "}
+            <input
+              type="file"
+              id="reporting-previous-year"
+              data-id="8"
+              onChange={(e) => {
+                sendFile(e);
+              }}
+            />
+            <label
+              className="p__drop-content download-file"
+              htmlFor="reporting-previous-year"
+            >
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                alt="download"
+              />
+              Прикрепить файл
+            </label>
+          </>
+        ) : (
+          <div className="file-download">
+            <img src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`} alt="" />
+            {files[8].name}
+          </div>
+        )}
       </div>
       {relationshipFormat === "ГПХ" ? (
         <div>
@@ -319,24 +356,36 @@ const BpResultFormDismissal = () => {
             />
             Соглашение о расторжении договора ГПХ
           </label>
-          <input
-            type="file"
-            id="reporting-previous-year"
-            data-id="9"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label
-            className="p__drop-content download-file"
-            htmlFor="reporting-previous-year"
-          >
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
-            />
-            Прикрепить файл
-          </label>
+          {!files[9].name ? (
+            <>
+              <input
+                type="file"
+                id="reporting-previous-year"
+                data-id="9"
+                onChange={(e) => {
+                  sendFile(e);
+                }}
+              />
+              <label
+                className="p__drop-content download-file"
+                htmlFor="reporting-previous-year"
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                  alt="download"
+                />
+                Прикрепить файл
+              </label>
+            </>
+          ) : (
+            <div className="file-download">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                alt=""
+              />
+              {files[9].name}
+            </div>
+          )}
         </div>
       ) : (
         <></>
@@ -350,24 +399,36 @@ const BpResultFormDismissal = () => {
             />
             Соглашение о расторжении ДОУ
           </label>
-          <input
-            type="file"
-            id="reporting-previous-year"
-            data-id="10"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label
-            className="p__drop-content download-file"
-            htmlFor="reporting-previous-year"
-          >
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
-            />
-            Прикрепить файл
-          </label>
+          {!files[10].name ? (
+            <>
+              <input
+                type="file"
+                id="reporting-previous-year"
+                data-id="10"
+                onChange={(e) => {
+                  sendFile(e);
+                }}
+              />
+              <label
+                className="p__drop-content download-file"
+                htmlFor="reporting-previous-year"
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                  alt="download"
+                />
+                Прикрепить файл
+              </label>
+            </>
+          ) : (
+            <div className="file-download">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                alt=""
+              />
+              {files[10].name}
+            </div>
+          )}
         </div>
       ) : (
         <></>
@@ -381,24 +442,37 @@ const BpResultFormDismissal = () => {
             />
             Внутренний обходной лист, подписанный руководителем, скан (поле)
           </label>
-          <input
-            type="file"
-            id="reporting-previous-year"
-            data-id="11"
-            onChange={(e) => {
-              sendFile(e);
-            }}
-          />
-          <label
-            className="p__drop-content download-file"
-            htmlFor="reporting-previous-year"
-          >
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
-              alt="download"
-            />
-            Прикрепить файл
-          </label>
+          {!files[11].name ? (
+            <>
+              {" "}
+              <input
+                type="file"
+                id="reporting-previous-year"
+                data-id="11"
+                onChange={(e) => {
+                  sendFile(e);
+                }}
+              />
+              <label
+                className="p__drop-content download-file"
+                htmlFor="reporting-previous-year"
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/FilePlus.svg`}
+                  alt="download"
+                />
+                Прикрепить файл
+              </label>
+            </>
+          ) : (
+            <div className="file-download">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/FilePlus.png`}
+                alt=""
+              />
+              {files[11].name}
+            </div>
+          )}
         </div>
       ) : (
         <></>

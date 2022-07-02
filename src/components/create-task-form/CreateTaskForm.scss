@@ -40,9 +40,12 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .form-task__dependencies__btn-active {
   background: #e6f8fd !important;
+}
+
+.doc-list > label:first-child {
+  width: 100%;
 }
