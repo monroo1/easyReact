@@ -134,7 +134,6 @@ const CreateTaskForm = () => {
   }, [tasksArr]);
 
   useEffect(() => {
-    console.log(nowTask);
     setTaskSample(createTaskForm);
     if (!!nowTask) {
       axios

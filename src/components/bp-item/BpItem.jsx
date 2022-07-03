@@ -15,8 +15,10 @@ const BpItem = ({ el }) => {
     setIdBp,
     openTasks,
     setOpenTasks,
+    bearer,
   } = useContext(StatusContext);
   const [project, setProject] = useState();
+  const [projectSection, setProjectSection] = useState({});
 
   const openTasksMenu = (e) => {
     if (e.id === openTasks) {
@@ -39,8 +41,23 @@ const BpItem = ({ el }) => {
         },
       })
       .then((res) => {
-        // console.log(res.data.data);
         setProject(res.data.data);
+      });
+
+    axios
+      .get(
+        `https://test.easy-task.ru/api/v1/projectsections/${el.project_section_id}`,
+        {
+          headers: {
+            Authorization: "Bearer " + bearer,
+          },
+        }
+      )
+      .then((res) => {
+        setProjectSection({
+          ...res.data.data,
+          name: res.data.data.name.slice(0, 12),
+        });
       });
   }, []);
 
@@ -97,7 +114,7 @@ const BpItem = ({ el }) => {
           </p>
           <div className="business__main-content__list-block__item__project">
             <p className="p-black">{project?.name.slice(0, 10)}</p>
-            <span className="p-grey">{project?.description.slice(0, 12)}</span>
+            <span className="p-grey">{projectSection.name}</span>
           </div>
         </div>
         <div

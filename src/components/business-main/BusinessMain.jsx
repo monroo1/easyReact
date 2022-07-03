@@ -5,7 +5,6 @@ import { StatusContext } from "../../context/status";
 import BusinessMainList from "../business-main-list/BusinessMainList";
 import CreateBp from "../create-bp/CreateBp";
 import CreateTask from "../create-task/CreateTask";
-import SelectSearch from "react-select-search";
 import { useState } from "react";
 
 const BusinessMain = () => {
@@ -150,7 +149,6 @@ const BusinessMain = () => {
                 </ul>
               </div> */}
               <select id="business-select-menu__label">
-                <option>ША Шеин Алексей</option>
                 {usersInitiator.map((user) => {
                   return (
                     <option key={user.id} value={user.id} id={user.id}>

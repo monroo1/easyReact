@@ -174,45 +174,100 @@ const CreateTask = () => {
   };
 
   const saveBp = () => {
-    let tasksStr = "";
-    for (let i in tasks) {
-      tasksStr = tasksStr.concat(tasks[i]);
-      if (i < tasks.length - 1) {
-        tasksStr = tasksStr.concat("|");
+    if (tasks.length > 0) {
+      let tasksStr = "";
+      for (let i in tasks) {
+        tasksStr = tasksStr.concat(tasks[i]);
+        if (i < tasks.length - 1) {
+          tasksStr = tasksStr.concat("|");
+        }
       }
-    }
 
-    if (createBpForm.deadlineDate !== null) {
-      if (!createBpForm.deadlineTime) {
-        setCreateBpForm({ ...createBpForm, deadlineTime: "00:00:00" });
+      if (createBpForm.deadlineDate !== null) {
+        if (!createBpForm.deadlineTime) {
+          setCreateBpForm({ ...createBpForm, deadlineTime: "00:00:00" });
+        }
       }
-    }
-    if (createBpForm.file_id === null || createBpForm.deadlineDate === null) {
-      if (createBpForm.file_id === null && createBpForm.deadlineDate === null) {
-        fetch(
-          `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=${tasksStr}`,
-          {
-            method: "POST",
-            headers: {
-              "secret-token": document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-          }
-        )
-          .then((res) => res.json())
-          .then((r) => {
-            console.log(r.businessProcess.tasks);
-          });
+      if (createBpForm.file_id === null || createBpForm.deadlineDate === null) {
+        if (
+          createBpForm.file_id === null &&
+          createBpForm.deadlineDate === null
+        ) {
+          fetch(
+            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}`,
+            {
+              method: "POST",
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((r) => {
+              // console.log(r.businessProcess.tasks);
+            });
+        }
+        if (
+          createBpForm.file_id === null &&
+          createBpForm.deadlineDate !== null
+        ) {
+          fetch(
+            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${
+              createBpForm.initiator_id
+            }&project_id=${createBpForm.project_id}&project_section_id=${
+              createBpForm.project_section_id
+            }&deadline=${
+              createBpForm.deadlineDate + " " + createBpForm.deadlineTime
+            }&tasks=${tasksStr}`,
+            {
+              method: "POST",
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((r) => {
+              // console.log(r.businessProcess.tasks);
+            });
+        }
+        if (
+          createBpForm.deadlineDate === null &&
+          createBpForm.file_id !== null
+        ) {
+          fetch(
+            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}&file_id=${createBpForm.file_id}`,
+            {
+              method: "POST",
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+            .then((res) => res.json())
+            .then((r) => {
+              // console.log(r.businessProcess.tasks);
+            });
+        }
       }
-      if (createBpForm.file_id === null && createBpForm.deadlineDate !== null) {
+      if (createBpForm.file_id !== null && createBpForm.deadlineDate !== null) {
         fetch(
           `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${
             createBpForm.initiator_id
-          }&project_id=${createBpForm.project_id}&deadline=${
+          }&project_id=${createBpForm.project_id}&project_section_id=${
+            createBpForm.project_section_id
+          }&deadline=${
             createBpForm.deadlineDate + " " + createBpForm.deadlineTime
-          }&tasks=${tasksStr}`,
+          }&tasks=${tasksStr}&file_id=${createBpForm.file_id}`,
           {
             method: "POST",
             headers: {
@@ -224,67 +279,51 @@ const CreateTask = () => {
           }
         )
           .then((res) => res.json())
-          .then((r) => {
-            console.log(r.businessProcess.tasks);
-          });
+          .then((r) => {});
       }
-      if (createBpForm.deadlineDate === null && createBpForm.file_id !== null) {
-        fetch(
-          `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&tasks=${tasksStr}&file_id=${createBpForm.file_id}`,
-          {
-            method: "POST",
-            headers: {
-              "secret-token": document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-          }
-        )
-          .then((res) => res.json())
-          .then((r) => {
-            console.log(r.businessProcess.tasks);
-          });
-      }
-    }
-    if (createBpForm.file_id !== null && createBpForm.deadlineDate !== null) {
-      fetch(
-        `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${
-          createBpForm.initiator_id
-        }&project_id=${createBpForm.project_id}&deadline=${
-          createBpForm.deadlineDate + " " + createBpForm.deadlineTime
-        }&tasks=${tasksStr}&file_id=${createBpForm.file_id}`,
-        {
-          method: "POST",
-          headers: {
-            "secret-token": document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+      setCreateBpForm({
+        name: null,
+        initiator_id: parseInt(
+          document.cookie.replace(
+            /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          )
+        ),
+        project_id: createBpForm.project_id,
+        deadlineDate: null,
+        deadlineTime: "00:00:00",
+        tasks: null,
+        file_id: null,
+        deadline: null,
+      });
+
+      setCreateTaskStatus(false);
+      setCreateTaskSampleFormStatus(false);
+      setStatusCreateTask(false);
+      setCreateTaskForm({
+        ...createTaskForm,
+        createTaskForm: createTaskForm.project_section_id,
+      });
+      setTasks([]);
+      setTasksArr([]);
+      setNowTask("");
+      setCreateBpSampleForm({
+        type: 0,
+        businessProcess: {
+          name: null,
+          deadline: null,
+          project_id: null,
+          tasks: 1,
+          initiator_id: parseInt(
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
               "$1"
-            ),
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((r) => {});
+            )
+          ),
+        },
+        options: [],
+      });
     }
-    setCreateBpForm({
-      name: null,
-      initiator_id: parseInt(
-        document.cookie.replace(
-          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        )
-      ),
-      project_id: createBpForm.project_id,
-      deadlineDate: null,
-      deadlineTime: "00:00:00",
-      tasks: null,
-      file_id: null,
-      deadline: null,
-    });
-    setTasks([]);
-    setCreateTaskStatus(false);
-    setCreateTaskSampleFormStatus(false);
   };
 
   useEffect(() => {

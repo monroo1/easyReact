@@ -81,7 +81,7 @@ function App() {
     prev_id: null,
     priority_id: 2,
     provide_to: 0,
-    status_id: 2,
+    status_id: 19,
     task_load: 5,
     work_load: 35,
     workflow_id: 1,

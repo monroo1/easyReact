@@ -41,6 +41,7 @@ const CreateBp = () => {
     "https://test.easy-task.ru/api/v1/projects"
   );
   const [file, setFile] = useState({});
+  const [projectSections, setProjectSections] = useState([]);
 
   const submitFile = (e) => {
     e.preventDefault();
@@ -75,7 +76,11 @@ const CreateBp = () => {
   };
 
   const nextCreateTasks = () => {
-    if (createBpForm.name !== null && createBpForm.project_id !== null) {
+    if (
+      createBpForm.name !== null &&
+      createBpForm.project_id !== null &&
+      createBpForm.project_section_id !== null
+    ) {
       setCreateBpStatus(false);
       setCreateTaskStatus(true);
     }
@@ -106,10 +111,8 @@ const CreateBp = () => {
 
   const nextBpSample = () => {
     if (!createBpSampleStatus) {
-      console.log("aaa");
       nextCreateTasks();
     } else {
-      console.log("Da");
       setCreateBpStatus(false);
       setCreateBpSampleStatus(false);
       setCreateTaskStatus(true);
@@ -135,7 +138,7 @@ const CreateBp = () => {
     if (createBpSampleForm.type === 0) {
       if (createBpSampleForm.businessProcess.file_id) {
         fetch(
-          `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${tasksStr}&file_id=${createBpSampleForm.businessProcess.file_id}`,
+          `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}&file_id=${createBpSampleForm.businessProcess.file_id}`,
           {
             method: "POST",
             headers: {
@@ -169,7 +172,7 @@ const CreateBp = () => {
           });
       } else {
         fetch(
-          `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&tasks=${tasksStr}`,
+          `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}`,
           {
             method: "POST",
             headers: {
@@ -197,7 +200,6 @@ const CreateBp = () => {
               },
               options: [],
             });
-            // console.log(r.businessProcess.tasks);
           });
       }
     } else {
@@ -346,9 +348,25 @@ const CreateBp = () => {
   }, []);
 
   useEffect(() => {
+    if (!!createBpForm.project_id) {
+      axios
+        .get(
+          `https://test.easy-task.ru/api/v1/projects/${createBpForm.project_id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + bearer,
+            },
+          }
+        )
+        .then((res) => {
+          setProjectSections(res.data.data.sections);
+        });
+    }
+  }, [createBpForm.project_id]);
+
+  useEffect(() => {
     if (createBpSampleForm.type === 0) {
       let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
-      console.log(bp);
       bp = bp[0].businessProcessId;
 
       let tasksStr = "";
@@ -513,6 +531,54 @@ const CreateBp = () => {
                 >
                   <option value={null}>Выбрать</option>
                   {projects.map((el) => {
+                    return (
+                      <option key={el.id} value={el.id}>
+                        {el.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div>
+                <label
+                  className="p__drop-content"
+                  htmlFor="input-project-section"
+                >
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
+                    alt="Article"
+                  />
+                  Секция проекта*
+                </label>
+                <select
+                  id="input-project-section"
+                  className="input-form"
+                  disabled={!createBpForm.project_id ? true : false}
+                  value={
+                    createBpSampleForm.businessProcess.project_section_id
+                      ? createBpSampleForm.businessProcess.project_section_id
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setCreateBpSampleForm({
+                      ...createBpSampleForm,
+                      businessProcess: {
+                        ...createBpSampleForm.businessProcess,
+                        project_section_id: parseInt(e.target.value),
+                      },
+                    });
+                    setCreateBpForm({
+                      ...createBpForm,
+                      project_section_id: parseInt(e.target.value),
+                    });
+                    setCreateTaskForm({
+                      ...createTaskForm,
+                      project_section_id: parseInt(e.target.value),
+                    });
+                  }}
+                >
+                  <option value={null}>Выбрать</option>
+                  {projectSections.map((el) => {
                     return (
                       <option key={el.id} value={el.id}>
                         {el.name}
