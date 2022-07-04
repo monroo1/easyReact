@@ -342,6 +342,49 @@ const CreateTask = () => {
           }
         )
         .then((res) => console.log(res));
+
+      setCreateBpForm({
+        name: null,
+        initiator_id: parseInt(
+          document.cookie.replace(
+            /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          )
+        ),
+        project_id: createBpForm.project_id,
+        deadlineDate: null,
+        deadlineTime: "00:00:00",
+        tasks: null,
+        file_id: null,
+        deadline: null,
+      });
+
+      setCreateTaskStatus(false);
+      setCreateTaskSampleFormStatus(false);
+      setStatusCreateTask(false);
+      setCreateTaskForm({
+        ...createTaskForm,
+        createTaskForm: createTaskForm.project_section_id,
+      });
+      setTasks([]);
+      setTasksArr([]);
+      setNowTask("");
+      setCreateBpSampleForm({
+        type: 0,
+        businessProcess: {
+          name: null,
+          deadline: null,
+          project_id: null,
+          tasks: 1,
+          initiator_id: parseInt(
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            )
+          ),
+        },
+        options: [],
+      });
     }
   };
 
