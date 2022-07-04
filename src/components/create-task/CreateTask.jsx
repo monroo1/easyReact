@@ -27,8 +27,29 @@ const CreateTask = () => {
     setAddTaskSample,
     setCreateBpSampleForm,
     setStatusCreateTask,
+    addTasksMenu,
+    setAddTasksMenu,
+
+    thisBp,
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
+
+  useEffect(() => {
+    if (addTasksMenu) {
+      console.log(tasks);
+      setCreateTaskForm({
+        ...createTaskForm,
+        project_section_id: thisBp.project_section_id,
+        project_id: thisBp.project_id,
+      });
+      setCreateBpForm({
+        ...createBpForm,
+        name: thisBp.name,
+        project_section_id: thisBp.project_section_id,
+        project_id: thisBp.project_id,
+      });
+    }
+  }, []);
 
   const saveTask = () => {
     if (!!addTask) {
@@ -162,7 +183,7 @@ const CreateTask = () => {
   };
 
   const saveBp = () => {
-    if (tasks.length > 0) {
+    if (tasks.length > 0 && !addTasksMenu) {
       let tasksStr = "";
       for (let i in tasks) {
         tasksStr = tasksStr.concat(tasks[i]);
@@ -192,9 +213,7 @@ const CreateTask = () => {
                 ),
               },
             }
-          )
-            .then((res) => res.json())
-            .then((r) => {});
+          ).then((res) => res.json());
         }
         if (
           createBpForm.file_id === null &&
@@ -217,9 +236,7 @@ const CreateTask = () => {
                 ),
               },
             }
-          )
-            .then((res) => res.json())
-            .then((r) => {});
+          ).then((res) => res.json());
         }
         if (
           createBpForm.deadlineDate === null &&
@@ -236,9 +253,7 @@ const CreateTask = () => {
                 ),
               },
             }
-          )
-            .then((res) => res.json())
-            .then((r) => {});
+          ).then((res) => res.json());
         }
       }
       if (createBpForm.file_id !== null && createBpForm.deadlineDate !== null) {
@@ -259,9 +274,7 @@ const CreateTask = () => {
               ),
             },
           }
-        )
-          .then((res) => res.json())
-          .then((r) => {});
+        ).then((res) => res.json());
       }
       setCreateBpForm({
         name: null,
@@ -305,6 +318,30 @@ const CreateTask = () => {
         },
         options: [],
       });
+    }
+    if (addTasksMenu) {
+      let tasksStr = "";
+      for (let i in tasks) {
+        tasksStr = tasksStr.concat(tasks[i]);
+        if (i < tasks.length - 1) {
+          tasksStr = tasksStr.concat("|");
+        }
+      }
+
+      axios
+        .patch(
+          `${apiBp}/businessProcess/${thisBp.id}?tasks=${tasksStr}`,
+          {},
+          {
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        )
+        .then((res) => console.log(res));
     }
   };
 
@@ -415,6 +452,7 @@ const CreateTask = () => {
                 },
                 options: [],
               });
+              setAddTasksMenu(false);
             }}
           >
             Отмена

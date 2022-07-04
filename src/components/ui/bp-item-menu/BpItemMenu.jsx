@@ -1,22 +1,36 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StatusContext } from "../../../context/status.js";
 import { ClickAwayListener } from "@mui/base";
 import "./BpItemMenu.scss";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const BpItemMenu = ({ id }) => {
-  const { idBp, setIdBp, apiBp, bpList, setCreateTaskStatus } =
-    useContext(StatusContext);
-  const [thisBp, setThisBp] = useState({});
+  const {
+    idBp,
+    setIdBp,
+    apiBp,
+    bpList,
+    setCreateTaskStatus,
+    setAddTasksMenu,
+    setTasks,
+    thisBp,
+    setThisBp,
+  } = useContext(StatusContext);
 
   useEffect(() => {
     bpList.filter((el) => {
       if (el.id === idBp) {
         return setThisBp(el);
       }
+      return false;
     });
   }, [idBp]);
+
+  useEffect(() => {
+    if (!!thisBp.id) {
+      let a = thisBp.tasks.map((el) => el.id);
+      setTasks(a);
+    }
+  }, [thisBp]);
 
   const createSample = () => {
     fetch(`${apiBp}/businessProcess/${idBp}/makeSample`, {
@@ -38,7 +52,15 @@ const BpItemMenu = ({ id }) => {
             {thisBp.status === 0 ||
             thisBp.status === 1 ||
             thisBp.status === 7 ? (
-              <li onClick={() => setCreateTaskStatus(true)}>Добавить задачу</li>
+              <li
+                onClick={() => {
+                  setIdBp("");
+                  setCreateTaskStatus(true);
+                  setAddTasksMenu(true);
+                }}
+              >
+                Добавить задачу
+              </li>
             ) : (
               <></>
             )}

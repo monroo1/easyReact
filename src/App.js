@@ -127,11 +127,15 @@ function App() {
   });
   const [lengthArrTasks, setLengthArrTasks] = useState("");
   const [addTaskSample, setAddTaskSample] = useState(false);
+  const [addTasksMenu, setAddTasksMenu] = useState(false);
+  const [thisBp, setThisBp] = useState({});
 
   return (
     <StatusContext.Provider
       value={{
         users,
+        thisBp,
+        setThisBp,
         setUsers,
         createBpStatus,
         setCreateBpStatus,
@@ -199,6 +203,8 @@ function App() {
         setAddTaskSample,
         bpList,
         setBpList,
+        addTasksMenu,
+        setAddTasksMenu,
       }}
     >
       <div className="bussines-page">
