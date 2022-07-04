@@ -236,6 +236,18 @@ const BpItemStatus = ({ status, workflow }) => {
           },
           src: "Lightbulb.svg",
         });
+      } else if (status === 50) {
+        setStatusObj({
+          text: "Запустить",
+          styleText: {
+            color: "#01B0E9",
+          },
+          styleIcons: {
+            borderColor: "#01B0E9",
+            background: "rgba(1, 176, 233, 0.1)",
+          },
+          src: "Power.svg",
+        });
       }
     }
   }, [setStatusObj, status]);

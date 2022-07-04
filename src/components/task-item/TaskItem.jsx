@@ -11,6 +11,7 @@ const TaskItem = ({ style, el }) => {
           ? "dependencies__content-list__item dependencies__content-list__item-dropdown"
           : "dependencies__content-list__item"
       }
+      id={el.id}
     >
       <div className="dependencies__content-list__item__btn">
         <div className="business__main-content__list-block__item__arrow">

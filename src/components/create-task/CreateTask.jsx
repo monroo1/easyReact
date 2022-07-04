@@ -328,6 +328,18 @@ const CreateTask = () => {
         }
       }
 
+      // fetch(`${apiBp}/businessProcess/${thisBp.id}?tasks=${tasksStr}`, {
+      //   method: "PATCH",
+      //   headers: {
+      //     "secret-token": document.cookie.replace(
+      //       /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+      //       "$1"
+      //     ),
+      //   },
+      // })
+      //   .then((res) => res.json())
+      //   .then((r) => console.log(r));
+
       axios
         .patch(
           `${apiBp}/businessProcess/${thisBp.id}?tasks=${tasksStr}`,

@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { StatusContext } from "../../../context/status.js";
 import { ClickAwayListener } from "@mui/base";
 import "./BpItemMenu.scss";
+import axios from "axios";
+import { useState } from "react";
 
 const BpItemMenu = ({ id }) => {
   const {
@@ -14,7 +16,10 @@ const BpItemMenu = ({ id }) => {
     setTasks,
     thisBp,
     setThisBp,
+    tasksList,
   } = useContext(StatusContext);
+
+  const [tasksListStart, setTasksListStart] = useState([]);
 
   useEffect(() => {
     bpList.filter((el) => {
@@ -44,6 +49,34 @@ const BpItemMenu = ({ id }) => {
     }).then((res) => console.log(res));
   };
 
+  const makeActiveTasks = () => {
+    const getTasks = thisBp.tasks.map((item) => {
+      const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
+      return axios.get(link, {
+        headers: {
+          Authorization:
+            "Bearer " +
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+        },
+      });
+    });
+    Promise.all(getTasks).then((results) => {
+      console.log(results.data.data);
+    });
+  };
+
+  useEffect(() => {
+    if (tasksListStart.length > 0) {
+      console.log(tasksListStart);
+      console.log(tasksList);
+
+      // tasksListStart.map((el) => console.log(el.data.data));
+    }
+  }, [tasksListStart]);
+
   if (idBp === id) {
     return (
       <ClickAwayListener onClickAway={() => setIdBp("")}>
@@ -64,8 +97,11 @@ const BpItemMenu = ({ id }) => {
             ) : (
               <></>
             )}
-
-            <li>Запустить с...</li>
+            {thisBp.status === 0 || thisBp.status === 1 ? (
+              <li onClick={() => makeActiveTasks()}>Запустить с...</li>
+            ) : (
+              <></>
+            )}
             <li>Показать результаты</li>
             <li>Распечатать</li>
             {thisBp.status === 0 ||
