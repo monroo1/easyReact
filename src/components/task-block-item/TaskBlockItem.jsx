@@ -10,7 +10,6 @@ const TaskBlockItem = ({ item }) => {
   const [styleLine, setStyleLine] = useState(false);
 
   useEffect(() => {
-    console.log(!!getTopChildBlock.current);
     if (!!getTopChildBlock.current) {
       setStyleLine(true);
     }

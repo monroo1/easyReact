@@ -53,31 +53,6 @@ const CreateTaskForm = () => {
   }, [createTaskFormDate]);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://test.easy-task.ru/api/v1/tasks?project_id=${createTaskForm.project_id}`,
-        {
-          headers: {
-            Authorization:
-              "Bearer " +
-              document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-          },
-        }
-      )
-      .then((res) => {
-        if (!!res.data.data[0].project_section_id) {
-          setCreateTaskForm({
-            ...createTaskForm,
-            project_section_id: parseInt(res.data.data[0].project_section_id),
-          });
-        }
-      });
-  }, []);
-
-  useEffect(() => {
     if (createTaskSampleFormStatus) {
       let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
 
@@ -125,6 +100,89 @@ const CreateTaskForm = () => {
   useEffect(() => {
     if (tasksArr.length > 0) {
       if (tasksArr.length === valueTaskSample.length) {
+        for (let i in tasksArr) {
+          if (!!valueTaskSample[i].next_id) {
+            let a;
+            valueTaskSample.filter((el, id) => {
+              if (el.id === valueTaskSample[i].next_id) {
+                return (a = id);
+              }
+            });
+
+            axios
+              .patch(
+                `https://test.easy-task.ru/api/v1/tasks/${tasksArr[i]}`,
+                { next_id: tasksArr[a] },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+              });
+          }
+          if (!!valueTaskSample[i].parent_id) {
+            let a;
+            valueTaskSample.filter((el, id) => {
+              if (el.id === valueTaskSample[i].parent_id) {
+                return (a = id);
+              }
+            });
+
+            axios
+              .patch(
+                `https://test.easy-task.ru/api/v1/tasks/${tasksArr[i]}`,
+                { parent_id: tasksArr[a] },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+              });
+          }
+          if (!!valueTaskSample[i].prev_id) {
+            let a;
+            valueTaskSample.filter((el, id) => {
+              if (el.id === valueTaskSample[i].prev_id) {
+                return (a = id);
+              }
+            });
+
+            axios
+              .patch(
+                `https://test.easy-task.ru/api/v1/tasks/${tasksArr[i]}`,
+                { prev_id: tasksArr[a] },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res);
+              });
+          }
+        }
         setStatusCreateTask(false);
         setCreateTaskStatus(false);
         setCreateBpStatus(true);
@@ -151,8 +209,8 @@ const CreateTaskForm = () => {
             parent_id: null,
             prev_id: null,
             priority_id: nowTask.priority_id,
-            project_id: nowTask.project_id,
-            project_section_id: nowTask.project_section_id,
+            project_id: createTaskForm.project_id,
+            project_section_id: createTaskForm.project_section_id,
             provide_to: nowTask.provide_to,
             status_id: nowTask.status_id,
             status_related_user_id: null,

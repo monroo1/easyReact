@@ -560,6 +560,7 @@ const CreateBp = () => {
                       : ""
                   }
                   onChange={(e) => {
+                    console.log(e.target.value);
                     setCreateBpSampleForm({
                       ...createBpSampleForm,
                       businessProcess: {

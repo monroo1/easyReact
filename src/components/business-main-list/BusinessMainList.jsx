@@ -5,7 +5,6 @@ import SortBtn from "../ui/sort-btn/SortBtn.jsx";
 import { StatusContext } from "../../context/status.js";
 
 const BusinessMainList = () => {
-  const [bpList, setBpList] = useState([]);
   const {
     filter,
     setFilter,
@@ -13,6 +12,8 @@ const BusinessMainList = () => {
     createBpStatus,
     createBpSampleStatus,
     apiBp,
+    bpList,
+    setBpList,
   } = useContext(StatusContext);
 
   const token = document.cookie.replace(
@@ -32,6 +33,23 @@ const BusinessMainList = () => {
       })
       .catch((e) => console.log(e));
   }, [setBpList, filter, filterMethod]);
+
+  useEffect(() => {
+    axios
+      .get(`https://test.easy-task.ru/api/v1/statuses`, {
+        headers: {
+          Authorization:
+            "Bearer " +
+            document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  }, []);
 
   const sortFunc = (e) => {
     setFilter(e.dataset.sort);

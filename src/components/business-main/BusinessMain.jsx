@@ -37,19 +37,6 @@ const BusinessMain = () => {
     setCreateBpStatus(true);
   };
 
-  const createBpSample = () => {
-    if (createBpStatus === true) {
-      return false;
-    }
-    if (createTaskStatus === true) {
-      return false;
-    }
-    if (createBpSampleStatus === true) {
-      return false;
-    }
-    setCreateBpSampleStatus(true);
-  };
-
   useEffect(() => {
     if (!!nextLink) {
       axios

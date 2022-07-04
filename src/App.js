@@ -14,7 +14,7 @@ function App() {
     )
   );
   const [apiBp, setApiBb] = useState("https://easytaskbp.tk/api/v1");
-
+  const [bpList, setBpList] = useState([]);
   const [createBpStatus, setCreateBpStatus] = useState(false);
   const [createBpSampleStatus, setCreateBpSampleStatus] = useState(false);
   const [createTaskStatus, setCreateTaskStatus] = useState(false);
@@ -81,11 +81,23 @@ function App() {
     prev_id: null,
     priority_id: 2,
     provide_to: 0,
-    status_id: 19,
+    status_id: 19, //3
     task_load: 5,
     work_load: 35,
     workflow_id: 1,
   });
+
+  // 0: {id: 2, name: 'Отправлено автору', slug: 'for_approval_chief'}
+  // 1: {id: 3, name: 'Отправлено исполнителю', slug: 'for_approval_performer'}
+  // 2: {id: 10, name: 'В работе', slug: 'in_work'}
+  // 3: {id: 11, name: 'Отменена', slug: 'canceled'}
+  // 4: {id: 12, name: 'Выполнено', slug: 'done'}
+  // 5: {id: 13, name: 'Завершено', slug: 'completed'}
+  // 6: {id: 14, name: 'Просрочена', slug: 'overdue'}
+  // 7: {id: 15, name: 'В архиве', slug: 'archived'}
+  // 8: {id: 18, name: 'Подзадача', slug: 'podzadacha'}
+  // 9: {id: 19, name: 'Идея', slug: 'idea'}
+
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("id");
   const [filterMethod, setFilterMethod] = useState("asc");
@@ -185,6 +197,8 @@ function App() {
         setLengthArrTasks,
         addTaskSample,
         setAddTaskSample,
+        bpList,
+        setBpList,
       }}
     >
       <div className="bussines-page">

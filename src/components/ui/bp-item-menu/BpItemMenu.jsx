@@ -2,10 +2,21 @@ import React, { useContext } from "react";
 import { StatusContext } from "../../../context/status.js";
 import { ClickAwayListener } from "@mui/base";
 import "./BpItemMenu.scss";
-import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const BpItemMenu = ({ id }) => {
-  const { idBp, setIdBp, apiBp } = useContext(StatusContext);
+  const { idBp, setIdBp, apiBp, bpList, setCreateTaskStatus } =
+    useContext(StatusContext);
+  const [thisBp, setThisBp] = useState({});
+
+  useEffect(() => {
+    bpList.filter((el) => {
+      if (el.id === idBp) {
+        return setThisBp(el);
+      }
+    });
+  }, [idBp]);
 
   const createSample = () => {
     fetch(`${apiBp}/businessProcess/${idBp}/makeSample`, {
@@ -24,11 +35,24 @@ const BpItemMenu = ({ id }) => {
       <ClickAwayListener onClickAway={() => setIdBp("")}>
         <div className="bp-item-menu">
           <ul>
-            <li>Добавить задачу</li>
+            {thisBp.status === 0 ||
+            thisBp.status === 1 ||
+            thisBp.status === 7 ? (
+              <li onClick={() => setCreateTaskStatus(true)}>Добавить задачу</li>
+            ) : (
+              <></>
+            )}
+
             <li>Запустить с...</li>
             <li>Показать результаты</li>
             <li>Распечатать</li>
-            <li onClick={() => createSample()}>Сохранить как шаблон</li>
+            {thisBp.status === 0 ||
+            thisBp.status === 1 ||
+            thisBp.status === 2 ? (
+              <li onClick={() => createSample()}>Сохранить как шаблон</li>
+            ) : (
+              <></>
+            )}
           </ul>
         </div>
       </ClickAwayListener>

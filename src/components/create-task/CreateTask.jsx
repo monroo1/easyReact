@@ -154,18 +154,6 @@ const CreateTask = () => {
             if (valueTaskSample[i].id === nowTask.id) {
               i++;
               setNowTask(valueTaskSample[i]);
-              // if (valueTaskSample) {
-              //   console.log("next");
-              //   console.log(valueTaskSample);
-              // }
-              // if (valueTaskSample) {
-              //   console.log("prev");
-              //   console.log(valueTaskSample);
-              // }
-              // if (valueTaskSample) {
-              //   console.log("parent");
-              //   console.log(valueTaskSample);
-              // }
             }
           }
         }
@@ -206,9 +194,7 @@ const CreateTask = () => {
             }
           )
             .then((res) => res.json())
-            .then((r) => {
-              // console.log(r.businessProcess.tasks);
-            });
+            .then((r) => {});
         }
         if (
           createBpForm.file_id === null &&
@@ -233,9 +219,7 @@ const CreateTask = () => {
             }
           )
             .then((res) => res.json())
-            .then((r) => {
-              // console.log(r.businessProcess.tasks);
-            });
+            .then((r) => {});
         }
         if (
           createBpForm.deadlineDate === null &&
@@ -254,9 +238,7 @@ const CreateTask = () => {
             }
           )
             .then((res) => res.json())
-            .then((r) => {
-              // console.log(r.businessProcess.tasks);
-            });
+            .then((r) => {});
         }
       }
       if (createBpForm.file_id !== null && createBpForm.deadlineDate !== null) {
