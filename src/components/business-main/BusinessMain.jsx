@@ -19,6 +19,7 @@ const BusinessMain = () => {
     apiBp,
     openMenuTasks,
     openMenuBp,
+    bpList,
   } = useContext(StatusContext);
   const [nextLink, setNextLink] = useState(
     "https://test.easy-task.ru/api/v1/users?page=1"
@@ -26,6 +27,13 @@ const BusinessMain = () => {
 
   const [usersInitiator, setUsersInitiator] = useState([]);
   const [excelStatus, setExcelStatus] = useState(false);
+  const [allTasksState, setAllTasksState] = useState([]);
+  const [selectColumnsStatus, setSelectColumnsStatus] = useState(false);
+  const [selectColumns, setSelectColumns] = useState([]);
+
+  useEffect(() => {
+    console.log(selectColumns);
+  }, [selectColumns]);
 
   const createBp = () => {
     if (
@@ -74,19 +82,87 @@ const BusinessMain = () => {
     });
   }, [users]);
 
-  const excelExport = () => {
-    fetch(`${apiBp}/exportBusinessProcess`, {
-      method: "POST",
-      headers: {
-        "secret-token": document.cookie.replace(
-          /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        ),
-      },
-    })
-      .then((res) => res.json())
-      .then((r) => console.log(r));
+  const excelExport = async () => {
+    let allTasks = [];
+    await Promise.all(
+      bpList.map(async (item) => {
+        return item.tasks;
+      })
+    ).then((r) => (allTasks = r.flat()));
+
+    await Promise.all(
+      allTasks.map((item) => {
+        return axios.get(`https://test.easy-task.ru/api/v1/tasks/${item.id}`, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        });
+      })
+    ).then((respo) => {
+      setAllTasksState(respo.map((el) => el.data.data));
+    });
   };
+
+  const sendReq = async () => {
+    const response = await axios.post(
+      `${apiBp}/exportBusinessProcess`,
+      {
+        tasks: allTasksState,
+      },
+      {
+        headers: {
+          "secret-token": document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+        responseType: "blob",
+      }
+    );
+    if (response.status === 200) {
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+    }
+  };
+
+  const excelExportColumns = async () => {
+    const response = await axios.post(
+      `${apiBp}/exportBusinessProcessColumn`,
+      {
+        columns: selectColumns,
+      },
+      {
+        headers: {
+          "secret-token": document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+        responseType: "blob",
+      }
+    );
+    if (response.status === 200) {
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+    }
+  };
+
+  useEffect(() => {
+    if (allTasksState.length > 0) {
+      sendReq();
+    }
+  }, [allTasksState]);
 
   return (
     <>
@@ -258,7 +334,9 @@ const BusinessMain = () => {
               <button
                 className="business__main-content__header-right__btn"
                 id="excel"
-                onClick={() => setExcelStatus(true)}
+                onClick={() => {
+                  setExcelStatus(true);
+                }}
               >
                 <svg
                   width="6"
@@ -275,22 +353,209 @@ const BusinessMain = () => {
                   />
                 </svg>
                 {!!excelStatus ? (
-                  <ClickAwayListener onClickAway={() => setExcelStatus(false)}>
-                    <div id="excel-menu">
-                      <div onClick={() => excelExport()}>
-                        <img
-                          src={`${process.env.PUBLIC_URL}/assets/DownloadSimple.svg`}
-                          alt=""
-                        />
-                        Экспорт в Excel
-                      </div>
-                      <div>
-                        <img
-                          src={`${process.env.PUBLIC_URL}/assets/Gear.svg`}
-                          alt=""
-                        />
-                        Выбрать столбцы
-                      </div>
+                  <ClickAwayListener
+                    onClickAway={() => {
+                      setSelectColumnsStatus(false);
+                      setExcelStatus(false);
+                    }}
+                  >
+                    <div
+                      id="excel-menu"
+                      className={
+                        selectColumnsStatus ? "excel-menu__select-column" : ""
+                      }
+                    >
+                      {selectColumnsStatus ? (
+                        <>
+                          <div>
+                            <div className="excel-item">
+                              <input
+                                type="checkbox"
+                                id="excel-column-id"
+                                value="id"
+                                onChange={(e) => {
+                                  if (selectColumns.includes(e.target.value)) {
+                                    setSelectColumns(
+                                      selectColumns.filter(
+                                        (el) => el !== e.target.value
+                                      )
+                                    );
+                                  } else {
+                                    setSelectColumns([
+                                      ...selectColumns,
+                                      e.target.value,
+                                    ]);
+                                  }
+                                }}
+                              />
+                              <label htmlFor="excel-column-id">
+                                ID бизнесс процесса
+                              </label>
+                            </div>
+                            <div className="excel-item">
+                              <input
+                                type="checkbox"
+                                id="excel-column-initiator"
+                                value="initiator_id"
+                                onChange={(e) => {
+                                  if (selectColumns.includes(e.target.value)) {
+                                    setSelectColumns(
+                                      selectColumns.filter(
+                                        (el) => el !== e.target.value
+                                      )
+                                    );
+                                  } else {
+                                    setSelectColumns([
+                                      ...selectColumns,
+                                      e.target.value,
+                                    ]);
+                                  }
+                                }}
+                              />
+                              <label htmlFor="excel-column-initiator">
+                                Инициатор
+                              </label>
+                            </div>
+                            <div className="excel-item">
+                              <input
+                                type="checkbox"
+                                id="excel-column-name"
+                                value="name"
+                                onChange={(e) => {
+                                  if (selectColumns.includes(e.target.value)) {
+                                    setSelectColumns(
+                                      selectColumns.filter(
+                                        (el) => el !== e.target.value
+                                      )
+                                    );
+                                  } else {
+                                    setSelectColumns([
+                                      ...selectColumns,
+                                      e.target.value,
+                                    ]);
+                                  }
+                                }}
+                              />
+                              <label htmlFor="excel-column-name">
+                                Наименование
+                              </label>
+                            </div>
+                            <div className="excel-item">
+                              <input
+                                type="checkbox"
+                                id="excel-column-status"
+                                value="status"
+                                onChange={(e) => {
+                                  if (selectColumns.includes(e.target.value)) {
+                                    setSelectColumns(
+                                      selectColumns.filter(
+                                        (el) => el !== e.target.value
+                                      )
+                                    );
+                                  } else {
+                                    setSelectColumns([
+                                      ...selectColumns,
+                                      e.target.value,
+                                    ]);
+                                  }
+                                }}
+                              />
+                              <label htmlFor="excel-column-status">
+                                Статус
+                              </label>
+                            </div>
+                            <div className="excel-item">
+                              <input
+                                type="checkbox"
+                                id="excel-column-deadline"
+                                value="deadline"
+                                onChange={(e) => {
+                                  {
+                                    if (
+                                      selectColumns.includes(e.target.value)
+                                    ) {
+                                      setSelectColumns(
+                                        selectColumns.filter(
+                                          (el) => el !== e.target.value
+                                        )
+                                      );
+                                    } else {
+                                      setSelectColumns([
+                                        ...selectColumns,
+                                        e.target.value,
+                                      ]);
+                                    }
+                                  }
+                                }}
+                              />
+                              <label htmlFor="excel-column-deadline">
+                                Длительность
+                              </label>
+                            </div>
+                            <div className="excel-item">
+                              <input
+                                type="checkbox"
+                                id="excel-column-project"
+                                value="project_id"
+                                onChange={(e) => {
+                                  if (selectColumns.includes(e.target.value)) {
+                                    setSelectColumns(
+                                      selectColumns.filter(
+                                        (el) => el !== e.target.value
+                                      )
+                                    );
+                                  } else {
+                                    setSelectColumns([
+                                      ...selectColumns,
+                                      e.target.value,
+                                    ]);
+                                  }
+                                }}
+                              />
+                              <label htmlFor="excel-column-project">
+                                Проект
+                              </label>
+                            </div>
+                          </div>
+                          <div
+                            onClick={() => {
+                              if (selectColumns.length > 0) {
+                                excelExportColumns();
+                              }
+                            }}
+                            style={
+                              !selectColumns.length > 0
+                                ? { backgroundColor: "grey", cursor: "default" }
+                                : {}
+                            }
+                          >
+                            Выгрузить
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div
+                            className="excel-item"
+                            onClick={() => excelExport()}
+                          >
+                            <img
+                              src={`${process.env.PUBLIC_URL}/assets/DownloadSimple.svg`}
+                              alt=""
+                            />
+                            Экспорт в Excel
+                          </div>
+                          <div
+                            className="excel-item"
+                            onClick={() => setSelectColumnsStatus(true)}
+                          >
+                            <img
+                              src={`${process.env.PUBLIC_URL}/assets/Gear.svg`}
+                              alt=""
+                            />
+                            Выбрать столбцы
+                          </div>
+                        </>
+                      )}
                     </div>
                   </ClickAwayListener>
                 ) : (

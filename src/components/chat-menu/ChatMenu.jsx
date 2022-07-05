@@ -70,9 +70,10 @@ const ChatMenu = () => {
     setThisTabs(i);
   };
 
-  useEffect(() => {
-    console.log(options);
-  }, [options]);
+  // useEffect(() => {
+  //   console.log(options);
+  // }, [options]);
+
   // options: [] если есть - у нас имеется  результат
 
   if (openMenuTasks || openMenuBp) {

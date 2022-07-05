@@ -562,7 +562,7 @@ const CreateTaskForm = () => {
             />
             Зависимости
           </div>
-          <div className="input-form">123</div>
+          <div className="input-form">Зависимости</div>
         </div>
       )}
     </form>
