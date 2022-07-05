@@ -13,7 +13,6 @@ const BusinessMain = () => {
     setCreateBpStatus,
     createTaskStatus,
     createBpSampleStatus,
-    setCreateBpSampleStatus,
     setUsers,
     users,
   } = useContext(StatusContext);

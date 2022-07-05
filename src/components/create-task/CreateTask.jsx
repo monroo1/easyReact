@@ -74,6 +74,7 @@ const CreateTask = () => {
           .then((res) => {
             setTasks([...tasks, res.data.id]);
           });
+        setDepsTask("");
       } else {
         fetch("https://test.easy-task.ru/api/v1/tasks", {
           method: "POST",
@@ -320,30 +321,14 @@ const CreateTask = () => {
       });
     }
     if (addTasksMenu) {
-      let tasksStr = "";
-      for (let i in tasks) {
-        tasksStr = tasksStr.concat(tasks[i]);
-        if (i < tasks.length - 1) {
-          tasksStr = tasksStr.concat("|");
-        }
-      }
-
-      // fetch(`${apiBp}/businessProcess/${thisBp.id}?tasks=${tasksStr}`, {
-      //   method: "PATCH",
-      //   headers: {
-      //     "secret-token": document.cookie.replace(
-      //       /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-      //       "$1"
-      //     ),
-      //   },
-      // })
-      //   .then((res) => res.json())
-      //   .then((r) => console.log(r));
+      let a = tasks.map((el) => {
+        return { id: el };
+      });
 
       axios
         .patch(
-          `${apiBp}/businessProcess/${thisBp.id}?tasks=${tasksStr}`,
-          {},
+          `${apiBp}/businessProcess/${thisBp.id}/addTasks`,
+          { tasks: a },
           {
             headers: {
               "secret-token": document.cookie.replace(
