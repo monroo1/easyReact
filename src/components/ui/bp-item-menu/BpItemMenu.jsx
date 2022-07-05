@@ -17,9 +17,12 @@ const BpItemMenu = ({ id }) => {
     thisBp,
     setThisBp,
     tasksList,
+    setTasksList,
+    start,
+    setStart,
+    openTasks,
+    setOpenTasks,
   } = useContext(StatusContext);
-
-  const [tasksListStart, setTasksListStart] = useState([]);
 
   useEffect(() => {
     bpList.filter((el) => {
@@ -63,19 +66,41 @@ const BpItemMenu = ({ id }) => {
         },
       });
     });
-    Promise.all(getTasks).then((results) => {
-      console.log(results.data.data);
-    });
+    Promise.all(getTasks).then((results) => setTasksList(results));
+
+    fetch(`${apiBp}/businessProcess/${idBp}/makeActive`, {
+      method: "PATCH",
+      headers: {
+        "secret-token": document.cookie.replace(
+          /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        ),
+      },
+    })
+      .then((res) => res.json())
+      .then((re) => console.log(re));
+    setStart(true);
   };
 
   useEffect(() => {
-    if (tasksListStart.length > 0) {
-      console.log(tasksListStart);
-      console.log(tasksList);
-
-      // tasksListStart.map((el) => console.log(el.data.data));
+    if (start && tasksList.length > 0) {
+      let arr = tasksList.map((el) => {
+        return {
+          ...el,
+          data: {
+            ...el.data,
+            data: {
+              ...el.data.data,
+              status_id: 50,
+            },
+          },
+        };
+      });
+      setTasksList(arr);
+      setOpenTasks("business-item-" + idBp);
+      setStart(false);
     }
-  }, [tasksListStart]);
+  }, [tasksList, start]);
 
   if (idBp === id) {
     return (
@@ -98,7 +123,14 @@ const BpItemMenu = ({ id }) => {
               <></>
             )}
             {thisBp.status === 0 || thisBp.status === 1 ? (
-              <li onClick={() => makeActiveTasks()}>Запустить с...</li>
+              <li
+                onClick={() => {
+                  setTasksList([]);
+                  makeActiveTasks();
+                }}
+              >
+                Запустить с...
+              </li>
             ) : (
               <></>
             )}

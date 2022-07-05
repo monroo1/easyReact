@@ -97,7 +97,7 @@ function App() {
   // 7: {id: 15, name: 'В архиве', slug: 'archived'}
   // 8: {id: 18, name: 'Подзадача', slug: 'podzadacha'}
   // 9: {id: 19, name: 'Идея', slug: 'idea'}
-
+  const [start, setStart] = useState(false);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("id");
   const [filterMethod, setFilterMethod] = useState("asc");
@@ -134,6 +134,8 @@ function App() {
     <StatusContext.Provider
       value={{
         users,
+        start,
+        setStart,
         thisBp,
         setThisBp,
         setUsers,

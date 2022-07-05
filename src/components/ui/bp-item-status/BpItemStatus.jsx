@@ -1,9 +1,14 @@
+import axios from "axios";
 import React, { useEffect, useState, useContext } from "react";
 import { StatusContext } from "../../../context/status.js";
 
-const BpItemStatus = ({ status, workflow }) => {
-  const { createBpStatus, createBpSampleStatus, createTaskStatus } =
-    useContext(StatusContext);
+const BpItemStatus = ({ status, workflow, id }) => {
+  const {
+    createBpStatus,
+    createBpSampleStatus,
+    createTaskStatus,
+    setOpenTasks,
+  } = useContext(StatusContext);
   const [statusObj, setStatusObj] = useState({});
 
   useEffect(() => {
@@ -252,8 +257,35 @@ const BpItemStatus = ({ status, workflow }) => {
     }
   }, [setStatusObj, status]);
 
+  const makeActiveTask = (e) => {
+    if (e.dataset.status == 50) {
+      axios
+        .patch(
+          `https://test.easy-task.ru/api/v1/tasks/${e.dataset.id}`,
+          { status_id: 3 },
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+            },
+          }
+        )
+        .then((res) => console.log(res));
+      setOpenTasks("");
+    }
+  };
+
   return (
-    <div className="business__main-content__list-block__item__status">
+    <div
+      className="business__main-content__list-block__item__status"
+      onClick={(e) => makeActiveTask(e.currentTarget)}
+      data-id={id}
+      data-status={status}
+    >
       <button style={statusObj.styleIcons}>
         <img
           src={`${process.env.PUBLIC_URL}/assets/status/${statusObj.src}`}

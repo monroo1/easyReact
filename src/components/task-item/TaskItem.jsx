@@ -45,7 +45,11 @@ const TaskItem = ({ style, el }) => {
             : "dependencies__content-list__item__right"
         }
       >
-        <BpItemStatus status={el.status_id} workflow={el.workflow_id} />
+        <BpItemStatus
+          status={el.status_id}
+          workflow={el.workflow_id}
+          id={el.id}
+        />
         <div className="dependencies__content-list__deadline p-black">
           {new Date(new Date(el.end).toJSON())
             .toLocaleString("ru", {

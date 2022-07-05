@@ -4,23 +4,26 @@ import axios from "axios";
 import TaskBlockItem from "../task-block-item/TaskBlockItem";
 
 const TasksList = ({ tasks }) => {
-  const { tasksList, setTasksList } = useContext(StatusContext);
+  const { tasksList, setTasksList, start } = useContext(StatusContext);
 
   useEffect(() => {
-    const getTasks = tasks.map((item) => {
-      const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
-      return axios.get(link, {
-        headers: {
-          Authorization:
-            "Bearer " +
-            document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-              "$1"
-            ),
-        },
+    if (start === false) {
+      const getTasks = tasks.map((item) => {
+        const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
+        return axios.get(link, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        });
       });
-    });
-    Promise.all(getTasks).then((results) => setTasksList(results));
+
+      Promise.all(getTasks).then((results) => setTasksList(results));
+    }
   }, []);
 
   if (tasksList.length > 0) {
