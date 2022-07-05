@@ -1,17 +1,73 @@
 import React, { useContext } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { StatusContext } from "../../context/status";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 
 const TaskItem = ({ style, el }) => {
-  const { createBpStatus } = useContext(StatusContext);
+  const {
+    createBpStatus,
+    setOpenMenuTasks,
+    openMenuTasks,
+    openMenuBp,
+    createTaskStatus,
+    createBpSampleStatus,
+    setIdCall,
+    setOpenMenuBp,
+  } = useContext(StatusContext);
+  const [classTask, setClassTask] = useState(
+    "dependencies__content-list__item"
+  );
+
+  useEffect(() => {
+    if (style === "dropdown") {
+      if (
+        openMenuTasks ||
+        openMenuBp ||
+        createTaskStatus ||
+        createBpSampleStatus ||
+        createBpStatus
+      ) {
+        setClassTask(
+          "dependencies__content-list__item dependencies__content-list__item-active dependencies__content-list__item-dropdown"
+        );
+      } else {
+        setClassTask(
+          "dependencies__content-list__item dependencies__content-list__item-dropdown"
+        );
+      }
+    } else {
+      if (
+        openMenuTasks ||
+        openMenuBp ||
+        createTaskStatus ||
+        createBpSampleStatus ||
+        createBpStatus
+      ) {
+        setClassTask(
+          "dependencies__content-list__item dependencies__content-list__item-active"
+        );
+      } else {
+        setClassTask("dependencies__content-list__item");
+      }
+    }
+  }, [
+    style,
+    openMenuTasks,
+    openMenuBp,
+    createTaskStatus,
+    createBpSampleStatus,
+  ]);
+
   return (
     <div
-      className={
-        style === "dropdown"
-          ? "dependencies__content-list__item dependencies__content-list__item-dropdown"
-          : "dependencies__content-list__item"
-      }
+      className={classTask}
       id={el.id}
+      onClick={() => {
+        setIdCall(el.id);
+        setOpenMenuTasks(true);
+        setOpenMenuBp(false);
+      }}
     >
       <div className="dependencies__content-list__item__btn">
         <div className="business__main-content__list-block__item__arrow">
@@ -38,13 +94,7 @@ const TaskItem = ({ style, el }) => {
         <p className="p-black">{el.name.slice(0, 20)}</p>
         <span className="p-grey">{el.description.slice(0, 20)}</span>
       </div>
-      <div
-        className={
-          createBpStatus
-            ? "dependencies__content-list__item__right dependencies__content-list__item__right-active"
-            : "dependencies__content-list__item__right"
-        }
-      >
+      <div className="dependencies__content-list__item__right">
         <BpItemStatus
           status={el.status_id}
           workflow={el.workflow_id}
@@ -68,11 +118,20 @@ const TaskItem = ({ style, el }) => {
           <p className="p-black">{"projectTheme".slice(0, 10)}</p>
           <span className="p-grey">{"projectTheme".slice(0, 12)}</span>
         </div>
-        <div className="dependencies__content-list__item__right__priority">
-          <div className="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-          <div className="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
-          <div className="dependencies__content-list__item__right__priority-indicator"></div>
-        </div>
+        {createBpStatus ||
+        createTaskStatus ||
+        createBpSampleStatus ||
+        openMenuTasks ||
+        openMenuBp ? (
+          <></>
+        ) : (
+          <div className="dependencies__content-list__item__right__priority">
+            <div className="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
+            <div className="dependencies__content-list__item__right__priority-indicator dependencies__content-list__item__right__priority-indicator__active"></div>
+            <div className="dependencies__content-list__item__right__priority-indicator"></div>
+          </div>
+        )}
+
         <div className="dependencies__content-list__item__right__list">
           <img src={`${process.env.PUBLIC_URL}/assets/List.svg`} alt="list" />
         </div>

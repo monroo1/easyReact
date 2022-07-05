@@ -8,16 +8,31 @@ const LeftNav = () => {
     createTaskStatus,
     setCreateBpSampleStatus,
     createBpSampleStatus,
+    openMenuTasks,
+    openMenuBp,
   } = useContext(StatusContext);
   const [navStyle, setNavStyle] = useState("");
 
   useEffect(() => {
-    if (createBpStatus || createTaskStatus || createBpSampleStatus) {
+    if (
+      createBpStatus ||
+      createTaskStatus ||
+      createBpSampleStatus ||
+      openMenuTasks ||
+      openMenuBp
+    ) {
       setNavStyle("left-nav-hidden");
     } else {
       setNavStyle("");
     }
-  }, [createBpStatus, setNavStyle, createTaskStatus, createBpSampleStatus]);
+  }, [
+    createBpStatus,
+    setNavStyle,
+    createTaskStatus,
+    createBpSampleStatus,
+    openMenuTasks,
+    openMenuBp,
+  ]);
 
   return (
     <section className={"left-nav " + navStyle}>

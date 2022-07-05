@@ -8,6 +8,8 @@ const BpItemStatus = ({ status, workflow, id }) => {
     createBpSampleStatus,
     createTaskStatus,
     setOpenTasks,
+    openMenuTasks,
+    openMenuBp,
   } = useContext(StatusContext);
   const [statusObj, setStatusObj] = useState({});
 
@@ -292,7 +294,11 @@ const BpItemStatus = ({ status, workflow, id }) => {
           alt="status"
         />
       </button>
-      {createBpStatus || createTaskStatus || createBpSampleStatus ? (
+      {createBpStatus ||
+      createTaskStatus ||
+      createBpSampleStatus ||
+      openMenuTasks ||
+      openMenuBp ? (
         <></>
       ) : (
         <p style={statusObj.styleText}>{statusObj.text}</p>

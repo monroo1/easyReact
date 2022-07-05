@@ -3,7 +3,6 @@ import { StatusContext } from "../../../context/status.js";
 import { ClickAwayListener } from "@mui/base";
 import "./BpItemMenu.scss";
 import axios from "axios";
-import { useState } from "react";
 
 const BpItemMenu = ({ id }) => {
   const {
@@ -20,7 +19,6 @@ const BpItemMenu = ({ id }) => {
     setTasksList,
     start,
     setStart,
-    openTasks,
     setOpenTasks,
   } = useContext(StatusContext);
 

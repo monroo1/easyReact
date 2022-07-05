@@ -97,6 +97,7 @@ function App() {
   // 7: {id: 15, name: 'В архиве', slug: 'archived'}
   // 8: {id: 18, name: 'Подзадача', slug: 'podzadacha'}
   // 9: {id: 19, name: 'Идея', slug: 'idea'}
+
   const [start, setStart] = useState(false);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("id");
@@ -130,6 +131,11 @@ function App() {
   const [addTasksMenu, setAddTasksMenu] = useState(false);
   const [thisBp, setThisBp] = useState({});
 
+  //menu
+
+  const [openMenuTasks, setOpenMenuTasks] = useState(false);
+  const [openMenuBp, setOpenMenuBp] = useState(false);
+  const [idCall, setIdCall] = useState("");
   return (
     <StatusContext.Provider
       value={{
@@ -207,6 +213,12 @@ function App() {
         setBpList,
         addTasksMenu,
         setAddTasksMenu,
+        openMenuTasks,
+        setOpenMenuTasks,
+        openMenuBp,
+        setOpenMenuBp,
+        idCall,
+        setIdCall,
       }}
     >
       <div className="bussines-page">

@@ -1,11 +1,12 @@
 import "./BusinessMain.scss";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { StatusContext } from "../../context/status";
+import { ClickAwayListener } from "@mui/base";
 import BusinessMainList from "../business-main-list/BusinessMainList";
 import CreateBp from "../create-bp/CreateBp";
 import CreateTask from "../create-task/CreateTask";
-import { useState } from "react";
+import ChatMenu from "../chat-menu/ChatMenu";
 
 const BusinessMain = () => {
   const {
@@ -15,21 +16,25 @@ const BusinessMain = () => {
     createBpSampleStatus,
     setUsers,
     users,
+    apiBp,
+    openMenuTasks,
+    openMenuBp,
   } = useContext(StatusContext);
   const [nextLink, setNextLink] = useState(
     "https://test.easy-task.ru/api/v1/users?page=1"
   );
 
   const [usersInitiator, setUsersInitiator] = useState([]);
+  const [excelStatus, setExcelStatus] = useState(false);
 
   const createBp = () => {
-    if (createBpStatus === true) {
-      return false;
-    }
-    if (createTaskStatus === true) {
-      return false;
-    }
-    if (createBpSampleStatus === true) {
+    if (
+      createBpStatus ||
+      openMenuTasks ||
+      openMenuBp ||
+      createTaskStatus ||
+      createBpSampleStatus
+    ) {
       return false;
     }
 
@@ -69,71 +74,36 @@ const BusinessMain = () => {
     });
   }, [users]);
 
+  const excelExport = () => {
+    fetch(`${apiBp}/exportBusinessProcess`, {
+      method: "POST",
+      headers: {
+        "secret-token": document.cookie.replace(
+          /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        ),
+      },
+    })
+      .then((res) => res.json())
+      .then((r) => console.log(r));
+  };
+
   return (
     <>
       <section
         className={
-          createBpStatus || createBpSampleStatus || createTaskStatus
+          createBpStatus ||
+          createBpSampleStatus ||
+          createTaskStatus ||
+          openMenuTasks ||
+          openMenuBp
             ? "business business-open"
-            : "business"
+            : "business "
         }
       >
         <div className="business__main-content">
           <div className="business__main-content__header">
             <div className="business__main-content__header-left">
-              {/* <div className="business__main-content__header-left__select">
-                <input
-                  className="hidden"
-                  type="checkbox"
-                  id="business-select-menu"
-                />
-                <label
-                  htmlFor="business-select-menu"
-                  id="business-select-menu__label"
-                >
-                  <div>
-                    <div className="business-select-menu__img">
-                      <img
-                        src={`${process.env.PUBLIC_URL}/assets/header-profile-logo.png`}
-                        alt="logo"
-                      />
-                    </div>
-                    <p className="p-black">Шеин Алексей</p>
-                  </div>
-                  <img
-                    src={`${process.env.PUBLIC_URL}/assets/Shape.svg`}
-                    alt="Shape"
-                  />
-                </label>
-                <ul id="business-select-menu__list">
-                  <li>
-                    <button className="business-select-menu__list-item">
-                      <div>
-                        <div className="business-select-menu__img">
-                          <img
-                            src={`${process.env.PUBLIC_URL}/assets/header-profile-logo.png`}
-                            alt="logo"
-                          />
-                        </div>
-                        <p className="p-black">Шеин Алексей</p>
-                      </div>
-                    </button>
-                  </li>
-                  <li>
-                    <button className="business-select-menu__list-item">
-                      <div>
-                        <div className="business-select-menu__img">
-                          <img
-                            src={`${process.env.PUBLIC_URL}/assets/header-profile-logo.png`}
-                            alt="logo"
-                          />
-                        </div>
-                        
-                      </div>
-                    </button>
-                  </li>
-                </ul>
-              </div> */}
               <select id="business-select-menu__label">
                 {usersInitiator.map((user) => {
                   return (
@@ -285,7 +255,11 @@ const BusinessMain = () => {
                   />
                 </svg>
               </button>
-              <button className="business__main-content__header-right__btn">
+              <button
+                className="business__main-content__header-right__btn"
+                id="excel"
+                onClick={() => setExcelStatus(true)}
+              >
                 <svg
                   width="6"
                   height="16"
@@ -300,11 +274,33 @@ const BusinessMain = () => {
                     fill="#292A34"
                   />
                 </svg>
+                {!!excelStatus ? (
+                  <ClickAwayListener onClickAway={() => setExcelStatus(false)}>
+                    <div id="excel-menu">
+                      <div onClick={() => excelExport()}>
+                        <img
+                          src={`${process.env.PUBLIC_URL}/assets/DownloadSimple.svg`}
+                          alt=""
+                        />
+                        Экспорт в Excel
+                      </div>
+                      <div>
+                        <img
+                          src={`${process.env.PUBLIC_URL}/assets/Gear.svg`}
+                          alt=""
+                        />
+                        Выбрать столбцы
+                      </div>
+                    </div>
+                  </ClickAwayListener>
+                ) : (
+                  <></>
+                )}
               </button>
               <button
                 className="blue-btn create-bp"
                 id="create-task"
-                onClick={(e) => createBp()}
+                onClick={() => createBp()}
               >
                 <span style={{ fontSize: 24 + "px", marginRight: 15 + "px" }}>
                   +
@@ -315,6 +311,7 @@ const BusinessMain = () => {
           </div>
           <BusinessMainList />
         </div>
+        <ChatMenu />
         <CreateBp />
         {createTaskStatus === true ? <CreateTask /> : <></>}
       </section>

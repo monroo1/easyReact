@@ -4,7 +4,16 @@ import axios from "axios";
 import TaskBlockItem from "../task-block-item/TaskBlockItem";
 
 const TasksList = ({ tasks }) => {
-  const { tasksList, setTasksList, start } = useContext(StatusContext);
+  const {
+    tasksList,
+    setTasksList,
+    start,
+    openMenuTasks,
+    openMenuBp,
+    createTaskStatus,
+    createBpSampleStatus,
+    createBpStatus,
+  } = useContext(StatusContext);
 
   useEffect(() => {
     if (start === false) {
@@ -28,7 +37,18 @@ const TasksList = ({ tasks }) => {
 
   if (tasksList.length > 0) {
     return (
-      <div className="dependencies">
+      <div
+        className="dependencies"
+        style={
+          openMenuTasks ||
+          openMenuBp ||
+          createTaskStatus ||
+          createBpSampleStatus ||
+          createBpStatus
+            ? { paddingLeft: 88 + "px" }
+            : {}
+        }
+      >
         <div className="dependencies__content">
           <div className="dependencies__content-list">
             {tasksList

@@ -14,6 +14,9 @@ const BusinessMainList = () => {
     apiBp,
     bpList,
     setBpList,
+    openMenuTasks,
+    openMenuBp,
+    createTaskStatus,
   } = useContext(StatusContext);
 
   const token = document.cookie.replace(
@@ -42,7 +45,7 @@ const BusinessMainList = () => {
     <div className="business__main-content__list-block">
       <div
         className={
-          createBpStatus || createBpSampleStatus
+          createBpStatus || createBpSampleStatus || openMenuTasks || openMenuBp
             ? "business__main-content__list-block__title business__main-content__list-block__title-active"
             : "business__main-content__list-block__title"
         }
@@ -119,14 +122,21 @@ const BusinessMainList = () => {
             Проект
             {filter === "project_id" ? <SortBtn /> : <></>}
           </button>
-          <button
-            className="p-grey sort"
-            data-sort="id7"
-            onClick={(e) => sortFunc(e.target)}
-          >
-            Приоритет
-            {filter === "id7" ? <SortBtn /> : <></>}
-          </button>
+          {openMenuTasks ||
+          openMenuBp ||
+          createTaskStatus ||
+          createBpSampleStatus ? (
+            <></>
+          ) : (
+            <button
+              className="p-grey sort"
+              data-sort="id7"
+              onClick={(e) => sortFunc(e.target)}
+            >
+              Приоритет
+              {filter === "id7" ? <SortBtn /> : <></>}
+            </button>
+          )}
         </div>
       </div>
       <div className="business__main-content__list-block__container">

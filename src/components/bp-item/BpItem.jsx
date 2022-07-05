@@ -16,6 +16,11 @@ const BpItem = ({ el }) => {
     openTasks,
     setOpenTasks,
     bearer,
+    setOpenMenuBp,
+    openMenuTasks,
+    openMenuBp,
+    setIdCall,
+    setOpenMenuTasks,
   } = useContext(StatusContext);
   const [project, setProject] = useState();
   const [projectSection, setProjectSection] = useState({});
@@ -64,14 +69,17 @@ const BpItem = ({ el }) => {
   return (
     <div
       className={
-        createBpStatus || createBpSampleStatus
+        createBpStatus || createBpSampleStatus || openMenuTasks || openMenuBp
           ? "business__main-content__list-block__item business__main-content__list-block__item-active"
           : "business__main-content__list-block__item"
       }
     >
       <div
         id={"business-item-" + el.id}
-        onClick={(e) => openTasksMenu(e.currentTarget)}
+        onClick={(e) => {
+          setIdCall(el.id);
+          openTasksMenu(e.currentTarget);
+        }}
       >
         <div className="business__main-content__list-block__item-left">
           <div className="business__main-content__list-block__item__arrow">
@@ -90,6 +98,11 @@ const BpItem = ({ el }) => {
           <div
             className="business__main-content__list-block__item__message business__main-content__list-block__item__message-active"
             id={"business-item-btn-" + el.id}
+            onClick={() => {
+              setIdCall(el.id);
+              setOpenMenuBp(true);
+              setOpenMenuTasks(false);
+            }}
           >
             <div>
               <img
