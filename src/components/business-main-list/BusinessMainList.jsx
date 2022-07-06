@@ -17,6 +17,7 @@ const BusinessMainList = () => {
     openMenuTasks,
     openMenuBp,
     createTaskStatus,
+    search,
   } = useContext(StatusContext);
 
   const token = document.cookie.replace(
@@ -25,17 +26,36 @@ const BusinessMainList = () => {
   );
 
   useEffect(() => {
-    axios
-      .get(`${apiBp}/businessProcess?orderFilter[${filter}]=${filterMethod}`, {
-        headers: {
-          "secret-token": token,
-        },
-      })
-      .then((response) => {
-        setBpList(response.data.data);
-      })
-      .catch((e) => console.log(e));
-  }, [setBpList, filter, filterMethod]);
+    if (search.trim() !== "") {
+      axios
+        .get(
+          `${apiBp}/businessProcess?orderFilter[${filter}]=${filterMethod}&searchFilter[name]=${search}`,
+          {
+            headers: {
+              "secret-token": token,
+            },
+          }
+        )
+        .then((response) => {
+          setBpList(response.data.data);
+        })
+        .catch((e) => console.log(e));
+    } else {
+      axios
+        .get(
+          `${apiBp}/businessProcess?orderFilter[${filter}]=${filterMethod}`,
+          {
+            headers: {
+              "secret-token": token,
+            },
+          }
+        )
+        .then((response) => {
+          setBpList(response.data.data);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, [setBpList, filter, filterMethod, search]);
 
   const sortFunc = (e) => {
     setFilter(e.dataset.sort);

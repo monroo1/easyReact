@@ -19,6 +19,8 @@ function App() {
   const [createBpSampleStatus, setCreateBpSampleStatus] = useState(false);
   const [createTaskStatus, setCreateTaskStatus] = useState(false);
 
+  const [search, setSearch] = useState("");
+
   const [createBpForm, setCreateBpForm] = useState({
     name: null,
     initiator_id: parseInt(
@@ -91,12 +93,9 @@ function App() {
   // 1: {id: 3, name: 'Отправлено исполнителю', slug: 'for_approval_performer'}
   // 2: {id: 10, name: 'В работе', slug: 'in_work'}
   // 3: {id: 11, name: 'Отменена', slug: 'canceled'}
-  // 4: {id: 12, name: 'Выполнено', slug: 'done'}
-  // 5: {id: 13, name: 'Завершено', slug: 'completed'}
-  // 6: {id: 14, name: 'Просрочена', slug: 'overdue'}
-  // 7: {id: 15, name: 'В архиве', slug: 'archived'}
   // 8: {id: 18, name: 'Подзадача', slug: 'podzadacha'}
   // 9: {id: 19, name: 'Идея', slug: 'idea'}
+  const [resultDropStatus, setResultDropStatus] = useState("");
 
   const [start, setStart] = useState(false);
   const [users, setUsers] = useState([]);
@@ -219,6 +218,10 @@ function App() {
         setOpenMenuBp,
         idCall,
         setIdCall,
+        search,
+        setSearch,
+        resultDropStatus,
+        setResultDropStatus,
       }}
     >
       <div className="bussines-page">

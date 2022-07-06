@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import { StatusContext } from "../../context/status";
 import "./Header.scss";
 
 const Header = () => {
+  const { search, setSearch } = useContext(StatusContext);
+
   return (
     <header className="header">
       <div className="header-content">
@@ -12,7 +15,13 @@ const Header = () => {
               alt="search"
             />
           </label>
-          <input type="text" id="header-search" placeholder="Поиск" />
+          <input
+            type="text"
+            id="header-search"
+            placeholder="Поиск"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
         <div className="header-content__notification">
           <img

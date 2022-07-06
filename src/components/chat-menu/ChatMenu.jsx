@@ -13,7 +13,6 @@ const ChatMenu = () => {
     setOpenMenuBp,
     idCall,
     apiBp,
-    users,
   } = useContext(StatusContext);
 
   const [thisTabs, setThisTabs] = useState(0);
@@ -139,7 +138,7 @@ const ChatMenu = () => {
       "$1"
     );
     fetch(
-      `${apiBp}/businessProcess/${bp.id}/comment?sender_id=${sender}&content=${message}&business_process_id=${bp.id}`,
+      `${apiBp}/businessProcess/${bp.id}/comment?sender_id=${sender}&comment_content=${message}&businessProcessId=${bp.id}`,
       {
         method: "POST",
         headers: {
@@ -285,6 +284,14 @@ const ChatMenu = () => {
                 placeholder="Введите текст"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    if (message.trim() !== "") {
+                      sendMessage();
+                      setMessage("");
+                    }
+                  }
+                }}
               />
               <button
                 className="chat-btn"
@@ -292,6 +299,7 @@ const ChatMenu = () => {
                 onClick={() => {
                   if (message.trim() !== "") {
                     sendMessage();
+                    setMessage("");
                   }
                 }}
               >
@@ -492,6 +500,7 @@ const ChatMenu = () => {
                     gap: 35 + "px",
                   }}
                 >
+                  {console.log(options)}
                   {options
                     .filter((el) => !!el.value)
                     .map((item) => {

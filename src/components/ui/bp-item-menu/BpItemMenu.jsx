@@ -20,6 +20,7 @@ const BpItemMenu = ({ id }) => {
     start,
     setStart,
     setOpenTasks,
+    setResultDropStatus,
   } = useContext(StatusContext);
 
   useEffect(() => {
@@ -100,10 +101,15 @@ const BpItemMenu = ({ id }) => {
     }
   }, [tasksList, start]);
 
+  const showResult = () => {
+    setIdBp("");
+    setResultDropStatus("business-item-" + idBp);
+  };
+
   if (idBp === id) {
     return (
       <ClickAwayListener onClickAway={() => setIdBp("")}>
-        <div className="bp-item-menu">
+        <div className="bp-item-menu" onClick={(e) => e.stopPropagation()}>
           <ul>
             {thisBp.status === 0 ||
             thisBp.status === 1 ||
@@ -132,7 +138,11 @@ const BpItemMenu = ({ id }) => {
             ) : (
               <></>
             )}
-            <li>Показать результаты</li>
+            {!!thisBp.options && thisBp.options.length > 0 ? (
+              <li onClick={() => showResult()}>Показать результаты</li>
+            ) : (
+              <></>
+            )}
             <li>Распечатать</li>
             {thisBp.status === 0 ||
             thisBp.status === 1 ||
