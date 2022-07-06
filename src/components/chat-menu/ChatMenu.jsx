@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { useEffect } from "react";
 import { StatusContext } from "../../context/status";
 import "./ChatMenu.scss";
-import CreateTaskForm from "../create-task-form/CreateTaskForm";
 import { useState } from "react";
 
 const ChatMenu = () => {
@@ -14,10 +13,17 @@ const ChatMenu = () => {
     setOpenMenuBp,
     idCall,
     apiBp,
+    users,
   } = useContext(StatusContext);
 
   const [thisTabs, setThisTabs] = useState(0);
   const [options, setOptions] = useState([]);
+  const [task, setTask] = useState({});
+  const [name, setName] = useState("");
+  const [bp, setBp] = useState({});
+  const [project, setProject] = useState("");
+  const [projectSection, setProjectSection] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!!idCall) {
@@ -34,7 +40,7 @@ const ChatMenu = () => {
                 ),
             },
           })
-          .then((res) => console.log(res.data.data));
+          .then((res) => setTask(res.data.data));
       }
       if (openMenuBp) {
         setThisTabs(3);
@@ -47,10 +53,48 @@ const ChatMenu = () => {
               ),
             },
           })
-          .then((res) => setOptions(res.data.data.options));
+          .then((res) => {
+            console.log(res.data.data);
+            setBp(res.data.data);
+            setOptions(res.data.data.options);
+          });
       }
     }
   }, [idCall]);
+
+  useEffect(() => {
+    if (bp?.id) {
+      console.log(bp);
+      axios
+        .get(`https://test.easy-task.ru/api/v1/projects/${bp.project_id}`, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        })
+        .then((res) => setProject(res.data.data.name));
+
+      axios
+        .get(
+          `https://test.easy-task.ru/api/v1/projectsections/${bp.project_section_id}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+            },
+          }
+        )
+        .then((res) => setProjectSection(res.data.data.name));
+    }
+  }, [bp]);
 
   const changeTabs = (i) => {
     if (openMenuTasks) {
@@ -70,11 +114,45 @@ const ChatMenu = () => {
     setThisTabs(i);
   };
 
-  // useEffect(() => {
-  //   console.log(options);
-  // }, [options]);
+  useEffect(() => {
+    if (task?.id) {
+      axios
+        .get(`https://test.easy-task.ru/api/v1/users/${task.executor_id}`, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        })
+        .then((res) =>
+          setName(res.data.data.name + " " + res.data.data.surname)
+        );
+    }
+  }, [task]);
 
-  // options: [] если есть - у нас имеется  результат
+  const sendMessage = () => {
+    let sender = document.cookie.replace(
+      /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    fetch(
+      `${apiBp}/businessProcess/${bp.id}/comment?sender_id=${sender}&content=${message}&business_process_id=${bp.id}`,
+      {
+        method: "POST",
+        headers: {
+          "secret-token": document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((r) => console.log(r));
+  };
 
   if (openMenuTasks || openMenuBp) {
     return (
@@ -126,7 +204,319 @@ const ChatMenu = () => {
             Закрыть
           </div>
         </div>
-        <div className="chatMenu-container"></div>
+        {openMenuBp && thisTabs === 3 ? (
+          <div id="chat">
+            <div className="chat-content">
+              <div className="chat-content-scroll">
+                {!!bp.id
+                  ? bp.comments.map((el) => {
+                      if (
+                        parseInt(
+                          document.cookie.replace(
+                            /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                            "$1"
+                          )
+                        ) === el.sender
+                      ) {
+                        return (
+                          <div
+                            className="chat-message chat-message-my"
+                            key={el.id}
+                          >
+                            <p>{el.content}</p>
+                          </div>
+                        );
+                      } else {
+                        axios
+                          .get(
+                            `https://test.easy-task.ru/api/v1/users/${el.sender}`,
+                            {
+                              headers: {
+                                Authorization:
+                                  "Bearer " +
+                                  document.cookie.replace(
+                                    /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                                    "$1"
+                                  ),
+                              },
+                            }
+                          )
+                          .then((res) =>
+                            setName(
+                              res.data.data.name + " " + res.data.data.surname
+                            )
+                          );
+                        return (
+                          <div
+                            className="chat-message chat-message-my"
+                            key={el.id}
+                          >
+                            <h4>{name}</h4>
+                            <p>{el.content}</p>
+                          </div>
+                        );
+                      }
+                    })
+                  : false}
+              </div>
+            </div>
+            <div className="chat-bottom">
+              <button
+                className="chat-btn"
+                style={{
+                  marginRight: 17 + "px",
+                }}
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/input/Vector.svg`}
+                />
+              </button>
+              <button className="chat-btn">
+                <img src={`${process.env.PUBLIC_URL}/assets/@.svg`} />
+              </button>
+              <input
+                className="input-form"
+                style={{
+                  width: 70 + "%",
+                  marginLeft: 17 + "px",
+                  marginRight: 25 + "px",
+                }}
+                type="text"
+                placeholder="Введите текст"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button
+                className="chat-btn"
+                id="send-message"
+                onClick={() => {
+                  if (message.trim() !== "") {
+                    sendMessage();
+                  }
+                }}
+              >
+                <img
+                  src={`${process.env.PUBLIC_URL}/assets/send-message.svg`}
+                />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="chatMenu-container">
+              {openMenuTasks ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 35 + "px",
+                  }}
+                >
+                  <div>
+                    <label
+                      className="p__drop-content"
+                      htmlFor="input-name-Task"
+                    >
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
+                      />
+                      Название задачи*
+                    </label>
+                    <div className="input-form input-full">{task.name}</div>
+                  </div>
+                  <div>
+                    <label className="p__drop-content">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/NewspaperClipping.svg`}
+                      />
+                      Описание
+                    </label>
+                    <div className="input-desc">
+                      <div>
+                        <label htmlFor="businessTask__description__what">
+                          Что нужно сделать:
+                        </label>
+
+                        <div>{task.description}</div>
+                      </div>
+                      <div>
+                        <label htmlFor="businessTask__description__as">
+                          Как нужно сделать:
+                        </label>
+                        <div>{task.description}</div>
+                      </div>
+                      <div>
+                        <label htmlFor="businessTask__description__result">
+                          Какой должен быть результат:
+                        </label>
+                        <div>{task.description}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      className="p__drop-content"
+                      htmlFor="businessTask__executor"
+                    >
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/User.svg`}
+                      />
+                      Исполнитель
+                    </label>
+
+                    <div className="input-form input-full">{name}</div>
+                  </div>
+                  <div className="input__date">
+                    <label className="p__drop-content">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
+                      />
+                      Дата и время начала
+                    </label>
+                    <div>
+                      <div
+                        className="input-form"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        {task.begin}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="input__date">
+                    <label
+                      className="p__drop-content"
+                      htmlFor="businessTask__date-end"
+                    >
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
+                      />
+                      Дата и время окончания
+                    </label>
+                    <div>
+                      <div
+                        className="input-form"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        {task.end}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-task__dependencies">
+                    <div className="p__drop-content">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/ArrowUDownRight.svg`}
+                      />
+                      Зависимости
+                    </div>
+                    <div className="form-task__dependencies__btns">
+                      <button>Родительская</button>
+                      <button>Дочерняя</button>
+                      <button>Предыдущая</button>
+                      <button>Следующая</button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+              {openMenuBp && thisTabs === 1 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 35 + "px",
+                  }}
+                >
+                  <div>
+                    <label className="p__drop-content" htmlFor="input-name">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
+                        alt="Article"
+                      />
+                      Название*
+                    </label>
+
+                    <div className="input-form input-full">{bp.name}</div>
+                  </div>
+                  <div>
+                    <label className="p__drop-content">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
+                        alt="Article"
+                      />
+                      Проект*
+                    </label>
+
+                    <div className="input-form input-full">{project}</div>
+                  </div>
+                  <div>
+                    <label className="p__drop-content">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
+                        alt="Article"
+                      />
+                      Секция проекта*
+                    </label>
+
+                    <div className="input-form input-full">
+                      {projectSection}
+                    </div>
+                  </div>
+
+                  <div className="input__date">
+                    <label className="p__drop-content">
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/input/CalendarBlank.svg`}
+                        alt="CalendarBlank"
+                      />
+                      Общий срок
+                    </label>
+                    <div>
+                      <div
+                        className="input-form"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        {bp.deadline}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+              {openMenuBp && thisTabs === 2 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 35 + "px",
+                  }}
+                >
+                  {options
+                    .filter((el) => !!el.value)
+                    .map((item) => {
+                      return (
+                        <div key={item.id}>
+                          <label className="p__drop-content">
+                            <img
+                              src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
+                              alt="Article"
+                            />
+                            {item.option.name}
+                          </label>
+                          <div className="input-form input-full">
+                            {item.value}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </>
+        )}
       </div>
     );
   }

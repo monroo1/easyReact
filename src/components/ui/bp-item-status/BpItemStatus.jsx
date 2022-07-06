@@ -284,7 +284,10 @@ const BpItemStatus = ({ status, workflow, id }) => {
   return (
     <div
       className="business__main-content__list-block__item__status"
-      onClick={(e) => makeActiveTask(e.currentTarget)}
+      onClick={(e) => {
+        e.stopPropagation();
+        makeActiveTask(e.currentTarget);
+      }}
       data-id={id}
       data-status={status}
     >
