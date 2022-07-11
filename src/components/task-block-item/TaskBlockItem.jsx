@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { StatusContext } from "../../context/status";
 import TaskItem from "../task-item/TaskItem";
 
-const TaskBlockItem = ({ item }) => {
+const TaskBlockItem = ({ item, parentId }) => {
   const { tasksList } = useContext(StatusContext);
   const getTopChildBlock = useRef();
   const getTopParentBlock = useRef();
@@ -20,7 +20,7 @@ const TaskBlockItem = ({ item }) => {
       className="dependencies__content-list__task-block"
       ref={getTopParentBlock}
     >
-      <TaskItem el={item} />
+      <TaskItem el={item} parentId={parentId} />
       <div className="dependencies__content-list__task-block__vertical-line">
         <div
           style={
@@ -52,7 +52,11 @@ const TaskBlockItem = ({ item }) => {
                   key={it}
                   ref={getTopChildBlock}
                 >
-                  <TaskItem el={arr[0].data.data} style={"dropdown"} />
+                  <TaskItem
+                    el={arr[0].data.data}
+                    style={"dropdown"}
+                    parentId={parentId}
+                  />
                   <div className="dependencies__content-list__task-block__vertical-line">
                     <div></div>
                   </div>
@@ -74,6 +78,7 @@ const TaskBlockItem = ({ item }) => {
                               <TaskItem
                                 el={arr[0].data.data}
                                 style={"dropdown"}
+                                parentId={parentId}
                               />
                               <div className="dependencies__content-list__task-block__vertical-line">
                                 <div></div>

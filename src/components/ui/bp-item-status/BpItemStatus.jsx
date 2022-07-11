@@ -10,6 +10,9 @@ const BpItemStatus = ({ status, workflow, id }) => {
     setOpenTasks,
     openMenuTasks,
     openMenuBp,
+    idBp,
+    apiBp,
+    setStart,
   } = useContext(StatusContext);
   const [statusObj, setStatusObj] = useState({});
 
@@ -277,6 +280,18 @@ const BpItemStatus = ({ status, workflow, id }) => {
           }
         )
         .then((res) => console.log(res));
+
+      fetch(`${apiBp}/businessProcess/${idBp}/makeActive`, {
+        method: "PATCH",
+        headers: {
+          "secret-token": document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+      })
+        .then((res) => res.json())
+        .then((re) => console.log(re));
       setOpenTasks("");
     }
   };

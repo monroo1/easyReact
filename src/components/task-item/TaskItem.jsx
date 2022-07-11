@@ -4,7 +4,7 @@ import { useState } from "react";
 import { StatusContext } from "../../context/status";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 
-const TaskItem = ({ style, el }) => {
+const TaskItem = ({ style, el, parentId }) => {
   const {
     createBpStatus,
     setOpenMenuTasks,
@@ -63,8 +63,9 @@ const TaskItem = ({ style, el }) => {
     <div
       className={classTask}
       id={el.id}
-      onClick={() => {
-        setIdCall(el.id);
+      data-parentid={parentId}
+      onClick={(e) => {
+        setIdCall(e.currentTarget.id);
         setOpenMenuTasks(true);
         setOpenMenuBp(false);
       }}

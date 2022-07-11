@@ -29,8 +29,12 @@ const CreateTask = () => {
     setStatusCreateTask,
     addTasksMenu,
     setAddTasksMenu,
-
+    setTaskSample,
     thisBp,
+    setCreateTaskFormDate,
+    tasksArr,
+    contractLast,
+    contract,
   } = useContext(StatusContext);
   const [addTask, setAddTask] = useState();
 
@@ -94,6 +98,7 @@ const CreateTask = () => {
         })
           .then((resesult) => resesult.json())
           .then((res) => {
+            console.log(res.data.id);
             setTasks([...tasks, res.data.id]);
 
             if (depsTask === "Предыдущая") {
@@ -156,26 +161,127 @@ const CreateTask = () => {
                 )
                 .then((res) => {});
             }
-            setDepsTask("");
-            setCreateTaskForm({
-              ...createTaskForm,
-              next_id: null,
-              parent_id: null,
-              prev_id: null,
-            });
+            // setCreateTaskForm({
+            //   name: "",
+            //   description: "description",
+            //   begin: null,
+            //   end: null,
+            //   project_id: 35,
+            //   cyclic_task_id: 0,
+            //   project_section_id: 124,
+            //   executor_id: 512,
+            //   next_id: null,
+            //   parent_id: null,
+            //   prev_id: null,
+            //   priority_id: 2,
+            //   provide_to: 0,
+            //   status_id: 19,
+            //   task_load: 5,
+            //   work_load: 35,
+            //   workflow_id: 1,
+            // });
+            // setCreateTaskFormDate({
+            //   currentBeginDate: "",
+            //   beginDate: null,
+            //   beginTime: "",
+            //   currentEndDate: "",
+            //   endDate: null,
+            //   endTime: "",
+            // });
+            // setDepsTask("");
+            // setCreateTaskForm({
+            //   ...createTaskForm,
+            //   next_id: null,
+            //   parent_id: null,
+            //   prev_id: null,
+            // });
           });
       }
+      setCreateTaskForm({
+        name: "",
+        description: "description",
+        begin: null,
+        end: null,
+        project_id: 35,
+        cyclic_task_id: 0,
+        project_section_id: 124,
+        executor_id: 512,
+        next_id: null,
+        parent_id: null,
+        prev_id: null,
+        priority_id: 2,
+        provide_to: 0,
+        status_id: 19,
+        task_load: 5,
+        work_load: 35,
+        workflow_id: 1,
+      });
+      setCreateTaskFormDate({
+        currentBeginDate: "",
+        beginDate: null,
+        beginTime: "",
+        currentEndDate: "",
+        endDate: null,
+        endTime: "",
+      });
+      setTaskSample({ ...taskSample, name: "" });
     }
     if (statusCreateTask) {
       if (addTaskSample) {
         if (!nowTask) {
-          setNowTask(valueTaskSample[0]);
+          setNowTask({
+            ...valueTaskSample[0],
+
+            begin: null,
+            end: null,
+            description: "desc",
+            project_id: createBpForm.project_id,
+            project_section_id: createBpForm.project_section_id,
+            executor_id: 512,
+
+            cyclic_task_id: 0,
+            priority_id: 2,
+            provide_to: 0,
+            status_id: 19, //3
+            task_load: 5,
+            work_load: 35,
+            workflow_id: 1,
+          });
+
+          setTaskSample({
+            ...taskSample,
+            name: valueTaskSample[1].name,
+          });
+          // if(valueTaskSample.length === 1){
+
+          // }
         }
         if (!!nowTask) {
           for (let i in valueTaskSample) {
-            if (valueTaskSample[i].id === nowTask.id) {
+            if (valueTaskSample[i].name === nowTask.name) {
+              setTaskSample({
+                ...taskSample,
+                name: contract.tasks[contractLast.tasks.length + 1]?.name,
+              });
               i++;
-              setNowTask(valueTaskSample[i]);
+              setNowTask({
+                ...valueTaskSample[i],
+
+                begin: null,
+                end: null,
+                description: "desc",
+                project_id: createBpForm.project_id,
+                project_section_id: createBpForm.project_section_id,
+                executor_id: 512,
+
+                cyclic_task_id: 0,
+                priority_id: 2,
+                provide_to: 0,
+                status_id: 19, //3
+                task_load: 5,
+                work_load: 35,
+                workflow_id: 1,
+              });
             }
           }
         }
@@ -424,7 +530,9 @@ const CreateTask = () => {
                 ? { paddingLeft: 64 + "px", paddingRight: 64 + "px" }
                 : {}
             }
-            onClick={() => saveTask()}
+            onClick={() => {
+              saveTask();
+            }}
           >
             {!createTaskSampleFormStatus ? "Добавить еще" : "Далее"}
           </button>
@@ -448,6 +556,42 @@ const CreateTask = () => {
             className="defualt__btn"
             id="close-btn"
             onClick={() => {
+              if (tasks.length > 0) {
+                const delTasks = tasks.map((el) => {
+                  const link = `https://test.easy-task.ru/api/v1/tasks/${el}`;
+                  return axios.delete(link, {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                    },
+                  });
+                });
+
+                Promise.all(delTasks).then((res) => console.log(res));
+              }
+              setCreateTaskForm({
+                name: "",
+                description: "description",
+                begin: null,
+                end: null,
+                project_id: 35,
+                cyclic_task_id: 0,
+                project_section_id: 124,
+                executor_id: 512,
+                next_id: null,
+                parent_id: null,
+                prev_id: null,
+                priority_id: 2,
+                provide_to: 0,
+                status_id: 19,
+                task_load: 5,
+                work_load: 35,
+                workflow_id: 1,
+              });
               setCreateBpForm({
                 name: null,
                 initiator_id: parseInt(

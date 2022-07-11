@@ -31,10 +31,6 @@ const BusinessMain = () => {
   const [selectColumnsStatus, setSelectColumnsStatus] = useState(false);
   const [selectColumns, setSelectColumns] = useState([]);
 
-  useEffect(() => {
-    console.log(selectColumns);
-  }, [selectColumns]);
-
   const createBp = () => {
     if (
       createBpStatus ||

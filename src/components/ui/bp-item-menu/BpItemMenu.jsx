@@ -65,24 +65,16 @@ const BpItemMenu = ({ id }) => {
         },
       });
     });
-    Promise.all(getTasks).then((results) => setTasksList(results));
-
-    fetch(`${apiBp}/businessProcess/${idBp}/makeActive`, {
-      method: "PATCH",
-      headers: {
-        "secret-token": document.cookie.replace(
-          /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        ),
-      },
-    })
-      .then((res) => res.json())
-      .then((re) => console.log(re));
     setStart(true);
+    Promise.all(getTasks).then((results) => setTasksList(results));
   };
 
   useEffect(() => {
-    if (start && tasksList.length > 0) {
+    if (
+      start &&
+      tasksList.length > 0 &&
+      tasksList[0]?.data.data.status_id != 50
+    ) {
       let arr = tasksList.map((el) => {
         return {
           ...el,
@@ -96,6 +88,8 @@ const BpItemMenu = ({ id }) => {
         };
       });
       setTasksList(arr);
+    }
+    if (start && tasksList[0]?.data.data.status_id == 50) {
       setOpenTasks("business-item-" + idBp);
       setStart(false);
     }

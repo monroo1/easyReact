@@ -9,9 +9,6 @@ const CreateTaskForm = () => {
     setCreateTaskForm,
     createTaskFormDate,
     setCreateTaskFormDate,
-    depsTask,
-    setDepsTask,
-    tasks,
     createTaskSampleFormStatus,
     sampleArr,
     idSample,
@@ -30,7 +27,31 @@ const CreateTaskForm = () => {
     setLengthArrTasks,
     setCreateBpStatus,
     users,
+    contract,
+    setContract,
+    setContractLast,
+    contractLast,
+    createBpSampleForm,
+    createBpForm,
   } = useContext(StatusContext);
+
+  useEffect(() => {
+    if (
+      contract &&
+      createBpSampleForm.type !== 0 &&
+      createBpSampleForm.type !== null
+    ) {
+      setCreateTaskForm({
+        ...createTaskForm,
+        name: contract.tasks[contractLast.tasks.length]?.name,
+      });
+      setTaskSample({
+        ...taskSample,
+        name: contract.tasks[contractLast.tasks.length]?.name,
+      });
+      // console.log(contract.tasks[contractLast.tasks.length]?.name);
+    }
+  }, []);
 
   useEffect(() => {
     if (
@@ -54,202 +75,91 @@ const CreateTaskForm = () => {
 
   useEffect(() => {
     if (createTaskSampleFormStatus) {
-      let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
-
-      if (bp[0].tasksId) {
-        setArrTasksSample([...bp[0].tasksId.split("|")]);
-      }
-
-      if (bp[0].businessProcessId) {
-        if (bp[0].businessProcessId.tasks) {
-          let arrMas = [];
-          for (let i in bp[0].businessProcessId.tasks) {
-            arrMas.push(bp[0].businessProcessId.tasks[i].id);
-          }
-          setArrTasksSample([...arrMas]);
-        }
+      if (contract.tasks) {
+        setValueTaskSample(contract.tasks);
       }
     }
   }, [createTaskSampleFormStatus]);
 
   useEffect(() => {
-    if (arrTasksSample.length >= 1) {
-      Promise.all(
-        arrTasksSample.map(async (el) => {
-          return axios
-            .get(`https://test.easy-task.ru/api/v1/tasks/${el}`, {
-              headers: {
-                Authorization:
-                  "Bearer " +
-                  document.cookie.replace(
-                    /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                    "$1"
-                  ),
-              },
-            })
-            .then((result) => {
-              return result.data.data;
-            });
-        })
-      )
-        .then((r) => setValueTaskSample(r))
-        .catch((err) => console.log("err " + err));
-    }
-  }, [arrTasksSample]);
-
-  useEffect(() => {
-    if (tasksArr.length > 0) {
-      if (tasksArr.length === valueTaskSample.length) {
-        for (let i in tasksArr) {
-          if (!!valueTaskSample[i].next_id) {
-            let a;
-            valueTaskSample.filter((el, id) => {
-              if (el.id === valueTaskSample[i].next_id) {
-                return (a = id);
-              }
-            });
-
-            axios
-              .patch(
-                `https://test.easy-task.ru/api/v1/tasks/${tasksArr[i]}`,
-                { next_id: tasksArr[a] },
-                {
-                  headers: {
-                    Authorization:
-                      "Bearer " +
-                      document.cookie.replace(
-                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                      ),
-                  },
-                }
-              )
-              .then((res) => {
-                console.log(res);
-              });
-          }
-          if (!!valueTaskSample[i].parent_id) {
-            let a;
-            valueTaskSample.filter((el, id) => {
-              if (el.id === valueTaskSample[i].parent_id) {
-                return (a = id);
-              }
-            });
-
-            axios
-              .patch(
-                `https://test.easy-task.ru/api/v1/tasks/${tasksArr[i]}`,
-                { parent_id: tasksArr[a] },
-                {
-                  headers: {
-                    Authorization:
-                      "Bearer " +
-                      document.cookie.replace(
-                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                      ),
-                  },
-                }
-              )
-              .then((res) => {
-                console.log(res);
-              });
-          }
-          if (!!valueTaskSample[i].prev_id) {
-            let a;
-            valueTaskSample.filter((el, id) => {
-              if (el.id === valueTaskSample[i].prev_id) {
-                return (a = id);
-              }
-            });
-
-            axios
-              .patch(
-                `https://test.easy-task.ru/api/v1/tasks/${tasksArr[i]}`,
-                { prev_id: tasksArr[a] },
-                {
-                  headers: {
-                    Authorization:
-                      "Bearer " +
-                      document.cookie.replace(
-                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                      ),
-                  },
-                }
-              )
-              .then((res) => {
-                console.log(res);
-              });
-          }
-        }
+    if (contractLast?.tasks.length > 0) {
+      if (contractLast.tasks.length === contract.tasks.length) {
         setStatusCreateTask(false);
         setCreateTaskStatus(false);
         setCreateBpStatus(true);
         setCreateBpSampleStatus(true);
       }
     }
-  }, [tasksArr]);
+  }, [contractLast]);
 
   useEffect(() => {
-    setTaskSample(createTaskForm);
     if (!!nowTask) {
-      axios
-        .post(
-          `https://test.easy-task.ru/api/v1/tasks`,
-          {
-            author_id: nowTask.author_id,
-            begin: nowTask.begin,
-            cyclic_task_id: nowTask.cyclic_task_id,
-            description: nowTask.description,
-            end: nowTask.end,
-            executor_id: taskSample.executor_id,
-            name: taskSample.name,
-            next_id: null,
-            parent_id: null,
-            prev_id: null,
-            priority_id: nowTask.priority_id,
-            project_id: createTaskForm.project_id,
-            project_section_id: createTaskForm.project_section_id,
-            provide_to: nowTask.provide_to,
-            status_id: nowTask.status_id,
-            status_related_user_id: null,
-            task_load: nowTask.task_load,
-            task_load_sum: nowTask.task_load_sum,
-            timesheets: nowTask.timesheets,
-            work_load: nowTask.work_load,
-            workflow_id: nowTask.workflow_id,
-          },
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-              "company-id": document.cookie.replace(
-                /(?:(?:^|.*;\s*)company_id\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-          }
-        )
-        .then((res) => {
-          setTaskSample({
-            ...taskSample,
-            name: "",
+      var date = new Date();
+      var datePlus = new Date();
+      datePlus.setDate(datePlus.getDate() + 30);
+      contract.tasks.map((el) => {
+        if (el.name === nowTask.name) {
+          setContractLast({
+            ...contract,
+            tasks: [
+              ...contractLast?.tasks,
+              {
+                begin:
+                  nowTask.begin ||
+                  date.toLocaleDateString().replace(/\./g, "-") + " 00:00:00",
+                cyclic_task_id: nowTask.cyclic_task_id,
+                description: nowTask.description,
+                end:
+                  nowTask.end ||
+                  datePlus.toLocaleDateString().replace(/\./g, "-") +
+                    " 00:00:00",
+                executor_id: taskSample.executor_id,
+                name: el.name,
+                next_id: null,
+                parent_id: null,
+                prev_id: null,
+                priority_id: nowTask.priority_id,
+                project_id: createTaskForm.project_id,
+                project_section_id: createTaskForm.project_section_id,
+                provide_to: nowTask.provide_to,
+                status_id: nowTask.status_id,
+                task_load: nowTask.task_load,
+                work_load: nowTask.work_load,
+                workflow_id: nowTask.workflow_id,
+              },
+            ],
           });
-          setTasksArr([...tasksArr, res.data.data.id]);
-          setCreateTaskForm({ ...createTaskForm, name: "" });
-        })
-        .catch((err) => {
-          setLengthArrTasks(tasksArr.length);
-          setTaskSample({
-            ...taskSample,
-          });
-          console.log("errrrr " + err);
-        });
+        }
+      });
+
+      setCreateTaskForm({
+        name: "",
+        description: "description",
+        begin: null,
+        end: null,
+        project_id: createBpForm.project_id,
+        project_section_id: createBpForm.project_section_id,
+        cyclic_task_id: 0,
+        executor_id: 512,
+        next_id: null,
+        parent_id: null,
+        prev_id: null,
+        priority_id: 2,
+        provide_to: 0,
+        status_id: 19,
+        task_load: 5,
+        work_load: 35,
+        workflow_id: 1,
+      });
+      setCreateTaskFormDate({
+        currentBeginDate: "",
+        beginDate: null,
+        beginTime: "",
+        currentEndDate: "",
+        endDate: null,
+        endTime: "",
+      });
+      // setTaskSample({ ...taskSample, name: "" });
     }
   }, [nowTask]);
 
@@ -270,6 +180,11 @@ const CreateTaskForm = () => {
           type="text"
           id="input-name-task"
           value={taskSample.name}
+          disabled={
+            contract &&
+            createBpSampleForm.type !== 0 &&
+            createBpSampleForm.type !== null
+          }
           onChange={(e) => {
             if (e.target.value.trim() === "") {
               setCreateTaskForm({ ...createTaskForm, name: "" });
@@ -403,6 +318,7 @@ const CreateTaskForm = () => {
                 type="date"
                 id="businessTask__date-start"
                 htmlFor="businessTask__date-start"
+                value={createTaskFormDate.currentBeginDate}
                 onChange={(e) => {
                   if (!!e.target.value) {
                     setCreateTaskFormDate({
@@ -410,6 +326,9 @@ const CreateTaskForm = () => {
                       beginDate: new Date(e.target.value)
                         .toLocaleDateString()
                         .replace(/\./g, "-"),
+                      currentBeginDate: new Date(e.target.value)
+                        .toISOString()
+                        .split("T")[0],
                     });
                   }
                 }}
@@ -417,6 +336,7 @@ const CreateTaskForm = () => {
               <input
                 className="input-form"
                 type="time"
+                value={createTaskFormDate.beginTime}
                 onChange={(e) => {
                   if (!!e.target.value) {
                     setCreateTaskFormDate({
@@ -440,6 +360,7 @@ const CreateTaskForm = () => {
                 className="input-form"
                 type="date"
                 id="businessTask__date-end"
+                value={createTaskFormDate.currentEndDate}
                 onChange={(e) => {
                   if (!!e.target.value) {
                     setCreateTaskFormDate({
@@ -447,6 +368,9 @@ const CreateTaskForm = () => {
                       endDate: new Date(e.target.value)
                         .toLocaleDateString()
                         .replace(/\./g, "-"),
+                      currentEndDate: new Date(e.target.value)
+                        .toISOString()
+                        .split("T")[0],
                     });
                   }
                 }}
@@ -454,6 +378,7 @@ const CreateTaskForm = () => {
               <input
                 className="input-form"
                 type="time"
+                value={createTaskFormDate.endTime}
                 onChange={(e) => {
                   if (!!e.target.value) {
                     setCreateTaskFormDate({
@@ -465,7 +390,7 @@ const CreateTaskForm = () => {
               />
             </div>
           </div>
-          {tasks.length >= 1 ? (
+          {/* {tasks.length >= 1 ? (
             <div className="form-task__dependencies">
               <div className="p__drop-content">
                 <img
@@ -552,7 +477,7 @@ const CreateTaskForm = () => {
             </div>
           ) : (
             <></>
-          )}
+          )} */}
         </>
       ) : (
         <div className="task-sample__deps">

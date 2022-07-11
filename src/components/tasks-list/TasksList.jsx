@@ -3,7 +3,7 @@ import { StatusContext } from "../../context/status";
 import axios from "axios";
 import TaskBlockItem from "../task-block-item/TaskBlockItem";
 
-const TasksList = ({ tasks }) => {
+const TasksList = ({ tasks, parent }) => {
   const {
     tasksList,
     setTasksList,
@@ -16,7 +16,7 @@ const TasksList = ({ tasks }) => {
   } = useContext(StatusContext);
 
   useEffect(() => {
-    if (start === false) {
+    if (!start) {
       const getTasks = tasks.map((item) => {
         const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
         return axios.get(link, {
@@ -55,7 +55,11 @@ const TasksList = ({ tasks }) => {
               .filter((item) => item.data.data.parent_id === null)
               .map((el) => {
                 return (
-                  <TaskBlockItem item={el.data.data} key={el.data.data.id} />
+                  <TaskBlockItem
+                    item={el.data.data}
+                    key={el.data.data.id}
+                    parentId={parent}
+                  />
                 );
               })}
           </div>

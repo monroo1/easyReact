@@ -64,10 +64,12 @@ function App() {
   );
 
   const [createTaskFormDate, setCreateTaskFormDate] = useState({
+    currentBeginDate: "",
     beginDate: null,
-    beginTime: null,
+    beginTime: "",
+    currentEndDate: "",
     endDate: null,
-    endTime: null,
+    endTime: "",
   });
   const [createTaskForm, setCreateTaskForm] = useState({
     name: "",
@@ -129,12 +131,14 @@ function App() {
   const [addTaskSample, setAddTaskSample] = useState(false);
   const [addTasksMenu, setAddTasksMenu] = useState(false);
   const [thisBp, setThisBp] = useState({});
-
   //menu
-
   const [openMenuTasks, setOpenMenuTasks] = useState(false);
   const [openMenuBp, setOpenMenuBp] = useState(false);
   const [idCall, setIdCall] = useState("");
+
+  const [contract, setContract] = useState();
+  const [contractLast, setContractLast] = useState();
+  const [contractTaskOptions, setContractTaskOptions] = useState();
   return (
     <StatusContext.Provider
       value={{
@@ -222,6 +226,12 @@ function App() {
         setSearch,
         resultDropStatus,
         setResultDropStatus,
+        contract,
+        setContract,
+        contractLast,
+        setContractLast,
+        contractTaskOptions,
+        setContractTaskOptions,
       }}
     >
       <div className="bussines-page">

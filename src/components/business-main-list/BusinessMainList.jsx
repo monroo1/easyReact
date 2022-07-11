@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import axios from "axios";
 import BpItem from "../bp-item/BpItem.jsx";
 import SortBtn from "../ui/sort-btn/SortBtn.jsx";
