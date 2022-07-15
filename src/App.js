@@ -20,6 +20,7 @@ function App() {
   const [createTaskStatus, setCreateTaskStatus] = useState(false);
 
   const [search, setSearch] = useState("");
+  const [file, setFile] = useState({});
 
   const [createBpForm, setCreateBpForm] = useState({
     name: null,
@@ -90,13 +91,17 @@ function App() {
     work_load: 35,
     workflow_id: 1,
   });
+  //{"id": 18,"name": "Подзадача","slug": "podzadacha"}-0
+  //{id: 19, name: 'Идея', slug: 'idea'}-1
+  //{id: 11, name: 'Отменена', slug: 'canceled'}-2
 
-  // 0: {id: 2, name: 'Отправлено автору', slug: 'for_approval_chief'}
-  // 1: {id: 3, name: 'Отправлено исполнителю', slug: 'for_approval_performer'}
-  // 2: {id: 10, name: 'В работе', slug: 'in_work'}
-  // 3: {id: 11, name: 'Отменена', slug: 'canceled'}
-  // 8: {id: 18, name: 'Подзадача', slug: 'podzadacha'}
-  // 9: {id: 19, name: 'Идея', slug: 'idea'}
+  //{"id": 15,"name": "В архиве","slug": "archived"}-3
+  //{id: 3, name: 'Отправлено исполнителю', slug: 'for_approval_performer'}-4
+  //{id: 2, name: 'Отправлено автору', slug: 'for_approval_chief'}-5
+  //{"id": 14,"name": "Просрочена","slug": "overdue"}-6
+  //{id: 10, name: 'В работе', slug: 'in_work'}-7
+  //{"id": 13,"name": "Завершено","slug": "completed"}-8
+
   const [resultDropStatus, setResultDropStatus] = useState("");
 
   const [start, setStart] = useState(false);
@@ -131,14 +136,20 @@ function App() {
   const [addTaskSample, setAddTaskSample] = useState(false);
   const [addTasksMenu, setAddTasksMenu] = useState(false);
   const [thisBp, setThisBp] = useState({});
+
+  const [projects, setProjects] = useState([]);
   //menu
   const [openMenuTasks, setOpenMenuTasks] = useState(false);
   const [openMenuBp, setOpenMenuBp] = useState(false);
   const [idCall, setIdCall] = useState("");
+  const [idCallBp, setIdCallBp] = useState("");
 
   const [contract, setContract] = useState();
   const [contractLast, setContractLast] = useState();
   const [contractTaskOptions, setContractTaskOptions] = useState();
+  const [contractTaskOptionsNow, setContractTaskOptionsNow] = useState({});
+  const [contractBp, setContractBp] = useState();
+  const [task, setTask] = useState({});
   return (
     <StatusContext.Provider
       value={{
@@ -214,6 +225,8 @@ function App() {
         setAddTaskSample,
         bpList,
         setBpList,
+        projects,
+        setProjects,
         addTasksMenu,
         setAddTasksMenu,
         openMenuTasks,
@@ -232,6 +245,16 @@ function App() {
         setContractLast,
         contractTaskOptions,
         setContractTaskOptions,
+        file,
+        setFile,
+        contractTaskOptionsNow,
+        setContractTaskOptionsNow,
+        contractBp,
+        setContractBp,
+        task,
+        setTask,
+        idCallBp,
+        setIdCallBp,
       }}
     >
       <div className="bussines-page">

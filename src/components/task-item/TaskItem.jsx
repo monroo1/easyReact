@@ -14,6 +14,9 @@ const TaskItem = ({ style, el, parentId }) => {
     createBpSampleStatus,
     setIdCall,
     setOpenMenuBp,
+    bpList,
+    setContractBp,
+    setContractTaskOptions,
   } = useContext(StatusContext);
   const [classTask, setClassTask] = useState(
     "dependencies__content-list__item"
@@ -68,6 +71,38 @@ const TaskItem = ({ style, el, parentId }) => {
         setIdCall(e.currentTarget.id);
         setOpenMenuTasks(true);
         setOpenMenuBp(false);
+        let bp = bpList.filter((item) => {
+          let arg;
+          item.tasks.filter((e) => {
+            if (e.original_id === el.id) {
+              arg = true;
+            }
+            if (arg === true) {
+              return true;
+            }
+          });
+          if (arg === true) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        {
+          bp[0].type === 1
+            ? setContractBp(bp[0].id)
+            : bp[0].type === 2
+            ? setContractBp(bp[0].id)
+            : bp[0].type === 3
+            ? setContractBp(bp[0].id)
+            : setContractBp("");
+        }
+        bpList.filter((el) =>
+          el.tasks.filter((i) => {
+            if (i.original_id === parseInt(e.currentTarget.id)) {
+              setContractTaskOptions(i.results);
+            }
+          })
+        );
       }}
     >
       <div className="dependencies__content-list__item__btn">

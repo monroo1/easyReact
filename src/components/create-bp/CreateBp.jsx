@@ -26,22 +26,24 @@ const CreateBp = () => {
     idSample,
     setIdSample,
     sampleArr,
-    setSampleArr,
     setStatusCreateTask,
-    tasksArr,
     setTasksArr,
     setNowBp,
     contract,
     setContract,
     setContractLast,
     contractLast,
+    file,
+    setFile,
+    projects,
+    setProjects,
   } = useContext(StatusContext);
-  const [projects, setProjects] = useState([]);
+
   const [accessNext, setAccessNext] = useState("blue-btn blue-btn__disabled");
   const [nextLinkProjects, setNextLinkProjects] = useState(
     "https://test.easy-task.ru/api/v1/projects"
   );
-  const [file, setFile] = useState({});
+
   const [projectSections, setProjectSections] = useState([]);
   const [taskSampleArr, setTaskSampleArr] = useState([]);
 
@@ -265,11 +267,12 @@ const CreateBp = () => {
 
   useEffect(() => {
     if (taskSampleArr.length > 0) {
+      console.log(contractLast);
       axios
         .post(
           `${apiBp}/addBusinessProcessWithOptions`,
           {
-            type: createBpSampleForm.type,
+            type: contractLast.type,
             businessProcess: {
               name: contractLast.businessProcess.name,
               initiator_id: document.cookie.replace(
@@ -520,7 +523,7 @@ const CreateBp = () => {
         });
     }
 
-    if (createBpSampleForm.type === 2) {
+    if (createBpSampleForm.type === 3) {
       axios
         .get(`${apiBp}/getSampleFile/recruitment`, {
           headers: {
@@ -536,7 +539,7 @@ const CreateBp = () => {
         });
     }
 
-    if (createBpSampleForm.type === 3) {
+    if (createBpSampleForm.type === 2) {
       axios
         .get(`${apiBp}/getSampleFile/dismissal`, {
           headers: {
@@ -571,7 +574,6 @@ const CreateBp = () => {
     if (contract && createBpSampleForm.type === 0) {
       console.log("шаблон без параметров");
     }
-    // console.log(contract);
   }, [contract]);
 
   if (createBpStatus === true) {
@@ -629,8 +631,8 @@ const CreateBp = () => {
                 >
                   <option value="">Без шаблона</option>
                   <option value="1">Договор</option>
-                  <option value="2">Принятие на работу</option>
-                  <option value="3">Увольнение</option>
+                  <option value="2">Увольнение</option>
+                  <option value="3">Принятие на работу</option>
                   {/* {sampleArr.map((el) => (
                     <option value={el.id} key={el.id}>
                       {el.name}

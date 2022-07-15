@@ -1,11 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { StatusContext } from "../../context/status.js";
 import BpItemStatus from "../ui/bp-item-status/BpItemStatus";
 import BpItemMenu from "../ui/bp-item-menu/BpItemMenu.jsx";
 import TasksList from "../tasks-list/TasksList.jsx";
 import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const BpItem = ({ el }) => {
   const {
@@ -19,10 +17,12 @@ const BpItem = ({ el }) => {
     setOpenMenuBp,
     openMenuTasks,
     openMenuBp,
-    setIdCall,
+    setIdCallBp,
     setOpenMenuTasks,
     resultDropStatus,
     setResultDropStatus,
+    setContractBp,
+    projects,
   } = useContext(StatusContext);
   const [project, setProject] = useState();
   const [projectSection, setProjectSection] = useState({});
@@ -36,20 +36,7 @@ const BpItem = ({ el }) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`https://test.easy-task.ru/api/v1/projects/${el.project_id}`, {
-        headers: {
-          Authorization:
-            "Bearer " +
-            document.cookie.replace(
-              /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-              "$1"
-            ),
-        },
-      })
-      .then((res) => {
-        setProject(res.data.data);
-      });
+    setProject(...projects.filter((item) => item.id === el.project_id));
 
     axios
       .get(
@@ -79,7 +66,7 @@ const BpItem = ({ el }) => {
       <div
         id={"business-item-" + el.id}
         onClick={(e) => {
-          setIdCall(el.id);
+          setIdCallBp(el.id);
           openTasksMenu(e.currentTarget);
         }}
       >
@@ -101,7 +88,7 @@ const BpItem = ({ el }) => {
             className="business__main-content__list-block__item__message business__main-content__list-block__item__message-active"
             id={"business-item-btn-" + el.id}
             onClick={() => {
-              setIdCall(el.id);
+              setIdCallBp(el.id);
               setOpenMenuBp(true);
               setOpenMenuTasks(false);
             }}

@@ -32,11 +32,13 @@ const CreateTask = () => {
     setTaskSample,
     thisBp,
     setCreateTaskFormDate,
-    tasksArr,
     contractLast,
     contract,
+    setFile,
   } = useContext(StatusContext);
+
   const [addTask, setAddTask] = useState();
+  const [tasksArrCreate, setTasksArrCreate] = useState([]);
 
   useEffect(() => {
     if (addTasksMenu) {
@@ -289,100 +291,63 @@ const CreateTask = () => {
     }
   };
 
-  const saveBp = () => {
-    if (tasks.length > 0 && !addTasksMenu) {
-      let tasksStr = "";
-      for (let i in tasks) {
-        tasksStr = tasksStr.concat(tasks[i]);
-        if (i < tasks.length - 1) {
-          tasksStr = tasksStr.concat("|");
-        }
-      }
-
-      if (createBpForm.deadlineDate !== null) {
-        if (!createBpForm.deadlineTime) {
-          setCreateBpForm({ ...createBpForm, deadlineTime: "00:00:00" });
-        }
-      }
-      if (createBpForm.file_id === null || createBpForm.deadlineDate === null) {
-        if (
-          createBpForm.file_id === null &&
-          createBpForm.deadlineDate === null
-        ) {
-          fetch(
-            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}`,
+  useEffect(() => {
+    if (tasksArrCreate.length > 0) {
+      if (createBpForm.file_id === null) {
+        axios
+          .post(
+            `${apiBp}/businessProcess`,
             {
-              method: "POST",
-              headers: {
-                "secret-token": document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
+              type: 0,
+              businessProcess: {
+                name: createBpForm.name,
+                initiator_id: createBpForm.initiator_id,
+                project_id: createBpForm.project_id,
+                project_section_id: createBpForm.project_section_id,
+                deadline:
+                  createBpForm.deadlineDate + " " + createBpForm.deadlineTime,
+                tasks: tasksArrCreate,
               },
-            }
-          ).then((res) => res.json());
-        }
-        if (
-          createBpForm.file_id === null &&
-          createBpForm.deadlineDate !== null
-        ) {
-          fetch(
-            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${
-              createBpForm.initiator_id
-            }&project_id=${createBpForm.project_id}&project_section_id=${
-              createBpForm.project_section_id
-            }&deadline=${
-              createBpForm.deadlineDate + " " + createBpForm.deadlineTime
-            }&tasks=${tasksStr}`,
-            {
-              method: "POST",
-              headers: {
-                "secret-token": document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-              },
-            }
-          ).then((res) => res.json());
-        }
-        if (
-          createBpForm.deadlineDate === null &&
-          createBpForm.file_id !== null
-        ) {
-          fetch(
-            `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${createBpForm.initiator_id}&project_id=${createBpForm.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}&file_id=${createBpForm.file_id}`,
-            {
-              method: "POST",
-              headers: {
-                "secret-token": document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-              },
-            }
-          ).then((res) => res.json());
-        }
-      }
-      if (createBpForm.file_id !== null && createBpForm.deadlineDate !== null) {
-        fetch(
-          `${apiBp}/businessProcess?name=${createBpForm.name}&initiator_id=${
-            createBpForm.initiator_id
-          }&project_id=${createBpForm.project_id}&project_section_id=${
-            createBpForm.project_section_id
-          }&deadline=${
-            createBpForm.deadlineDate + " " + createBpForm.deadlineTime
-          }&tasks=${tasksStr}&file_id=${createBpForm.file_id}`,
-          {
-            method: "POST",
-            headers: {
-              "secret-token": document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
             },
-          }
-        ).then((res) => res.json());
+            {
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+          .then((res) => console.log(res));
+      } else {
+        axios
+          .post(
+            `${apiBp}/businessProcess`,
+            {
+              type: 0,
+              businessProcess: {
+                name: createBpForm.name,
+                initiator_id: createBpForm.initiator_id,
+                project_id: createBpForm.project_id,
+                project_section_id: createBpForm.project_section_id,
+                deadline:
+                  createBpForm.deadlineDate + " " + createBpForm.deadlineTime,
+                file_id: createBpForm.file_id,
+                tasks: tasksArrCreate,
+              },
+            },
+            {
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+          .then((res) => console.log(res));
       }
+      setFile({});
       setCreateBpForm({
         name: null,
         initiator_id: parseInt(
@@ -425,6 +390,40 @@ const CreateTask = () => {
         },
         options: [],
       });
+    }
+  }, [tasksArrCreate]);
+
+  const saveBp = () => {
+    if (tasks.length > 0 && !addTasksMenu) {
+      console.log(tasks);
+
+      const getTasks = tasks.map((el) => {
+        const link = `https://test.easy-task.ru/api/v1/tasks/${el}`;
+        return axios.get(link, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        });
+      });
+
+      Promise.all(getTasks).then((res) =>
+        setTasksArrCreate(
+          res.map((el) => {
+            return {
+              name: el.data.data.name,
+              executor_id: el.data.data.executor_id,
+              deadline: "2022-07-10 00:00:00",
+              // deadline: el.data.data.end,
+              original_id: el.data.data.id,
+            };
+          })
+        )
+      );
     }
     if (addTasksMenu) {
       let a = tasks.map((el) => {

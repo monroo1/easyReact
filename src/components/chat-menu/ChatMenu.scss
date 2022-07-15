@@ -241,7 +241,6 @@ textarea {
 .radio-counterparty {
   display: grid;
   grid-template-columns: 18px 1fr;
-  margin-bottom: 5px;
 
   & > label:last-child {
     margin-left: 10px;
@@ -305,5 +304,9 @@ textarea {
 }
 
 input[type="file"] {
+  display: none;
+}
+
+input[type="radio"] {
   display: none;
 }
