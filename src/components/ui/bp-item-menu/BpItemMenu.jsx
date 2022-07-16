@@ -53,7 +53,7 @@ const BpItemMenu = ({ id }) => {
 
   const makeActiveTasks = () => {
     const getTasks = thisBp.tasks.map((item) => {
-      const link = `https://test.easy-task.ru/api/v1/tasks/${item.id}`;
+      const link = `https://test.easy-task.ru/api/v1/tasks/${item.original_id}`;
       return axios.get(link, {
         headers: {
           Authorization:

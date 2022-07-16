@@ -21,7 +21,7 @@ const BpItem = ({ el }) => {
     setOpenMenuTasks,
     resultDropStatus,
     setResultDropStatus,
-    setContractBp,
+
     projects,
   } = useContext(StatusContext);
   const [project, setProject] = useState();

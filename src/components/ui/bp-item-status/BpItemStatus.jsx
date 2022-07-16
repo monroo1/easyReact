@@ -12,7 +12,6 @@ const BpItemStatus = ({ status, workflow, id }) => {
     openMenuBp,
     idBp,
     apiBp,
-    setStart,
   } = useContext(StatusContext);
   const [statusObj, setStatusObj] = useState({});
 
@@ -20,24 +19,28 @@ const BpItemStatus = ({ status, workflow, id }) => {
     if (status === 0 || status === 1) {
       if (status === 0) {
         setStatusObj({
-          text: "Предзадача",
+          text: "Черновик",
           styleText: {
-            color: "black",
-          },
-          styleIcons: { border: "none", background: "transparent" },
-          src: "NotePencil.svg",
-        });
-      } else {
-        setStatusObj({
-          text: "Идея",
-          styleText: {
-            color: "black",
+            color: "#7B7B7B",
           },
           styleIcons: {
-            border: "none",
-            background: "transparent",
+            borderColor: "#7B7B7B",
+            background: "rgba(123, 123, 123, 0.1)",
           },
-          src: "Lightbulb.svg",
+          src: "NotePencil.svg",
+        });
+      }
+      if (status === 1) {
+        setStatusObj({
+          text: "В работе",
+          styleText: {
+            color: "#436EA0",
+          },
+          styleIcons: {
+            borderColor: "#436EA0",
+            background: "rgba(67, 110, 160, 0.1)",
+          },
+          src: "play.svg",
         });
       }
     } else {
@@ -56,15 +59,15 @@ const BpItemStatus = ({ status, workflow, id }) => {
           });
         } else {
           setStatusObj({
-            text: "Отменена",
+            text: "Завершен",
             styleText: {
-              color: "#7B7B7B",
+              color: "#43A047",
             },
             styleIcons: {
-              borderColor: "#7B7B7B",
-              background: "rgba(123, 123, 123, 0.1)",
+              borderColor: "#43A047",
+              background: "rgba(67, 160, 71, 0.1)",
             },
-            src: "square.svg",
+            src: "performed.svg",
           });
         }
       } else if (status === 3) {
@@ -82,44 +85,32 @@ const BpItemStatus = ({ status, workflow, id }) => {
           });
         } else {
           setStatusObj({
-            text: "В архиве",
+            text: "Возвращен",
             styleText: {
-              color: "#7B7B7B",
+              color: "#FF9900",
             },
             styleIcons: {
-              borderColor: "#7B7B7B",
-              background: "rgba(123, 123, 123, 0.1)",
+              borderColor: "#FF9900",
+              background: "rgba(255, 153, 0, 0.1)",
             },
-            src: "folders.svg",
+            src: "ArrowUUpLeft.svg",
           });
         }
       } else if (status === 4) {
         setStatusObj({
-          text: "Исполнителю",
+          text: "Отменен",
           styleText: {
-            color: "#FF9900",
+            color: "#7B7B7B",
           },
           styleIcons: {
-            borderColor: "#FF9900",
-            background: "rgba(255, 153, 0, 0.1)",
+            borderColor: "#7B7B7B",
+            background: "rgba(123, 123, 123, 0.1)",
           },
-          src: "users.svg",
+          src: "square.svg",
         });
       } else if (status === 5) {
         setStatusObj({
-          text: "Автору",
-          styleText: {
-            color: "#FF9900",
-          },
-          styleIcons: {
-            borderColor: "#FF9900",
-            background: "rgba(255, 153, 0, 0.1)",
-          },
-          src: "user.svg",
-        });
-      } else if (status === 6) {
-        setStatusObj({
-          text: "Просрочена",
+          text: "Просрочен",
           styleText: {
             color: "#F44336",
           },
@@ -128,30 +119,6 @@ const BpItemStatus = ({ status, workflow, id }) => {
             background: "rgba(244, 67, 54, 0.1)",
           },
           src: "overdue.svg",
-        });
-      } else if (status === 7) {
-        setStatusObj({
-          text: "В работе",
-          styleText: {
-            color: "#436EA0",
-          },
-          styleIcons: {
-            borderColor: "#436EA0",
-            background: "rgba(67, 110, 160, 0.1)",
-          },
-          src: "play.svg",
-        });
-      } else if (status === 8) {
-        setStatusObj({
-          text: "Выполнено",
-          styleText: {
-            color: "#43A047",
-          },
-          styleIcons: {
-            borderColor: "#43A047",
-            background: "rgba(67, 160, 71, 0.1)",
-          },
-          src: "performed.svg",
         });
       } else if (status === 10) {
         setStatusObj({
@@ -176,18 +143,6 @@ const BpItemStatus = ({ status, workflow, id }) => {
             background: "rgba(123, 123, 123, 0.1)",
           },
           src: "square.svg",
-        });
-      } else if (status === 12) {
-        setStatusObj({
-          text: "Выполнено",
-          styleText: {
-            color: "#43A047",
-          },
-          styleIcons: {
-            borderColor: "#43A047",
-            background: "rgba(67, 160, 71, 0.1)",
-          },
-          src: "performed.svg",
         });
       } else if (status === 13) {
         setStatusObj({
@@ -227,11 +182,14 @@ const BpItemStatus = ({ status, workflow, id }) => {
         });
       } else if (status === 18) {
         setStatusObj({
-          text: "Подзадача",
+          text: "Предзадача",
           styleText: {
-            color: "black",
+            color: "#7B7B7B",
           },
-          styleIcons: { border: "none", background: "transparent" },
+          styleIcons: {
+            borderColor: "#7B7B7B",
+            background: "rgba(123, 123, 123, 0.1)",
+          },
           src: "NotePencil.svg",
         });
       } else if (status === 19) {
@@ -263,7 +221,7 @@ const BpItemStatus = ({ status, workflow, id }) => {
   }, [setStatusObj, status]);
 
   const makeActiveTask = (e) => {
-    if (e.dataset.status == 50) {
+    if (parseInt(e.dataset.status) === 50) {
       axios
         .patch(
           `https://test.easy-task.ru/api/v1/tasks/${e.dataset.id}`,
