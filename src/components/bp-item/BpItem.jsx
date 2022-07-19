@@ -21,8 +21,9 @@ const BpItem = ({ el }) => {
     setOpenMenuTasks,
     resultDropStatus,
     setResultDropStatus,
-
+    setContractBp,
     projects,
+    setBpResultStatus,
   } = useContext(StatusContext);
   const [project, setProject] = useState();
   const [projectSection, setProjectSection] = useState({});
@@ -88,9 +89,17 @@ const BpItem = ({ el }) => {
             className="business__main-content__list-block__item__message business__main-content__list-block__item__message-active"
             id={"business-item-btn-" + el.id}
             onClick={() => {
+              el.type === 1
+                ? setContractBp(el.id)
+                : el.type === 2
+                ? setContractBp(el.id)
+                : el.type === 3
+                ? setContractBp(el.id)
+                : setContractBp("");
               setIdCallBp(el.id);
               setOpenMenuBp(true);
               setOpenMenuTasks(false);
+              setBpResultStatus(true);
             }}
           >
             <div>

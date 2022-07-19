@@ -3,13 +3,17 @@ import axios from "axios";
 import { StatusContext } from "../../context/status";
 import TextareaAutosize from "react-textarea-autosize";
 
-const Result = ({ resultArr }) => {
+const Result = ({ resultArr, disabled }) => {
   const {
     apiBp,
     contractTaskOptions,
     contractTaskOptionsNow,
     setContractTaskOptionsNow,
+    setContractTaskOptions,
     task,
+    bp,
+    bpResultStatus,
+    setBpResultStatus,
   } = useContext(StatusContext);
   const [resultArrLast, setResultArrLast] = useState([]);
 
@@ -62,10 +66,25 @@ const Result = ({ resultArr }) => {
   }, [task]);
 
   useEffect(() => {
-    console.log(contractTaskOptions);
-  }, []);
+    if (!!bp && !!bpResultStatus) {
+      let arr = [];
+      bp.tasks.map((el) => el.results.map((item) => arr.push(item)));
+      setContractTaskOptions(arr);
 
-  return !!resultArrLast && !!resultArrLast?.results ? (
+      let arrInput = [];
+      JSON.parse(localStorage.getItem(`${resultArr}`)).tasks.map((tas) => {
+        if (!!tas.results) {
+          tas.results.map((i) => arrInput.push(i));
+        }
+      });
+      setResultArrLast({ results: arrInput });
+      setBpResultStatus(false);
+    }
+  }, [bp, bpResultStatus]);
+
+  return !!resultArrLast &&
+    !!resultArrLast?.results &&
+    !!contractTaskOptions ? (
     resultArrLast.results.map((el, i) => {
       if (el.type === 1) {
         return (
@@ -81,7 +100,7 @@ const Result = ({ resultArr }) => {
               className="input-form input-full"
               type="text"
               placeholder={el.name}
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -113,7 +132,7 @@ const Result = ({ resultArr }) => {
             </label>
             <select
               className="input-form input-full"
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -157,7 +176,7 @@ const Result = ({ resultArr }) => {
             </label>
             <select
               className="input-form input-full"
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -236,11 +255,7 @@ const Result = ({ resultArr }) => {
                       name={"counterparty-" + el.name}
                       style={{ display: "none" }}
                       data-id={el.name}
-                      disabled={
-                        contractTaskOptions[i]?.bool_value === 0 ||
-                        contractTaskOptions[i]?.bool_value === 1 ||
-                        contractTaskOptions[i]?.bool_value === 2
-                      }
+                      disabled={disabled ? true : false}
                       value={
                         !!contractTaskOptions[i]?.bool_value
                           ? contractTaskOptions[i].bool_value
@@ -291,7 +306,7 @@ const Result = ({ resultArr }) => {
               className="input-form input-form__short"
               type="number"
               placeholder="56 000"
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -330,11 +345,7 @@ const Result = ({ resultArr }) => {
                       id={item + "-" + i}
                       name={"counterparty-" + el.name}
                       style={{ display: "none" }}
-                      disabled={
-                        contractTaskOptions[i]?.bool_value === 0 ||
-                        contractTaskOptions[i]?.bool_value === 1 ||
-                        contractTaskOptions[i]?.bool_value === 2
-                      }
+                      disabled={disabled ? true : false}
                       value={
                         !!contractTaskOptions[i]?.bool_value
                           ? contractTaskOptions[i].bool_value
@@ -409,10 +420,7 @@ const Result = ({ resultArr }) => {
                       id={item + "-" + i}
                       name={"counterparty-" + el.name}
                       style={{ display: "none" }}
-                      disabled={
-                        contractTaskOptions[i]?.bool_value === 0 ||
-                        contractTaskOptions[i]?.bool_value === 1
-                      }
+                      disabled={disabled ? true : false}
                       value={
                         !!contractTaskOptions[i]?.bool_value
                           ? contractTaskOptions[i].bool_value
@@ -466,7 +474,12 @@ const Result = ({ resultArr }) => {
             contractTaskOptions[i]?.bool_value === 0 ? (
               <>
                 <div style={{ marginTop: 20 + "px" }}>
-                  <input type="file" id={"file-" + el.type} multiple />
+                  <input
+                    type="file"
+                    id={"file-" + el.type}
+                    multiple
+                    disabled={disabled ? true : false}
+                  />
                   <label
                     className="p__drop-content download-file"
                     htmlFor={"file-" + el.type}
@@ -490,7 +503,7 @@ const Result = ({ resultArr }) => {
                     <div className="counterparty__radio-input">
                       <input
                         type="radio"
-                        disabled={!!contractTaskOptions[i]?.value}
+                        disabled={disabled ? true : false}
                         value={
                           !!contractTaskOptions[i].value
                             ? contractTaskOptions[i].value
@@ -524,7 +537,7 @@ const Result = ({ resultArr }) => {
                     <div className="counterparty__radio-input">
                       <input
                         type="radio"
-                        disabled={!!contractTaskOptions[i]?.value}
+                        disabled={disabled ? true : false}
                         value={
                           !!contractTaskOptions[i].value
                             ? contractTaskOptions[i].value
@@ -580,7 +593,7 @@ const Result = ({ resultArr }) => {
               minRows={4}
               className="input-form input-full"
               placeholder={el.name}
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -612,7 +625,7 @@ const Result = ({ resultArr }) => {
             </label>
             <select
               className="input-form input-full"
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -741,6 +754,7 @@ const Result = ({ resultArr }) => {
                   type="file"
                   id={"file-" + i}
                   onChange={(e) => sendFile(e, contractTaskOptions[i].id)}
+                  disabled={disabled ? true : false}
                   multiple
                 />
                 <label
@@ -777,11 +791,7 @@ const Result = ({ resultArr }) => {
                       id={item + "-" + i}
                       name={"counterparty-" + el.name}
                       style={{ display: "none" }}
-                      disabled={
-                        contractTaskOptions[i]?.bool_value === 0 ||
-                        contractTaskOptions[i]?.bool_value === 1 ||
-                        contractTaskOptions[i]?.bool_value === 2
-                      }
+                      disabled={disabled ? true : false}
                       value={
                         !!contractTaskOptions[i]?.bool_value
                           ? contractTaskOptions[i].bool_value
@@ -824,7 +834,7 @@ const Result = ({ resultArr }) => {
                   marginLeft: 0,
                   marginTop: 14 + "px",
                 }}
-                disabled={!!contractTaskOptions[i]?.value}
+                disabled={disabled ? true : false}
                 value={
                   !!contractTaskOptions[i]?.value
                     ? contractTaskOptions[i].value
@@ -864,11 +874,7 @@ const Result = ({ resultArr }) => {
                       id={item + "-" + i}
                       name={"counterparty-" + el.name}
                       style={{ display: "none" }}
-                      disabled={
-                        contractTaskOptions[i]?.bool_value === 0 ||
-                        (contractTaskOptions[i]?.bool_value === 1 &&
-                          contractTaskOptions[i]?.files.length > 0)
-                      }
+                      disabled={disabled ? true : false}
                       value={
                         !!contractTaskOptions[i]?.bool_value
                           ? contractTaskOptions[i].bool_value
@@ -922,6 +928,7 @@ const Result = ({ resultArr }) => {
                         type="file"
                         id={"file-" + i}
                         onChange={(e) => sendFile(e, contractTaskOptions[i].id)}
+                        disabled={disabled ? true : false}
                         multiple
                       />
                       <label
@@ -963,11 +970,7 @@ const Result = ({ resultArr }) => {
                       id={item + "-" + i}
                       name={"counterparty-" + el.name}
                       style={{ display: "none" }}
-                      disabled={
-                        contractTaskOptions[i]?.bool_value === 0 ||
-                        (contractTaskOptions[i]?.bool_value === 1 &&
-                          contractTaskOptions[i]?.files.length > 0)
-                      }
+                      disabled={disabled ? true : false}
                       value={
                         !!contractTaskOptions[i]?.bool_value
                           ? contractTaskOptions[i].bool_value
@@ -1007,7 +1010,7 @@ const Result = ({ resultArr }) => {
                     className="input-form input-full"
                     type="text"
                     placeholder={el.name}
-                    disabled={!!contractTaskOptions[i]?.value}
+                    disabled={disabled ? true : false}
                     value={
                       !!contractTaskOptions[i]?.value
                         ? contractTaskOptions[i].value
@@ -1041,6 +1044,7 @@ const Result = ({ resultArr }) => {
                         type="file"
                         id={"file-" + i}
                         onChange={(e) => sendFile(e, contractTaskOptions[i].id)}
+                        disabled={disabled ? true : false}
                         multiple
                       />
                       <label
@@ -1077,7 +1081,7 @@ const Result = ({ resultArr }) => {
               minRows={3}
               className="input-form input-full"
               placeholder={el.name}
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               defaultValue={el.variables}
               value={
                 !!contractTaskOptions[i]?.value
@@ -1110,7 +1114,7 @@ const Result = ({ resultArr }) => {
             </label>
             <select
               className="input-form input-full"
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -1180,7 +1184,7 @@ const Result = ({ resultArr }) => {
             </label>
             <select
               className="input-form input-full"
-              disabled={!!contractTaskOptions[i]?.value}
+              disabled={disabled ? true : false}
               value={
                 !!contractTaskOptions[i]?.value
                   ? contractTaskOptions[i].value
@@ -1251,6 +1255,7 @@ const Result = ({ resultArr }) => {
                       type="file"
                       id={"file-" + i}
                       onChange={(e) => sendFile(e, contractTaskOptions[i].id)}
+                      disabled={disabled ? true : false}
                       multiple
                     />
                     <label

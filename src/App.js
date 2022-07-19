@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusContext } from "./context/status";
 import Header from "./components/header/Header";
 import BusinessMain from "./components/business-main/BusinessMain";
@@ -150,6 +150,8 @@ function App() {
   const [contractTaskOptionsNow, setContractTaskOptionsNow] = useState({});
   const [contractBp, setContractBp] = useState();
   const [task, setTask] = useState({});
+  const [bp, setBp] = useState({});
+  const [bpResultStatus, setBpResultStatus] = useState(false);
   return (
     <StatusContext.Provider
       value={{
@@ -255,6 +257,10 @@ function App() {
         setTask,
         idCallBp,
         setIdCallBp,
+        bp,
+        setBp,
+        bpResultStatus,
+        setBpResultStatus,
       }}
     >
       <div className="bussines-page">

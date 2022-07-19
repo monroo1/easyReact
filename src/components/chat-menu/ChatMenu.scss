@@ -56,6 +56,18 @@
 .chatMenu-container {
   padding: 29px 51px 29px 29px;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    background: rgba(0, 0, 0, 0.07);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 7px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+  }
 }
 
 .input-full {
@@ -103,6 +115,18 @@ textarea {
   height: calc(100vh - 318px);
   border: 1px solid #e1e1e1;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    background: rgba(0, 0, 0, 0.07);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 7px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+  }
 }
 
 .chat-content-scroll {
@@ -262,7 +286,22 @@ textarea {
 .result {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 194px);
+  justify-content: space-between;
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+    background: rgba(0, 0, 0, 0.07);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 7px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+  }
 }
 
 .result-bottom {
@@ -274,15 +313,19 @@ textarea {
   justify-content: flex-start;
   align-items: center;
   gap: 18px;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  flex-shrink: 0;
 }
 
 .result-content {
-  height: calc(100vh - 318px);
   display: flex;
   flex-direction: column;
   gap: 35px;
-  overflow-y: scroll;
   padding: 35px;
+  flex-shrink: 0;
 }
 
 .bool-number {

@@ -60,6 +60,7 @@ const TaskItem = ({ style, el, parentId }) => {
     openMenuBp,
     createTaskStatus,
     createBpSampleStatus,
+    createBpStatus,
   ]);
 
   return (

@@ -131,23 +131,41 @@ const CreateBp = () => {
     setCreateBpStatus(false);
     setCreateBpSampleStatus(false);
 
-    const createTasks = contractLast.tasks.map((task) => {
+    const createTasks = contractLast.tasks.map((task, i) => {
       console.log(task);
-      return axios.post(
-        "https://test.easy-task.ru/api/v1/tasks",
-        { ...task },
-        {
-          headers: {
-            Authorization:
-              "Bearer " +
-              document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            "company-id": 1,
-          },
-        }
-      );
+      if (i === 0) {
+        return axios.post(
+          "https://test.easy-task.ru/api/v1/tasks",
+          { ...task, status_id: 10 },
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              "company-id": 1,
+            },
+          }
+        );
+      } else {
+        return axios.post(
+          "https://test.easy-task.ru/api/v1/tasks",
+          { ...task },
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              "company-id": 1,
+            },
+          }
+        );
+      }
     });
     Promise.all(createTasks).then((res) => {
       let taskArr = [];
@@ -155,7 +173,14 @@ const CreateBp = () => {
         taskArr.push({
           name: el.data.data.name,
           executor_id: el.data.data.executor_id,
-          deadline: el.data.data.end,
+          deadline:
+            el.data.data.end.split(" ")[0].split("-")[2] +
+            "." +
+            el.data.data.end.split(" ")[0].split("-")[1] +
+            "." +
+            el.data.data.end.split(" ")[0].split("-")[0] +
+            " " +
+            el.data.data.end.split(" ")[1],
           description: el.data.data.description,
           original_id: el.data.data.id,
           results: contract.tasks[i].results,
@@ -315,7 +340,18 @@ const CreateBp = () => {
             },
             options: [],
           });
-          console.log(res.data);
+          fetch(`${apiBp}/task/${res.data.tasks[0].id}?status=7`, {
+            method: "PATCH",
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          })
+            .then((res) => res.json())
+            .then((r) => console.log(r.data))
+            .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
     }
@@ -806,7 +842,7 @@ const CreateBp = () => {
                   })}
                 </select>
               </div>
-              {!createBpSampleStatus ? (
+              {/* {!createBpSampleStatus ? (
                 <div>
                   <label className="p__drop-content" htmlFor="input-initiator">
                     <img
@@ -864,7 +900,7 @@ const CreateBp = () => {
                 </div>
               ) : (
                 <></>
-              )}
+              )} */}
 
               <div className="input__date">
                 <label className="p__drop-content">

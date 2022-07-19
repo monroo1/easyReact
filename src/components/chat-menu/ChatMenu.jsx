@@ -13,7 +13,7 @@ const ChatMenu = () => {
     setOpenMenuBp,
     idCall,
     apiBp,
-    setContractTaskOptions,
+
     bpList,
     contractTaskOptionsNow,
     contractBp,
@@ -21,13 +21,15 @@ const ChatMenu = () => {
     setTask,
     projects,
     idCallBp,
+    bp,
+    setBp,
   } = useContext(StatusContext);
 
   const [thisTabs, setThisTabs] = useState(0);
   const [options, setOptions] = useState([]);
 
   const [name, setName] = useState("");
-  const [bp, setBp] = useState({});
+
   const [project, setProject] = useState("");
   const [projectSection, setProjectSection] = useState("");
   const [message, setMessage] = useState("");
@@ -103,7 +105,7 @@ const ChatMenu = () => {
 
   useEffect(() => {
     if (bp?.id) {
-      setProject(...projects.filter((item) => item.id === bp.project_id));
+      setProject(projects.filter((item) => item.id === bp.project_id)[0].name);
 
       axios
         .get(
@@ -141,8 +143,8 @@ const ChatMenu = () => {
   };
 
   useEffect(() => {
-    console.log(task);
     if (task?.id) {
+      console.log(task);
       axios
         .get(`https://test.easy-task.ru/api/v1/users/${task.executor_id}`, {
           headers: {
@@ -178,7 +180,7 @@ const ChatMenu = () => {
       }
     )
       .then((res) => res.json())
-      .then((r) => console.log(r));
+      .then((r) => setBp({ ...bp, comments: [...bp.comments, r.newComment] }));
   };
 
   if (openMenuTasks || openMenuBp) {
@@ -340,48 +342,96 @@ const ChatMenu = () => {
             {openMenuTasks && thisTabs === 2 ? (
               <div className="result">
                 <div className="result-content">
-                  {console.log(contractBp)}
                   {!!contractBp ? (
                     bpList.filter((el) => {
                       if (el.id === contractBp) {
                         return el;
                       }
                     })[0].type === 1 ? (
-                      <Result resultArr={"treaty"} />
+                      <Result
+                        resultArr={"treaty"}
+                        disabled={
+                          task.executor_id ===
+                          parseInt(
+                            document.cookie.replace(
+                              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                              "$1"
+                            )
+                          )
+                            ? false
+                            : true
+                        }
+                      />
                     ) : bpList.filter((el) => {
                         if (el.id === contractBp) {
                           return el;
                         }
                       })[0].type === 3 ? (
-                      <Result resultArr={"recruitment"} />
+                      <Result
+                        resultArr={"recruitment"}
+                        disabled={
+                          task.executor_id ===
+                          parseInt(
+                            document.cookie.replace(
+                              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                              "$1"
+                            )
+                          )
+                            ? false
+                            : true
+                        }
+                      />
                     ) : bpList.filter((el) => {
                         if (el.id === contractBp) {
                           return el;
                         }
                       })[0].type === 2 ? (
-                      <Result resultArr={"dismissal"} />
+                      <Result
+                        resultArr={"dismissal"}
+                        disabled={
+                          task.executor_id ===
+                          parseInt(
+                            document.cookie.replace(
+                              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                              "$1"
+                            )
+                          )
+                            ? false
+                            : true
+                        }
+                      />
                     ) : (
                       <></>
                     )
                   ) : (
                     <div>
-                      {task.name} {task.id} dismissal
+                      {task.name} {task.id}.
                     </div>
                   )}
                 </div>
-                <div className="result-bottom">
-                  <div
-                    className={
-                      Object.keys(contractTaskOptionsNow).length > 0
-                        ? "blue-btn white-btn "
-                        : "blue-btn white-btn white-btn__disabled"
-                    }
-                    onClick={() => saveOptions()}
-                  >
-                    Сохранить
+                {task.executor_id ===
+                parseInt(
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  )
+                ) ? (
+                  <div className="result-bottom">
+                    <div
+                      className={
+                        Object.keys(contractTaskOptionsNow).length > 0
+                          ? "blue-btn white-btn "
+                          : "blue-btn white-btn white-btn__disabled"
+                      }
+                      onClick={() => saveOptions()}
+                    >
+                      Сохранить
+                    </div>
+                    <div className="defualt__btn">Отмена</div>
                   </div>
-                  <div className="defualt__btn">Отмена</div>
-                </div>
+                ) : (
+                  <></>
+                )}
               </div>
             ) : (
               <div className="chatMenu-container">
@@ -573,8 +623,33 @@ const ChatMenu = () => {
                       gap: 35 + "px",
                     }}
                   >
-                    1111
-                    {console.log(options)}
+                    {!!contractBp ? (
+                      bpList.filter((el) => {
+                        if (el.id === contractBp) {
+                          return el;
+                        }
+                      })[0].type === 1 ? (
+                        <Result resultArr={"treaty"} disabled={true} />
+                      ) : bpList.filter((el) => {
+                          if (el.id === contractBp) {
+                            return el;
+                          }
+                        })[0].type === 3 ? (
+                        <Result resultArr={"recruitment"} disabled={true} />
+                      ) : bpList.filter((el) => {
+                          if (el.id === contractBp) {
+                            return el;
+                          }
+                        })[0].type === 2 ? (
+                        <Result resultArr={"dismissal"} disabled={true} />
+                      ) : (
+                        <></>
+                      )
+                    ) : (
+                      <div>
+                        {bp.name} {bp.id}.bp
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <></>
