@@ -13,7 +13,7 @@ const ChatMenu = () => {
     setOpenMenuBp,
     idCall,
     apiBp,
-
+    bpCall,
     bpList,
     contractTaskOptionsNow,
     contractBp,
@@ -23,6 +23,11 @@ const ChatMenu = () => {
     idCallBp,
     bp,
     setBp,
+    setBpCall,
+    thisBp,
+    setContractBp,
+    setIdCallBp,
+    setBpResultStatus,
   } = useContext(StatusContext);
 
   const [thisTabs, setThisTabs] = useState(0);
@@ -76,7 +81,7 @@ const ChatMenu = () => {
     if (!!idCall) {
       if (openMenuTasks) {
         setThisTabs(2);
-
+        console.log("tabs");
         axios
           .get(`https://test.easy-task.ru/api/v1/tasks/${idCall}`, {
             headers: {
@@ -96,9 +101,16 @@ const ChatMenu = () => {
   useEffect(() => {
     if (!!idCallBp) {
       if (openMenuBp) {
-        setThisTabs(3);
-        setBp(bpList.filter((item) => item.id === idCallBp)[0]);
-        setOptions(bpList.filter((item) => item.id === idCallBp)[0].tasks);
+        if (bpCall === 1) {
+          setThisTabs(3);
+          setBp(bpList.filter((item) => item.id === idCallBp)[0]);
+          setOptions(bpList.filter((item) => item.id === idCallBp)[0].tasks);
+        }
+        if (bpCall === 2) {
+          setThisTabs(2);
+          setBp(bpList.filter((item) => item.id === idCallBp)[0]);
+          setOptions(bpList.filter((item) => item.id === idCallBp)[0].tasks);
+        }
       }
     }
   }, [idCallBp]);
@@ -137,6 +149,17 @@ const ChatMenu = () => {
     if (openMenuBp) {
       if (i === 2 && !options.length > 0) {
         return false;
+      } else if (i === 2) {
+        setBpCall(2);
+        thisBp.type === 1
+          ? setContractBp(thisBp.id)
+          : thisBp.type === 2
+          ? setContractBp(thisBp.id)
+          : thisBp.type === 3
+          ? setContractBp(thisBp.id)
+          : setContractBp("");
+        setIdCallBp(thisBp.id);
+        setBpResultStatus(true);
       }
     }
     setThisTabs(i);

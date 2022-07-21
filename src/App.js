@@ -102,8 +102,6 @@ function App() {
   //{id: 10, name: 'В работе', slug: 'in_work'}-7
   //{"id": 13,"name": "Завершено","slug": "completed"}-8
 
-  const [resultDropStatus, setResultDropStatus] = useState("");
-
   const [start, setStart] = useState(false);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("id");
@@ -112,18 +110,19 @@ function App() {
   const [idBp, setIdBp] = useState("");
   const [tasksList, setTasksList] = useState([]);
   const [nowBp, setNowBp] = useState({});
-  const [depsTask, setDepsTask] = useState();
+  const [depsTask, setDepsTask] = useState("");
+  const [depsTaskId, setDepsTaskId] = useState("");
+  const [depsTasksArr, setDepsTasksArr] = useState([]);
   const [tasks, setTasks] = useState([]);
 
   const [createTaskSampleForm, setCreateTaskSampleForm] = useState({});
   const [createTaskSampleFormStatus, setCreateTaskSampleFormStatus] =
     useState(false);
 
-  const [idSample, setIdSample] = useState("1");
+  const [idSample, setIdSample] = useState("");
   const [sampleArr, setSampleArr] = useState([]);
   const [statusCreateTask, setStatusCreateTask] = useState(false);
   const [arrTasksSample, setArrTasksSample] = useState([]);
-  const [depsTaskSample, setDepsTaskSample] = useState([]);
   const [valueTaskSample, setValueTaskSample] = useState([]);
   const [nowTask, setNowTask] = useState("");
   const [endTasksSample, setEndTasksSample] = useState([]);
@@ -136,14 +135,13 @@ function App() {
   const [addTaskSample, setAddTaskSample] = useState(false);
   const [addTasksMenu, setAddTasksMenu] = useState(false);
   const [thisBp, setThisBp] = useState({});
-
   const [projects, setProjects] = useState([]);
   //menu
   const [openMenuTasks, setOpenMenuTasks] = useState(false);
   const [openMenuBp, setOpenMenuBp] = useState(false);
   const [idCall, setIdCall] = useState("");
   const [idCallBp, setIdCallBp] = useState("");
-
+  const [bpCall, setBpCall] = useState("1");
   const [contract, setContract] = useState();
   const [contractLast, setContractLast] = useState();
   const [contractTaskOptions, setContractTaskOptions] = useState();
@@ -198,6 +196,8 @@ function App() {
         setNowBp,
         depsTask,
         setDepsTask,
+        depsTaskId,
+        setDepsTaskId,
         apiBp,
         tasks,
         setTasks,
@@ -207,8 +207,6 @@ function App() {
         setSampleArr,
         arrTasksSample,
         setArrTasksSample,
-        depsTaskSample,
-        setDepsTaskSample,
         valueTaskSample,
         setValueTaskSample,
         nowTask,
@@ -221,6 +219,8 @@ function App() {
         setTasksArr,
         taskSample,
         setTaskSample,
+        depsTasksArr,
+        setDepsTasksArr,
         lengthArrTasks,
         setLengthArrTasks,
         addTaskSample,
@@ -239,8 +239,6 @@ function App() {
         setIdCall,
         search,
         setSearch,
-        resultDropStatus,
-        setResultDropStatus,
         contract,
         setContract,
         contractLast,
@@ -261,6 +259,8 @@ function App() {
         setBp,
         bpResultStatus,
         setBpResultStatus,
+        bpCall,
+        setBpCall,
       }}
     >
       <div className="bussines-page">

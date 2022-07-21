@@ -10,30 +10,62 @@ const CreateTaskForm = () => {
     createTaskFormDate,
     setCreateTaskFormDate,
     createTaskSampleFormStatus,
-    sampleArr,
-    idSample,
-    arrTasksSample,
-    setArrTasksSample,
-    valueTaskSample,
     setValueTaskSample,
     nowTask,
-    setTasksArr,
-    tasksArr,
     taskSample,
     setTaskSample,
     setStatusCreateTask,
     setCreateTaskStatus,
     setCreateBpSampleStatus,
-    setLengthArrTasks,
     setCreateBpStatus,
     users,
     contract,
-    setContract,
     setContractLast,
     contractLast,
     createBpSampleForm,
     createBpForm,
+    tasks,
+    depsTask,
+    setDepsTask,
+    depsTaskId,
+    setDepsTaskId,
+    depsTasksArr,
   } = useContext(StatusContext);
+
+  useEffect(() => {
+    if (depsTask === "Родительская") {
+      setCreateTaskForm({
+        ...createTaskForm,
+        prev_id: null,
+        parent_id: null,
+        next_id: null,
+      });
+    }
+    if (depsTask === "Дочерняя") {
+      setCreateTaskForm({
+        ...createTaskForm,
+        prev_id: null,
+        parent_id: depsTaskId,
+        next_id: null,
+      });
+    }
+    if (depsTask === "Предыдущая") {
+      setCreateTaskForm({
+        ...createTaskForm,
+        prev_id: null,
+        parent_id: null,
+        next_id: depsTaskId,
+      });
+    }
+    if (depsTask === "Следующая") {
+      setCreateTaskForm({
+        ...createTaskForm,
+        prev_id: depsTaskId,
+        parent_id: null,
+        next_id: null,
+      });
+    }
+  }, [depsTaskId]);
 
   useEffect(() => {
     if (
@@ -49,7 +81,6 @@ const CreateTaskForm = () => {
         ...taskSample,
         name: contract.tasks[contractLast.tasks.length]?.name,
       });
-      // console.log(contract.tasks[contractLast.tasks.length]?.name);
     }
   }, []);
 
@@ -75,19 +106,34 @@ const CreateTaskForm = () => {
 
   useEffect(() => {
     if (createTaskSampleFormStatus) {
-      if (contract.tasks) {
+      if (contract?.tasks) {
         setValueTaskSample(contract.tasks);
       }
     }
   }, [createTaskSampleFormStatus]);
 
   useEffect(() => {
-    if (contractLast?.tasks.length > 0) {
-      if (contractLast.tasks.length === contract.tasks.length) {
-        setStatusCreateTask(false);
-        setCreateTaskStatus(false);
-        setCreateBpStatus(true);
-        setCreateBpSampleStatus(true);
+    if (
+      createBpSampleForm.type === 1 ||
+      createBpSampleForm.type === 2 ||
+      createBpSampleForm.type === 3
+    ) {
+      if (contractLast?.tasks.length > 0) {
+        if (contractLast.tasks.length === contract.tasks.length) {
+          setStatusCreateTask(false);
+          setCreateTaskStatus(false);
+          setCreateBpStatus(true);
+          setCreateBpSampleStatus(true);
+        }
+      }
+    } else if (createBpSampleForm.type === 0) {
+      if (contractLast?.tasks.length > 0) {
+        if (contractLast.tasks.length === contract.tasks.length) {
+          setStatusCreateTask(false);
+          setCreateTaskStatus(false);
+          setCreateBpStatus(true);
+          setCreateBpSampleStatus(true);
+        }
       }
     }
   }, [contractLast]);
@@ -97,40 +143,122 @@ const CreateTaskForm = () => {
       var date = new Date();
       var datePlus = new Date();
       datePlus.setDate(datePlus.getDate() + 30);
-      contract.tasks.map((el) => {
-        if (el.name === nowTask.name) {
-          setContractLast({
-            ...contract,
-            tasks: [
-              ...contractLast?.tasks,
-              {
-                begin:
-                  nowTask.begin ||
-                  date.toLocaleDateString().replace(/\./g, "-") + " 00:00:00",
-                cyclic_task_id: nowTask.cyclic_task_id,
-                description: nowTask.description,
-                end:
-                  nowTask.end ||
-                  datePlus.toLocaleDateString().replace(/\./g, "-") +
-                    " 00:00:00",
-                executor_id: taskSample.executor_id,
-                name: el.name,
-                next_id: null,
-                parent_id: null,
-                prev_id: null,
-                priority_id: nowTask.priority_id,
-                project_id: createTaskForm.project_id,
-                project_section_id: createTaskForm.project_section_id,
-                provide_to: nowTask.provide_to,
-                status_id: nowTask.status_id,
-                task_load: nowTask.task_load,
-                work_load: nowTask.work_load,
-                workflow_id: nowTask.workflow_id,
+      console.log(contract);
+
+      if (
+        createBpSampleForm.type === 1 ||
+        createBpSampleForm.type === 2 ||
+        createBpSampleForm.type === 3
+      ) {
+        contract.tasks.map((el) => {
+          if (el.name === nowTask.name) {
+            setContractLast({
+              ...contract,
+              tasks: [
+                ...contractLast?.tasks,
+                {
+                  begin:
+                    nowTask.begin ||
+                    date.toLocaleDateString().replace(/\./g, "-") + " 00:00:00",
+                  cyclic_task_id: nowTask.cyclic_task_id,
+                  description: nowTask.description,
+                  end:
+                    nowTask.end ||
+                    datePlus.toLocaleDateString().replace(/\./g, "-") +
+                      " 00:00:00",
+                  executor_id: taskSample.executor_id,
+                  name: el.name,
+                  next_id: null,
+                  parent_id: null,
+                  prev_id: null,
+                  priority_id: nowTask.priority_id,
+                  project_id: createTaskForm.project_id,
+                  project_section_id: createTaskForm.project_section_id,
+                  provide_to: nowTask.provide_to,
+                  status_id: nowTask.status_id,
+                  task_load: nowTask.task_load,
+                  work_load: nowTask.work_load,
+                  workflow_id: nowTask.workflow_id,
+                },
+              ],
+            });
+          }
+        });
+      } else {
+        contract.tasks.map((el) => {
+          if (el.id === nowTask.id) {
+            setContractLast({
+              type: 0,
+              businessProcess: {
+                ...contract.businessProcess,
+                name: createBpSampleForm.name,
+                project_id: createBpSampleForm.project_id,
+                project_section_id: createBpSampleForm.project_section_id,
+                tasks: [
+                  ...contractLast?.tasks,
+                  {
+                    begin:
+                      nowTask.begin ||
+                      date.toLocaleDateString().replace(/\./g, "-") +
+                        " 00:00:00",
+                    cyclic_task_id: nowTask.cyclic_task_id,
+                    description: nowTask.description,
+                    end:
+                      nowTask.end ||
+                      datePlus.toLocaleDateString().replace(/\./g, "-") +
+                        " 00:00:00",
+                    executor_id: taskSample.executor_id,
+                    name: taskSample.name,
+                    next_id: nowTask.next_id,
+                    parent_id: nowTask.parent_id,
+                    prev_id: nowTask.prev_id,
+                    priority_id: nowTask.priority_id,
+                    project_id: createTaskForm.project_id,
+                    project_section_id: createTaskForm.project_section_id,
+                    provide_to: nowTask.provide_to,
+                    status_id: nowTask.status_id,
+                    task_load: nowTask.task_load,
+                    work_load: nowTask.work_load,
+                    workflow_id: nowTask.workflow_id,
+                  },
+                ],
               },
-            ],
-          });
-        }
-      });
+
+              tasks: [
+                ...contractLast?.tasks,
+                {
+                  begin:
+                    nowTask.begin ||
+                    date.toLocaleDateString().replace(/\./g, "-") + " 00:00:00",
+                  cyclic_task_id: nowTask.cyclic_task_id,
+                  description: nowTask.description,
+                  end:
+                    nowTask.end ||
+                    datePlus.toLocaleDateString().replace(/\./g, "-") +
+                      " 00:00:00",
+                  executor_id: taskSample.executor_id,
+                  name: taskSample.name,
+                  next_id: nowTask.next_id,
+                  parent_id: nowTask.parent_id,
+                  prev_id: nowTask.prev_id,
+                  priority_id: nowTask.priority_id,
+                  project_id: createTaskForm.project_id,
+                  project_section_id: createTaskForm.project_section_id,
+                  provide_to: nowTask.provide_to,
+                  status_id: nowTask.status_id,
+                  task_load: nowTask.task_load,
+                  work_load: nowTask.work_load,
+                  workflow_id: nowTask.workflow_id,
+                },
+              ],
+            });
+            setTaskSample({
+              ...taskSample,
+              name: "",
+            });
+          }
+        });
+      }
 
       setCreateTaskForm({
         name: "",
@@ -159,7 +287,6 @@ const CreateTaskForm = () => {
         endDate: null,
         endTime: "",
       });
-      // setTaskSample({ ...taskSample, name: "" });
     }
   }, [nowTask]);
 
@@ -390,7 +517,7 @@ const CreateTaskForm = () => {
               />
             </div>
           </div>
-          {/* {tasks.length >= 1 ? (
+          {tasks.length >= 1 ? (
             <div className="form-task__dependencies">
               <div className="p__drop-content">
                 <img
@@ -408,12 +535,7 @@ const CreateTaskForm = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setDepsTask("Родительская");
-                    setCreateTaskForm({
-                      ...createTaskForm,
-                      prev_id: null,
-                      parent_id: null,
-                      next_id: null,
-                    });
+                    setDepsTaskId("");
                   }}
                 >
                   Родительская
@@ -427,12 +549,7 @@ const CreateTaskForm = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setDepsTask("Дочерняя");
-                    setCreateTaskForm({
-                      ...createTaskForm,
-                      next_id: null,
-                      prev_id: null,
-                      parent_id: tasks[tasks.length - 1],
-                    });
+                    setDepsTaskId("");
                   }}
                 >
                   Дочерняя
@@ -446,11 +563,7 @@ const CreateTaskForm = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setDepsTask("Предыдущая");
-                    setCreateTaskForm({
-                      ...createTaskForm,
-                      next_id: null,
-                      parent_id: null,
-                    });
+                    setDepsTaskId("");
                   }}
                 >
                   Предыдущая
@@ -464,20 +577,30 @@ const CreateTaskForm = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setDepsTask("Следующая");
-                    setCreateTaskForm({
-                      ...createTaskForm,
-                      prev_id: null,
-                      parent_id: null,
-                    });
+                    setDepsTaskId("");
                   }}
                 >
                   Следующая
                 </button>
               </div>
+              <select
+                className="input-form input-full"
+                style={{ marginTop: 20 + "px" }}
+                onChange={(e) => setDepsTaskId(e.target.value)}
+                value={depsTaskId}
+                disabled={depsTask === "" ? true : false}
+              >
+                <option value={" "}>Выбрать...</option>
+                {depsTasksArr.map((el) => (
+                  <option key={el.id} value={el.id}>
+                    {el.name}
+                  </option>
+                ))}
+              </select>
             </div>
           ) : (
             <></>
-          )} */}
+          )}
         </>
       ) : (
         <div className="task-sample__deps">

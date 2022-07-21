@@ -66,7 +66,7 @@ const TaskItem = ({ style, el, parentId }) => {
   return (
     <div
       className={classTask}
-      id={el.id}
+      id={el?.id}
       data-parentid={parentId}
       onClick={(e) => {
         setIdCall(e.currentTarget.id);
@@ -128,17 +128,17 @@ const TaskItem = ({ style, el, parentId }) => {
       </div>
 
       <div className="dependencies__content-list__item__title">
-        <p className="p-black">{el.name.slice(0, 20)}</p>
-        <span className="p-grey">{el.description.slice(0, 20)}</span>
+        <p className="p-black">{el?.name.slice(0, 20)}</p>
+        <span className="p-grey">{el?.description.slice(0, 20)}</span>
       </div>
       <div className="dependencies__content-list__item__right">
         <BpItemStatus
-          status={el.status_id}
-          workflow={el.workflow_id}
-          id={el.id}
+          status={el?.status_id}
+          workflow={el?.workflow_id}
+          id={el?.id}
         />
         <div className="dependencies__content-list__deadline p-black">
-          {new Date(new Date(el.end).toJSON())
+          {new Date(new Date(el?.end).toJSON())
             .toLocaleString("ru", {
               month: "long",
               day: "numeric",

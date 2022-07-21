@@ -24,6 +24,7 @@ const CreateBp = () => {
     createBpSampleFormOptions,
     setCreateTaskSampleFormStatus,
     idSample,
+    setSampleArr,
     setIdSample,
     sampleArr,
     setStatusCreateTask,
@@ -79,17 +80,6 @@ const CreateBp = () => {
       });
   };
 
-  const nextCreateTasks = () => {
-    if (
-      createBpForm.name !== null &&
-      createBpForm.project_id !== null &&
-      createBpForm.project_section_id !== null
-    ) {
-      setCreateBpStatus(false);
-      setCreateTaskStatus(true);
-    }
-  };
-
   useEffect(() => {
     if (createBpForm.name !== null && createBpForm.project_id !== null) {
       setAccessNext("blue-btn");
@@ -115,7 +105,14 @@ const CreateBp = () => {
 
   const nextBpSample = () => {
     if (!createBpSampleStatus) {
-      nextCreateTasks();
+      if (
+        createBpForm.name !== null &&
+        createBpForm.project_id !== null &&
+        createBpForm.project_section_id !== null
+      ) {
+        setCreateBpStatus(false);
+        setCreateTaskStatus(true);
+      }
     } else {
       setCreateBpStatus(false);
       setCreateBpSampleStatus(false);
@@ -132,27 +129,54 @@ const CreateBp = () => {
     setCreateBpSampleStatus(false);
 
     const createTasks = contractLast.tasks.map((task, i) => {
-      console.log(task);
       if (i === 0) {
-        return axios.post(
-          "https://test.easy-task.ru/api/v1/tasks",
-          { ...task, status_id: 10 },
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-              "company-id": 1,
+        if (
+          createBpSampleForm.type === 1 ||
+          createBpSampleForm.type === 2 ||
+          createBpSampleForm.type === 3
+        ) {
+          return axios.post(
+            "https://test.easy-task.ru/api/v1/tasks",
+            {
+              ...task,
+              status_id: 3,
+              next_id: null,
+              parent_id: null,
+              prev_id: null,
             },
-          }
-        );
+            {
+              headers: {
+                Authorization:
+                  "Bearer " +
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  ),
+                "company-id": 1,
+              },
+            }
+          );
+        } else {
+          return axios.post(
+            "https://test.easy-task.ru/api/v1/tasks",
+            { ...task, next_id: null, parent_id: null, prev_id: null },
+            {
+              headers: {
+                Authorization:
+                  "Bearer " +
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  ),
+                "company-id": 1,
+              },
+            }
+          );
+        }
       } else {
         return axios.post(
           "https://test.easy-task.ru/api/v1/tasks",
-          { ...task },
+          { next_id: null, ...task, parent_id: null, prev_id: null },
           {
             headers: {
               Authorization:
@@ -169,23 +193,151 @@ const CreateBp = () => {
     });
     Promise.all(createTasks).then((res) => {
       let taskArr = [];
-      res.map((el, i) => {
-        taskArr.push({
-          name: el.data.data.name,
-          executor_id: el.data.data.executor_id,
-          deadline:
-            el.data.data.end.split(" ")[0].split("-")[2] +
-            "." +
-            el.data.data.end.split(" ")[0].split("-")[1] +
-            "." +
-            el.data.data.end.split(" ")[0].split("-")[0] +
-            " " +
-            el.data.data.end.split(" ")[1],
-          description: el.data.data.description,
-          original_id: el.data.data.id,
-          results: contract.tasks[i].results,
+      if (
+        createBpSampleForm.type === 1 ||
+        createBpSampleForm.type === 2 ||
+        createBpSampleForm.type === 3
+      ) {
+        res.map((el, i) => {
+          taskArr.push({
+            name: el.data.data.name,
+            executor_id: el.data.data.executor_id,
+            deadline:
+              el.data.data.end.split(" ")[0].split("-")[2] +
+              "." +
+              el.data.data.end.split(" ")[0].split("-")[1] +
+              "." +
+              el.data.data.end.split(" ")[0].split("-")[0] +
+              " " +
+              el.data.data.end.split(" ")[1],
+            description: el.data.data.description,
+            original_id: el.data.data.id,
+            results: contract.tasks[i].results,
+          });
         });
-      });
+      } else {
+        let arr = [];
+        let arrSample = [];
+        contract.tasks.map((el) => arrSample.push(el.original_id));
+
+        res.map((el) => {
+          arr.push(el.data.data.id);
+          taskArr.push({
+            name: el.data.data.name,
+            executor_id: el.data.data.executor_id,
+            deadline:
+              el.data.data.end.split(" ")[0].split("-")[2] +
+              "." +
+              el.data.data.end.split(" ")[0].split("-")[1] +
+              "." +
+              el.data.data.end.split(" ")[0].split("-")[0] +
+              " " +
+              el.data.data.end.split(" ")[1],
+            original_id: el.data.data.id,
+          });
+        });
+
+        contract.tasks.map((t, i) => {
+          console.log("t");
+          axios
+            .get(`https://test.easy-task.ru/api/v1/tasks/${t.original_id}`, {
+              headers: {
+                Authorization:
+                  "Bearer " +
+                  document.cookie.replace(
+                    /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                    "$1"
+                  ),
+                "company-id": 1,
+              },
+            })
+            .then((res) => {
+              console.log(res.data.data);
+              if (res.data.data.next_id) {
+                let idSample = arrSample.filter(
+                  (e) => e === res.data.data.next_id
+                )[0];
+                let id;
+                arrSample.map((item, a) => {
+                  if (item === idSample) {
+                    return (id = a);
+                  }
+                });
+                axios.patch(
+                  `https://test.easy-task.ru/api/v1/tasks/${arr[i]}`,
+                  { next_id: arr[id] },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                      "company-id": 1,
+                    },
+                  }
+                );
+              }
+              if (res.data.data.parent_id) {
+                let idSample = arrSample.filter(
+                  (e) => e === res.data.data.parent_id
+                )[0];
+                let id;
+                arrSample.map((item, a) => {
+                  if (item === idSample) {
+                    return (id = a);
+                  }
+                });
+                axios.patch(
+                  `https://test.easy-task.ru/api/v1/tasks/${arr[i]}`,
+                  { parent_id: arr[id] },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                      "company-id": 1,
+                    },
+                  }
+                );
+              }
+              if (res.data.data.prev_id) {
+                let idSample = arrSample.filter(
+                  (e) => e === res.data.data.prev_id
+                )[0];
+                let id;
+                arrSample.map((item, a) => {
+                  if (item === idSample) {
+                    return (id = a);
+                  }
+                });
+                axios.patch(
+                  `https://test.easy-task.ru/api/v1/tasks/${arr[i]}`,
+                  { prev_id: arr[id] },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " +
+                        document.cookie.replace(
+                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                          "$1"
+                        ),
+                      "company-id": 1,
+                    },
+                  }
+                );
+              }
+            });
+        });
+
+        // console.log(arr);
+        // console.log(contractLast);
+      }
+
       setTaskSampleArr(taskArr);
     });
 
@@ -203,26 +355,6 @@ const CreateBp = () => {
     //         },
     //       }
     //     )
-    //       .then((res) => res.json())
-    //       .then((r) => {
-    //         setTasksArr([]);
-    //         setCreateBpSampleForm({
-    //           type: 0,
-    //           businessProcess: {
-    //             name: null,
-    //             deadline: null,
-    //             project_id: null,
-    //             tasks: 1,
-    //             initiator_id: parseInt(
-    //               document.cookie.replace(
-    //                 /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-    //                 "$1"
-    //               )
-    //             ),
-    //           },
-    //           options: [],
-    //         });
-    //         console.log(r.businessProcess.tasks);
     //       });
     //   } else {
     //     fetch(
@@ -237,123 +369,121 @@ const CreateBp = () => {
     //         },
     //       }
     //     )
-    //       .then((res) => res.json())
-    //       .then((r) => {
-    //         setTasksArr([]);
-    //         setCreateBpSampleForm({
-    //           type: 0,
-    //           businessProcess: {
-    //             name: null,
-    //             deadline: null,
-    //             project_id: null,
-    //             tasks: 1,
-    //             initiator_id: document.cookie.replace(
-    //               /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-    //               "$1"
-    //             ),
-    //           },
-    //           options: [],
-    //         });
-    //       });
     //   }
     // }
-
-    setCreateBpForm({
-      name: null,
-      initiator_id: parseInt(
-        document.cookie.replace(
-          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        )
-      ),
-      project_id: null,
-      deadlineDate: null,
-      deadlineTime: null,
-      tasks: null,
-      sample: null,
-      file_id: null,
-    });
-    setCreateBpSampleForm({
-      type: 0,
-      businessProcess: {
-        name: null,
-        deadline: null,
-        project_id: null,
-        tasks: 1,
-        initiator_id: document.cookie.replace(
-          /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-          "$1"
-        ),
-      },
-      options: [],
-    });
-    setTasksArr([]);
   };
 
   useEffect(() => {
     if (taskSampleArr.length > 0) {
-      console.log(contractLast);
-      axios
-        .post(
-          `${apiBp}/addBusinessProcessWithOptions`,
-          {
-            type: contractLast.type,
-            businessProcess: {
-              name: contractLast.businessProcess.name,
-              initiator_id: document.cookie.replace(
-                /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-              project_id: contractLast.businessProcess.project_id,
-              project_section_id:
-                contractLast.businessProcess.project_section_id,
-              deadline: contractLast.businessProcess.deadline,
-              is_sample: contractLast.businessProcess.is_sample,
-              is_runned: contractLast.businessProcess.is_runned,
-              status: contractLast.businessProcess.status,
+      if (
+        createBpSampleForm.type === 1 ||
+        createBpSampleForm.type === 2 ||
+        createBpSampleForm.type === 3
+      ) {
+        axios
+          .post(
+            `${apiBp}/addBusinessProcessWithOptions`,
+            {
+              type: contractLast.type,
+              businessProcess: {
+                name: contractLast.businessProcess.name,
+                initiator_id: document.cookie.replace(
+                  /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+                project_id: contractLast.businessProcess.project_id,
+                project_section_id:
+                  contractLast.businessProcess.project_section_id,
+                deadline: contractLast.businessProcess.deadline,
+                is_sample: contractLast.businessProcess.is_sample,
+                is_runned: contractLast.businessProcess.is_runned,
+                status: contractLast.businessProcess.status,
+              },
+              tasks: taskSampleArr,
             },
-            tasks: taskSampleArr,
-          },
-          {
-            headers: {
-              "secret-token": document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-          }
-        )
-        .then((res) => {
-          setCreateBpSampleStatus(false);
-          setTasksArr([]);
-          setCreateBpSampleForm({
-            type: 0,
-            businessProcess: {
-              name: null,
-              deadline: null,
-              project_id: null,
-              tasks: 1,
-              initiator_id: document.cookie.replace(
-                /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-            options: [],
-          });
-          fetch(`${apiBp}/task/${res.data.tasks[0].id}?status=7`, {
-            method: "PATCH",
-            headers: {
-              "secret-token": document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
+            {
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+          .then((res) => {
+            setCreateBpSampleStatus(false);
+            fetch(`${apiBp}/task/${res.data.tasks[0].id}?status=7`, {
+              method: "PATCH",
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            })
+              .then((res) => res.json())
+              .then((r) => console.log(r.data))
+              .catch((err) => console.log(err));
           })
-            .then((res) => res.json())
-            .then((r) => console.log(r.data))
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
+          .catch((err) => console.log(err));
+      } else {
+        axios
+          .post(
+            `${apiBp}/businessProcess`,
+            {
+              type: 0,
+              businessProcess: {
+                name: createBpSampleForm.businessProcess.name,
+                initiator_id: createBpSampleForm.businessProcess.initiator_id,
+                project_id: createBpSampleForm.businessProcess.project_id,
+                project_section_id:
+                  createBpSampleForm.businessProcess.project_section_id,
+                deadline: createBpSampleForm.businessProcess.deadline,
+                tasks: taskSampleArr,
+              },
+            },
+            {
+              headers: {
+                "secret-token": document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+              },
+            }
+          )
+          .then((res) => console.log(res));
+      }
+
+      setCreateBpForm({
+        name: null,
+        initiator_id: parseInt(
+          document.cookie.replace(
+            /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          )
+        ),
+        project_id: null,
+        deadlineDate: null,
+        deadlineTime: null,
+        tasks: null,
+        sample: null,
+        file_id: null,
+      });
+      setCreateBpSampleForm({
+        type: 0,
+        businessProcess: {
+          name: null,
+          deadline: null,
+          project_id: null,
+          tasks: 1,
+          initiator_id: document.cookie.replace(
+            /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+        options: [],
+      });
+      setTasksArr([]);
     }
   }, [taskSampleArr]);
 
@@ -481,20 +611,20 @@ const CreateBp = () => {
     }
   }, [nextLinkProjects]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${apiBp}/getSamples`, {
-  //       headers: {
-  //         "secret-token": document.cookie.replace(
-  //           /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-  //           "$1"
-  //         ),
-  //       },
-  //     })
-  //     .then((res) => {
-  //       setSampleArr(res.data.data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`${apiBp}/getSamples`, {
+        headers: {
+          "secret-token": document.cookie.replace(
+            /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+            "$1"
+          ),
+        },
+      })
+      .then((res) => {
+        setSampleArr(res.data.data);
+      });
+  }, []);
 
   useEffect(() => {
     if (!!createBpForm.project_id) {
@@ -516,31 +646,8 @@ const CreateBp = () => {
   useEffect(() => {
     if (createBpSampleForm.type === 0) {
       let bp = sampleArr.filter((el) => el.id === parseInt(idSample));
-      bp = bp[0].businessProcessId;
-
-      let tasksStr = "";
-      for (let i in bp.tasks) {
-        tasksStr = tasksStr.concat(bp.tasks[i].id);
-        if (i < bp.tasks.length - 1) {
-          tasksStr = tasksStr.concat("|");
-        }
-      }
-
-      setCreateBpSampleForm({
-        ...createBpSampleForm,
-        businessProcess: {
-          name: bp.name,
-          initiator_id: parseInt(
-            document.cookie.replace(
-              /(?:(?:^|.*;\s*)user_id\s*\=\s*([^;]*).*$)|^.*$/,
-              "$1"
-            )
-          ),
-          project_id: parseInt(bp.project_id),
-          tasks: tasksStr,
-          deadline: bp.deadline,
-        },
-      });
+      bp = bp[0];
+      setContract(bp);
     }
 
     if (createBpSampleForm.type === 1) {
@@ -608,7 +715,7 @@ const CreateBp = () => {
       });
     }
     if (contract && createBpSampleForm.type === 0) {
-      console.log("шаблон без параметров");
+      setContractLast({ ...contract, tasks: [] });
     }
   }, [contract]);
 
@@ -632,11 +739,8 @@ const CreateBp = () => {
 
                 <select
                   className="input-form"
-                  value={
-                    !!createBpSampleForm.type ? createBpSampleForm.type : ""
-                  }
+                  value={!!idSample ? idSample : ""}
                   onChange={(e) => {
-                    console.log(e.target.value);
                     if (e.target.value !== "Без шаблона") {
                       setCreateBpSampleStatus(true);
                       if (
@@ -669,11 +773,11 @@ const CreateBp = () => {
                   <option value="1">Договор</option>
                   <option value="2">Увольнение</option>
                   <option value="3">Принятие на работу</option>
-                  {/* {sampleArr.map((el) => (
+                  {sampleArr.map((el) => (
                     <option value={el.id} key={el.id}>
                       {el.name}
                     </option>
-                  ))} */}
+                  ))}
                 </select>
               </div>
               <div>

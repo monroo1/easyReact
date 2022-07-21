@@ -35,6 +35,10 @@ const CreateTask = () => {
     contractLast,
     contract,
     setFile,
+    createBpSampleForm,
+    setDepsTasksArr,
+    depsTasksArr,
+    depsTaskId,
   } = useContext(StatusContext);
 
   const [addTask, setAddTask] = useState();
@@ -74,11 +78,15 @@ const CreateTask = () => {
               "$1"
             ),
           },
-          body: JSON.stringify(createTaskForm),
+          body: JSON.stringify({ ...createTaskForm, parent_id: depsTaskId }),
         })
           .then((resesult) => resesult.json())
           .then((res) => {
             setTasks([...tasks, res.data.id]);
+            setDepsTasksArr([
+              ...depsTasksArr,
+              { id: res.data.id, name: res.data.name },
+            ]);
           });
         setDepsTask("");
       } else {
@@ -102,101 +110,62 @@ const CreateTask = () => {
           .then((res) => {
             console.log(res.data.id);
             setTasks([...tasks, res.data.id]);
-
-            if (depsTask === "Предыдущая") {
-              axios
-                .patch(
-                  `https://test.easy-task.ru/api/v1/tasks/${
-                    tasks[tasks.length - 1]
-                  }`,
-                  { prev_id: res.data.id },
-                  {
-                    headers: {
-                      Authorization:
-                        "Bearer " +
-                        document.cookie.replace(
-                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                          "$1"
-                        ),
-                    },
-                  }
-                )
-                .then((res) => {});
+            setDepsTasksArr([
+              ...depsTasksArr,
+              { id: res.data.id, name: res.data.name },
+            ]);
+            console.log(depsTaskId);
+            if (depsTask === "Родительская") {
+              axios.patch(
+                `https://test.easy-task.ru/api/v1/tasks/${depsTaskId}`,
+                { parent_id: res.data.id },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                    "company-id": 1,
+                  },
+                }
+              );
             }
             if (depsTask === "Следующая") {
-              axios
-                .patch(
-                  `https://test.easy-task.ru/api/v1/tasks/${
-                    tasks[tasks.length - 1]
-                  }`,
-                  { next_id: res.data.id },
-                  {
-                    headers: {
-                      Authorization:
-                        "Bearer " +
-                        document.cookie.replace(
-                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                          "$1"
-                        ),
-                    },
-                  }
-                )
-                .then((res) => {});
+              axios.patch(
+                `https://test.easy-task.ru/api/v1/tasks/${depsTaskId}`,
+                { next_id: res.data.id },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                    "company-id": 1,
+                  },
+                }
+              );
             }
-            if (depsTask === "Родительская") {
-              axios
-                .patch(
-                  `https://test.easy-task.ru/api/v1/tasks/${
-                    tasks[tasks.length - 1]
-                  }`,
-                  { parent_id: res.data.id },
-                  {
-                    headers: {
-                      Authorization:
-                        "Bearer " +
-                        document.cookie.replace(
-                          /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                          "$1"
-                        ),
-                    },
-                  }
-                )
-                .then((res) => {});
+            if (depsTask === "Предыдущая") {
+              axios.patch(
+                `https://test.easy-task.ru/api/v1/tasks/${depsTaskId}`,
+                { prev_id: res.data.id },
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                    "company-id": 1,
+                  },
+                }
+              );
             }
-            // setCreateTaskForm({
-            //   name: "",
-            //   description: "description",
-            //   begin: null,
-            //   end: null,
-            //   project_id: 35,
-            //   cyclic_task_id: 0,
-            //   project_section_id: 124,
-            //   executor_id: 512,
-            //   next_id: null,
-            //   parent_id: null,
-            //   prev_id: null,
-            //   priority_id: 2,
-            //   provide_to: 0,
-            //   status_id: 19,
-            //   task_load: 5,
-            //   work_load: 35,
-            //   workflow_id: 1,
-            // });
-            // setCreateTaskFormDate({
-            //   currentBeginDate: "",
-            //   beginDate: null,
-            //   beginTime: "",
-            //   currentEndDate: "",
-            //   endDate: null,
-            //   endTime: "",
-            // });
-            // setDepsTask("");
-            // setCreateTaskForm({
-            //   ...createTaskForm,
-            //   next_id: null,
-            //   parent_id: null,
-            //   prev_id: null,
-            // });
           });
       }
       setCreateTaskForm({
@@ -204,10 +173,10 @@ const CreateTask = () => {
         description: "description",
         begin: null,
         end: null,
-        project_id: 35,
+        project_id: createTaskForm.project_id,
         cyclic_task_id: 0,
-        project_section_id: 124,
-        executor_id: 512,
+        project_section_id: createTaskForm.project_section_id,
+        executor_id: createTaskForm.executor_id,
         next_id: null,
         parent_id: null,
         prev_id: null,
@@ -231,59 +200,171 @@ const CreateTask = () => {
     if (statusCreateTask) {
       if (addTaskSample) {
         if (!nowTask) {
-          setNowTask({
-            ...valueTaskSample[0],
+          if (
+            createBpSampleForm.type === 1 ||
+            createBpSampleForm.type === 2 ||
+            createBpSampleForm.type === 3
+          ) {
+            setTaskSample({
+              ...taskSample,
+              name: valueTaskSample[1].name,
+            });
+            setNowTask({
+              ...valueTaskSample[0],
 
-            begin: null,
-            end: null,
-            description: "desc",
-            project_id: createBpForm.project_id,
-            project_section_id: createBpForm.project_section_id,
-            executor_id: 512,
+              begin: null,
+              end: null,
+              description: "desc",
+              project_id: createBpForm.project_id,
+              project_section_id: createBpForm.project_section_id,
+              executor_id: 512,
 
-            cyclic_task_id: 0,
-            priority_id: 2,
-            provide_to: 0,
-            status_id: 19, //3
-            task_load: 5,
-            work_load: 35,
-            workflow_id: 1,
-          });
+              cyclic_task_id: 0,
+              priority_id: 2,
+              provide_to: 0,
+              status_id: 19, //3
+              task_load: 5,
+              work_load: 35,
+              workflow_id: 1,
+            });
+          } else {
+            setTaskSample({
+              ...taskSample,
+              name: createTaskForm.name,
+            });
+            axios
+              .get(
+                `https://test.easy-task.ru/api/v1/tasks/${valueTaskSample[0].original_id}`,
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " +
+                      document.cookie.replace(
+                        /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                        "$1"
+                      ),
+                    "company-id": 1,
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(res.data.data);
+                setNowTask({
+                  ...valueTaskSample[0],
 
-          setTaskSample({
-            ...taskSample,
-            name: valueTaskSample[1].name,
-          });
-          // if(valueTaskSample.length === 1){
+                  begin: res.data.data.begin,
+                  end: res.data.data.end,
+                  description: "desc",
+                  project_id: createBpForm.project_id,
+                  project_section_id: createBpForm.project_section_id,
+                  executor_id: 512,
 
-          // }
+                  next_id: !!res.data.data?.next_id
+                    ? res.data.data.next_id
+                    : null,
+                  parent_id: !!res.data.data?.parent_id
+                    ? res.data.data.parent_id
+                    : null,
+                  prev_id: !!res.data.data?.prev_id
+                    ? res.data.data.prev_id
+                    : null,
+
+                  cyclic_task_id: 0,
+                  priority_id: 2,
+                  provide_to: 0,
+                  status_id: 19, //3
+                  task_load: 5,
+                  work_load: 35,
+                  workflow_id: 1,
+                });
+              });
+          }
+          console.log(valueTaskSample[0]);
         }
         if (!!nowTask) {
           for (let i in valueTaskSample) {
             if (valueTaskSample[i].name === nowTask.name) {
-              setTaskSample({
-                ...taskSample,
-                name: contract.tasks[contractLast.tasks.length + 1]?.name,
-              });
-              i++;
-              setNowTask({
-                ...valueTaskSample[i],
+              if (
+                createBpSampleForm.type === 1 ||
+                createBpSampleForm.type === 2 ||
+                createBpSampleForm.type === 3
+              ) {
+                i++;
+                setTaskSample({
+                  ...taskSample,
+                  name: contract.tasks[contractLast.tasks.length + 1]?.name,
+                });
+                setNowTask({
+                  ...valueTaskSample[i],
 
-                begin: null,
-                end: null,
-                description: "desc",
-                project_id: createBpForm.project_id,
-                project_section_id: createBpForm.project_section_id,
-                executor_id: 512,
+                  begin: null,
+                  end: null,
+                  description: "desc",
+                  project_id: createBpForm.project_id,
+                  project_section_id: createBpForm.project_section_id,
+                  executor_id: 512,
 
-                cyclic_task_id: 0,
-                priority_id: 2,
-                provide_to: 0,
-                status_id: 19, //3
-                task_load: 5,
-                work_load: 35,
-                workflow_id: 1,
-              });
+                  cyclic_task_id: 0,
+                  priority_id: 2,
+                  provide_to: 0,
+                  status_id: 19, //3
+                  task_load: 5,
+                  work_load: 35,
+                  workflow_id: 1,
+                });
+              } else {
+                i++;
+                setTaskSample({
+                  ...taskSample,
+                  name: createTaskForm.name,
+                });
+                axios
+                  .get(
+                    `https://test.easy-task.ru/api/v1/tasks/${valueTaskSample[i].original_id}`,
+                    {
+                      headers: {
+                        Authorization:
+                          "Bearer " +
+                          document.cookie.replace(
+                            /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                            "$1"
+                          ),
+                        "company-id": 1,
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    console.log(res.data.data);
+                    setNowTask({
+                      ...valueTaskSample[i],
+
+                      begin: res.data.data.begin,
+                      end: res.data.data.end,
+                      description: "desc",
+                      project_id: createBpForm.project_id,
+                      project_section_id: createBpForm.project_section_id,
+                      executor_id: 512,
+
+                      next_id: !!res.data.data?.next_id
+                        ? res.data.data.next_id
+                        : null,
+                      parent_id: !!res.data.data?.parent_id
+                        ? res.data.data.parent_id
+                        : null,
+                      prev_id: !!res.data.data?.prev_id
+                        ? res.data.data.prev_id
+                        : null,
+
+                      cyclic_task_id: 0,
+                      priority_id: 2,
+                      provide_to: 0,
+                      status_id: 19, //3
+                      task_load: 5,
+                      work_load: 35,
+                      workflow_id: 1,
+                    });
+                  });
+              }
             }
           }
         }
@@ -418,7 +499,6 @@ const CreateTask = () => {
               name: el.data.data.name,
               executor_id: el.data.data.executor_id,
               deadline: "2022-07-10 00:00:00",
-              // deadline: el.data.data.end,
               original_id: el.data.data.id,
             };
           })
@@ -426,8 +506,27 @@ const CreateTask = () => {
       );
     }
     if (addTasksMenu) {
-      let a = tasks.map((el) => {
-        return { id: el };
+      let a = [];
+      tasks.map((el) => {
+        axios
+          .get(`https://test.easy-task.ru/api/v1/tasks/${el}`, {
+            headers: {
+              Authorization:
+                "Bearer " +
+                document.cookie.replace(
+                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                  "$1"
+                ),
+            },
+          })
+          .then((res) => {
+            a.push({
+              original_id: res.data.data.id,
+              deadline: res.data.data.end,
+              name: res.data.data.name,
+              executor_id: res.data.data.executor_id,
+            });
+          });
       });
 
       axios

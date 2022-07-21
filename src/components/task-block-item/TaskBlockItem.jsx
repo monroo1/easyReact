@@ -53,7 +53,7 @@ const TaskBlockItem = ({ item, parentId }) => {
                   ref={getTopChildBlock}
                 >
                   <TaskItem
-                    el={arr[0].data.data}
+                    el={arr[0]?.data.data}
                     style={"dropdown"}
                     parentId={parentId}
                   />
@@ -65,7 +65,7 @@ const TaskBlockItem = ({ item, parentId }) => {
                       className="dependencies__content-list__task-block__gorizont"
                       id="dependencies-block-drow-el.id"
                     >
-                      {arr[0].data.data.child_tasks.length > 0 ? (
+                      {arr[0]?.data.data.child_tasks.length > 0 ? (
                         arr[0].data.data.child_tasks.map((it) => {
                           const arr = tasksList.filter((i) => {
                             return i.data.data.id === it;
@@ -76,7 +76,7 @@ const TaskBlockItem = ({ item, parentId }) => {
                               key={it}
                             >
                               <TaskItem
-                                el={arr[0].data.data}
+                                el={arr[0]?.data.data}
                                 style={"dropdown"}
                                 parentId={parentId}
                               />

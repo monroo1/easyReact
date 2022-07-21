@@ -66,8 +66,9 @@ const Result = ({ resultArr, disabled }) => {
   }, [task]);
 
   useEffect(() => {
-    if (!!bp && !!bpResultStatus) {
+    if (!!bp?.tasks && !!bpResultStatus) {
       let arr = [];
+      console.log(bp);
       bp.tasks.map((el) => el.results.map((item) => arr.push(item)));
       setContractTaskOptions(arr);
 

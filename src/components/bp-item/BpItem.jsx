@@ -19,11 +19,10 @@ const BpItem = ({ el }) => {
     openMenuBp,
     setIdCallBp,
     setOpenMenuTasks,
-    resultDropStatus,
-    setResultDropStatus,
     setContractBp,
     projects,
     setBpResultStatus,
+    setBpCall,
   } = useContext(StatusContext);
   const [project, setProject] = useState();
   const [projectSection, setProjectSection] = useState({});
@@ -89,6 +88,7 @@ const BpItem = ({ el }) => {
             className="business__main-content__list-block__item__message business__main-content__list-block__item__message-active"
             id={"business-item-btn-" + el.id}
             onClick={() => {
+              setBpCall(1);
               el.type === 1
                 ? setContractBp(el.id)
                 : el.type === 2
@@ -158,36 +158,6 @@ const BpItem = ({ el }) => {
       </div>
       {openTasks === "business-item-" + el.id ? (
         <TasksList tasks={el.tasks} />
-      ) : (
-        <></>
-      )}
-      {resultDropStatus === "business-item-" + el.id ? (
-        <div className="result-drop">
-          <div className="result-drop__header">
-            <h3>Инициирование договора</h3>
-            <div onClick={() => setResultDropStatus("")}>Скрыть</div>
-          </div>
-          <div className="result-drop__content">
-            {el.options
-              .filter((f) => f.value !== null)
-              .map((item) => {
-                return (
-                  <div className="result-drop__content-item">
-                    <div className="result-drop__content-top">
-                      <img
-                        src={`${process.env.PUBLIC_URL}/assets/input/Article.svg`}
-                        alt="Article"
-                      />
-                      {item.option.name}
-                    </div>
-                    <div className="result-drop__content-bottom">
-                      {item.value}
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
-        </div>
       ) : (
         <></>
       )}
