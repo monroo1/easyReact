@@ -64,7 +64,6 @@ const CreateBp = () => {
       })
 
       .then((res) => {
-        console.log(res.data);
         setCreateBpForm({ ...createBpForm, file_id: res.data.id });
         setCreateBpSampleForm({
           ...createBpSampleForm,
@@ -238,7 +237,6 @@ const CreateBp = () => {
         });
 
         contract.tasks.map((t, i) => {
-          console.log("t");
           axios
             .get(`https://test.easy-task.ru/api/v1/tasks/${t.original_id}`, {
               headers: {
@@ -252,7 +250,6 @@ const CreateBp = () => {
               },
             })
             .then((res) => {
-              console.log(res.data.data);
               if (res.data.data.next_id) {
                 let idSample = arrSample.filter(
                   (e) => e === res.data.data.next_id
@@ -333,44 +330,10 @@ const CreateBp = () => {
               }
             });
         });
-
-        // console.log(arr);
-        // console.log(contractLast);
       }
 
       setTaskSampleArr(taskArr);
     });
-
-    // if (createBpSampleForm.type === 0) {
-    //   if (createBpSampleForm.businessProcess.file_id) {
-    //     fetch(
-    //       `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}&file_id=${createBpSampleForm.businessProcess.file_id}`,
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           "secret-token": document.cookie.replace(
-    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-    //             "$1"
-    //           ),
-    //         },
-    //       }
-    //     )
-    //       });
-    //   } else {
-    //     fetch(
-    //       `${apiBp}/businessProcess?name=${createBpSampleForm.businessProcess.name}&initiator_id=${createBpSampleForm.businessProcess.initiator_id}&project_id=${createBpSampleForm.businessProcess.project_id}&project_section_id=${createBpForm.project_section_id}&tasks=${tasksStr}`,
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           "secret-token": document.cookie.replace(
-    //             /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-    //             "$1"
-    //           ),
-    //         },
-    //       }
-    //     )
-    //   }
-    // }
   };
 
   useEffect(() => {
@@ -420,38 +383,33 @@ const CreateBp = () => {
                   "$1"
                 ),
               },
-            })
-              .then((res) => res.json())
-              .then((r) => console.log(r.data))
-              .catch((err) => console.log(err));
+            }).catch((err) => console.log(err));
           })
           .catch((err) => console.log(err));
       } else {
-        axios
-          .post(
-            `${apiBp}/businessProcess`,
-            {
-              type: 0,
-              businessProcess: {
-                name: createBpSampleForm.businessProcess.name,
-                initiator_id: createBpSampleForm.businessProcess.initiator_id,
-                project_id: createBpSampleForm.businessProcess.project_id,
-                project_section_id:
-                  createBpSampleForm.businessProcess.project_section_id,
-                deadline: createBpSampleForm.businessProcess.deadline,
-                tasks: taskSampleArr,
-              },
+        axios.post(
+          `${apiBp}/businessProcess`,
+          {
+            type: 0,
+            businessProcess: {
+              name: createBpSampleForm.businessProcess.name,
+              initiator_id: createBpSampleForm.businessProcess.initiator_id,
+              project_id: createBpSampleForm.businessProcess.project_id,
+              project_section_id:
+                createBpSampleForm.businessProcess.project_section_id,
+              deadline: createBpSampleForm.businessProcess.deadline,
+              tasks: taskSampleArr,
             },
-            {
-              headers: {
-                "secret-token": document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-              },
-            }
-          )
-          .then((res) => console.log(res));
+          },
+          {
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        );
       }
 
       setCreateBpForm({
@@ -909,7 +867,6 @@ const CreateBp = () => {
                       : ""
                   }
                   onChange={(e) => {
-                    console.log(e.target.value);
                     if (!!contract) {
                       setContract({
                         ...contract,

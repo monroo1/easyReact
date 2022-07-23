@@ -6,7 +6,6 @@ const LeftNav = () => {
   const {
     createBpStatus,
     createTaskStatus,
-    setCreateBpSampleStatus,
     createBpSampleStatus,
     openMenuTasks,
     openMenuBp,

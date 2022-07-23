@@ -222,22 +222,20 @@ const BpItemStatus = ({ status, workflow, id }) => {
 
   const makeActiveTask = (e) => {
     if (parseInt(e.dataset.status) === 50) {
-      axios
-        .patch(
-          `https://test.easy-task.ru/api/v1/tasks/${e.dataset.id}`,
-          { status_id: 3 },
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                document.cookie.replace(
-                  /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
-                  "$1"
-                ),
-            },
-          }
-        )
-        .then((res) => console.log(res));
+      axios.patch(
+        `https://test.easy-task.ru/api/v1/tasks/${e.dataset.id}`,
+        { status_id: 3 },
+        {
+          headers: {
+            Authorization:
+              "Bearer " +
+              document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+          },
+        }
+      );
 
       fetch(`${apiBp}/businessProcess/${idBp}/makeActive`, {
         method: "PATCH",
@@ -247,9 +245,7 @@ const BpItemStatus = ({ status, workflow, id }) => {
             "$1"
           ),
         },
-      })
-        .then((res) => res.json())
-        .then((re) => console.log(re));
+      });
       setOpenTasks("");
     }
   };

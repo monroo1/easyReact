@@ -72,9 +72,7 @@ const BpItemMenu = ({ id }) => {
 
   useEffect(() => {
     if (tasksBpSample.length > 0) {
-      console.log(tasksBpSample);
       let sampleTasks = [];
-
       let tasksBpSampleReq = [];
 
       tasksBpSample.map((i) => {
@@ -219,32 +217,30 @@ const BpItemMenu = ({ id }) => {
         })
       );
 
-      axios
-        .post(
-          `${apiBp}/addBusinessProcessWithOptions`,
-          {
-            type: thisBp.type,
-            businessProcess: {
-              name: thisBp.name,
-              initiator_id: thisBp.initiator_id,
-              project_id: thisBp.project_id,
-              project_section_id: thisBp.project_section_id,
-              deadline: thisBp.deadline,
-              is_runned: thisBp.is_runned,
-              status: thisBp.status,
-            },
-            tasks: arrTaskFromReq,
+      axios.post(
+        `${apiBp}/addBusinessProcessWithOptions`,
+        {
+          type: thisBp.type,
+          businessProcess: {
+            name: thisBp.name,
+            initiator_id: thisBp.initiator_id,
+            project_id: thisBp.project_id,
+            project_section_id: thisBp.project_section_id,
+            deadline: thisBp.deadline,
+            is_runned: thisBp.is_runned,
+            status: thisBp.status,
           },
-          {
-            headers: {
-              "secret-token": document.cookie.replace(
-                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              ),
-            },
-          }
-        )
-        .then((r) => console.log(r));
+          tasks: arrTaskFromReq,
+        },
+        {
+          headers: {
+            "secret-token": document.cookie.replace(
+              /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+              "$1"
+            ),
+          },
+        }
+      );
     }
   }, [tasksBpSampleResponse]);
 

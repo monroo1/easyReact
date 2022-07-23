@@ -36,47 +36,47 @@ const TasksList = ({ tasks, parent }) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (tasksList.length > 0) {
-  //     const updateStatus = tasksList.map((item, i) => {
-  //       let status;
-  //       if (item.data.data.status_id === 18) {
-  //         status = 0;
-  //       } else if (item.data.data.status_id === 19) {
-  //         status = 1;
-  //       } else if (item.data.data.status_id === 11) {
-  //         status = 2;
-  //       } else if (item.data.data.status_id === 15) {
-  //         status = 3;
-  //       } else if (item.data.data.status_id === 3) {
-  //         status = 4;
-  //       } else if (item.data.data.status_id === 2) {
-  //         status = 5;
-  //       } else if (item.data.data.status_id === 14) {
-  //         status = 6;
-  //       } else if (item.data.data.status_id === 10) {
-  //         status = 7;
-  //       } else if (item.data.data.status_id === 13) {
-  //         status = 8;
-  //       }
-  //       const link = `${apiBp}/task/${tasks[i].id}?status=${status}`;
-  //       return axios.patch(
-  //         link,
-  //         {},
-  //         {
-  //           headers: {
-  //             "secret-token": document.cookie.replace(
-  //               /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
-  //               "$1"
-  //             ),
-  //           },
-  //         }
-  //       );
-  //     });
+  useEffect(() => {
+    if (tasksList.length > 0) {
+      const updateStatus = tasksList.map((item, i) => {
+        let status;
+        if (item.data.data.status_id === 18) {
+          status = 0;
+        } else if (item.data.data.status_id === 19) {
+          status = 1;
+        } else if (item.data.data.status_id === 11) {
+          status = 2;
+        } else if (item.data.data.status_id === 15) {
+          status = 3;
+        } else if (item.data.data.status_id === 3) {
+          status = 4;
+        } else if (item.data.data.status_id === 2) {
+          status = 5;
+        } else if (item.data.data.status_id === 14) {
+          status = 6;
+        } else if (item.data.data.status_id === 10) {
+          status = 7;
+        } else if (item.data.data.status_id === 13) {
+          status = 8;
+        }
+        const link = `${apiBp}/task/${tasks[i].id}?status=${status}`;
+        return axios.patch(
+          link,
+          {},
+          {
+            headers: {
+              "secret-token": document.cookie.replace(
+                /(?:(?:^|.*;\s*)access_token_jwt\s*\=\s*([^;]*).*$)|^.*$/,
+                "$1"
+              ),
+            },
+          }
+        );
+      });
 
-  //     Promise.all(updateStatus);
-  //   }
-  // }, [tasksList]);
+      Promise.all(updateStatus);
+    }
+  }, [tasksList]);
 
   if (tasksList.length > 0) {
     return (

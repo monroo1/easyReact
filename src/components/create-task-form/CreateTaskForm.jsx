@@ -143,8 +143,6 @@ const CreateTaskForm = () => {
       var date = new Date();
       var datePlus = new Date();
       datePlus.setDate(datePlus.getDate() + 30);
-      console.log(contract);
-
       if (
         createBpSampleForm.type === 1 ||
         createBpSampleForm.type === 2 ||

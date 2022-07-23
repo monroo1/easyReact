@@ -23,7 +23,6 @@ const Result = ({ resultArr, disabled }) => {
 
     for (let file in e.target.files) {
       if (typeof e.target.files[file] === "object") {
-        console.log(e.target.files[file]);
         formData.append(
           "file_" + e.target.files[file].name,
           e.target.files[file]
@@ -41,7 +40,6 @@ const Result = ({ resultArr, disabled }) => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setContractTaskOptionsNow({
           ...contractTaskOptionsNow,
           [i]: {
@@ -68,7 +66,6 @@ const Result = ({ resultArr, disabled }) => {
   useEffect(() => {
     if (!!bp?.tasks && !!bpResultStatus) {
       let arr = [];
-      console.log(bp);
       bp.tasks.map((el) => el.results.map((item) => arr.push(item)));
       setContractTaskOptions(arr);
 
@@ -220,7 +217,6 @@ const Result = ({ resultArr, disabled }) => {
                 type="text"
                 placeholder={el.name}
                 onChange={(e) => {
-                  console.log(contractTaskOptionsNow[i]);
                   setContractTaskOptionsNow({
                     ...contractTaskOptionsNow,
                     [i]: {

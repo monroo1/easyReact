@@ -81,7 +81,6 @@ const ChatMenu = () => {
     if (!!idCall) {
       if (openMenuTasks) {
         setThisTabs(2);
-        console.log("tabs");
         axios
           .get(`https://test.easy-task.ru/api/v1/tasks/${idCall}`, {
             headers: {
@@ -167,7 +166,6 @@ const ChatMenu = () => {
 
   useEffect(() => {
     if (task?.id) {
-      console.log(task);
       axios
         .get(`https://test.easy-task.ru/api/v1/users/${task.executor_id}`, {
           headers: {
